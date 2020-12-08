@@ -1,18 +1,20 @@
+import { BacklogConfig } from "../models/config/backlog";
 import { BacklogService } from "../services/backlog/backlogService";
 
 export class BacklogServiceFactory {
-  private static registry: { [id: string]: BacklogService }
+  private static registry: { [providerName: string]: any } = {};
 
-  public static register(id: string, service: BacklogService) {
-    this.registry[id] = service;
+  public static register(providerName: string, service: any) {
+    this.registry[providerName] = service;
   }
 
-  public static get(id: string): BacklogService {
-    const service = this.registry[id];
+  public static get(config: BacklogConfig): BacklogService {
+    const { providerName } = config;
+    const service = this.registry[providerName];
 
     if (!service) {
-      throw new Error(`Backlog service ${id} not defined. Options are ${Object.keys(this.registry).join(",")}`);
+      throw new Error(`Backlog service ${providerName} not defined. Options are ${Object.keys(this.registry).join(",")}`);
     }
-    return service;
+    return new service(config);
   }
 }

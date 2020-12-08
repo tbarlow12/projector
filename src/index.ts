@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 import { Command } from "./extensions";
 import * as commands from "./commands";
+import { registerProviders } from "./initialization/registerProviders";
 
 new Command()
   .description("CSE Bootstrap CLI")
   .name("cse")
-  .addCommands(commands)
-  .action((args: any[]) => {
-    console.log("Hey there");
+  .initialize(() => {
+    registerProviders();
   })
+  .addCommands(commands)
   .parse(process.argv);

@@ -4,18 +4,20 @@ import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi"
 import { BacklogConfig } from "../../../models/config/backlog";
 
 export class AzureDevOpsBacklogService implements BacklogService {
-  private work: WorkItemTrackingApi;
+  // private work: WorkItemTrackingApi;
   
   constructor(config: BacklogConfig) {
-    const { baseUrl } = config.providerOptions;
-    this.work = new WorkItemTrackingApi(baseUrl, []);
+    // const { baseUrl } = config.providerOptions;
+    // this.work = new WorkItemTrackingApi(baseUrl, []);
   }
 
   public async createBacklogItem(item: BacklogItem): Promise<BacklogItem> {
-    throw new Error("Not yet implemented");
+    console.log(`Created backlog item ${JSON.stringify(item, null, 4)}`);
+    return item;
   }
 
   public async createSprint(sprint: Sprint): Promise<Sprint> {
-    throw new Error("Not yet implemented");
+    console.log(`Created backlog item ${JSON.stringify(sprint, null, 4)}`);
+    return sprint
   }
 }

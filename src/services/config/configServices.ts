@@ -9,4 +9,13 @@ export class ConfigService {
       }
     };
   }
+
+  public static createFromArgs(args: string[]): CseCliConfig {
+    return {
+      backlog: {
+        providerName: "azdo",
+        providerOptions: {}
+      }
+    };
+  }
 }
