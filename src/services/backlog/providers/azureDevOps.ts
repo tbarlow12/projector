@@ -1,11 +1,13 @@
 import { BacklogItem, Sprint } from "../../../models";
 import { BacklogService } from "../backlogService";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi"
+import { BacklogConfig } from "../../../models/config/backlog";
 
 export class AzureDevOpsBacklogService implements BacklogService {
   private work: WorkItemTrackingApi;
   
-  constructor(baseUrl: string, private project: string) {
+  constructor(config: BacklogConfig) {
+    const { baseUrl } = config.providerOptions;
     this.work = new WorkItemTrackingApi(baseUrl, []);
   }
 

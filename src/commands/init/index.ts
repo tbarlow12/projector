@@ -1,8 +1,11 @@
 import { Command } from "../../extensions";
+import { writeFileSync } from "fs"
+import { ConfigService } from "../../services/config/configServices";
 
 export const init = new Command()
   .name("init")
   .description("Backlog Initialization")
   .action((args: any[]) => {
-    console.log("Hello from cse init");
+    const config = ConfigService.createInitialConfig(args);
+    writeFileSync("cse.json", JSON.stringify(config, null, 4));
   });
