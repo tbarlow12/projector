@@ -16,13 +16,14 @@ export class Command extends CommanderCommand {
     this.actions = [];
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types 
   public addCommands(commandImport: any, opts?: CommandOptions): Command {
     const commands: Command[] = Object.values(commandImport);
     commands.forEach((command: Command) => {
       if (!(command && command.name())) {
         return;
       }
-      this.addCommand(command);
+      this.addCommand(command, opts);
     });
     return this;
   }
@@ -61,12 +62,13 @@ export class Command extends CommanderCommand {
     return this;
   }
 
-  public addAction(action: ActionHandler) {
+  public addAction(action: ActionHandler): Command {
     this.actions.push(action);
     this.action(() => {
       this.actions.forEach((action) => {
         action();
       });
-    })
+    });
+    return this;
   }
 }
