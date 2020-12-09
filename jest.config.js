@@ -24,5 +24,4 @@ module.exports = {
     "json",
     "node"
   ],
-  "setupFilesAfterEnv": [ "./jest.setup.js" ]
 };

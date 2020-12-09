@@ -1,10 +1,11 @@
 import { BacklogItemType } from "./backlogItemType";
 
 export interface BacklogItem {
-  id?: string;
   name: string;
+  type: BacklogItemType
+  id?: string;
   description?: string;
   children?: BacklogItem[];
   acceptanceCriteria?: string[];
-  type: BacklogItemType
+  assignedTo?: string;
 }
