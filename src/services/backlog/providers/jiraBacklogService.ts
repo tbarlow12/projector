@@ -1,22 +1,18 @@
-import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
 import { BacklogItem, Sprint } from "../../../models";
 import { BacklogConfig } from "../../../models/config/backlogConfig";
 import { BaseBacklogService } from "../backlogService";
 
-export interface AzureDevOpsBacklogConfig extends BacklogConfig {
+export interface JiraBacklogConfig extends BacklogConfig {
   providerOptions: {
     baseUrl: string;
-    projectName: string;
   }
 } 
 
-export class AzureDevOpsBacklogService extends BaseBacklogService {
-  private workItemTracking: WorkItemTrackingApi;
+export class JiraBacklogService extends BaseBacklogService {
 
-  constructor(config: AzureDevOpsBacklogConfig) {
+  constructor(config: JiraBacklogConfig) {
     super(config);
     const { baseUrl } = config.providerOptions;
-    this.workItemTracking = new WorkItemTrackingApi(baseUrl, []);
   }
 
   createBacklogItem = async (item: BacklogItem): Promise<BacklogItem> => {

@@ -1,10 +1,11 @@
 import { BacklogConfig } from "../models/config/backlogConfig";
 import { BacklogService } from "../services/backlog/backlogService";
+import { BacklogServiceProvider } from "../services/backlog/providers";
 
 export class BacklogServiceFactory {
   private static registry: { [providerName: string]: any } = {};
 
-  public static register(providerName: string, service: any) {
+  public static register(providerName: BacklogServiceProvider, service: any) {
     this.registry[providerName] = service;
   }
 

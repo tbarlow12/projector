@@ -12,7 +12,7 @@ export interface BacklogInitializationOptions {
 export const backlogInit = new Command()
   .name("init")
   .description("Backlog Initialization")
-  .requiredOption("-f, --file", "JSON file with backlog items")
+  .option("-f, --file", "JSON file with backlog items")
   .execute(async (config: CseCliConfig, options: BacklogInitializationOptions) => {
     const { backlog } = config;
     const backlogService = BacklogServiceFactory.get(backlog);
