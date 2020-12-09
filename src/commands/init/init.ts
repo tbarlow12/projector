@@ -8,7 +8,5 @@ export const init = new Command()
   .description("Local Configuration Initialization")
   .action((args: any[]) => {
     const config = ConfigService.createInitialConfig(args);
-    const sampleBacklogItems = BaseBacklogService.createSampleBacklogItems();
     writeFileSync("cse.json", JSON.stringify(config, null, 4));
-    writeFileSync("backlogItems.json", JSON.stringify(sampleBacklogItems, null, 4));
   });
