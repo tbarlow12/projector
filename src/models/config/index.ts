@@ -1,3 +1,3 @@
-export * from "./backlog";
+export * from "./backlogConfig";
 export * from "./cliConfig";
-export * from "./provider";
+export * from "./providerConfig";

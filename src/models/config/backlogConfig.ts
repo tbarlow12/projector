@@ -1,4 +1,4 @@
-import { ProviderConfig } from "./provider";
+import { ProviderConfig } from "./providerConfig";
 
 export interface BacklogConfig extends ProviderConfig {
 }

@@ -1,4 +1,4 @@
-import { BacklogConfig } from "../models/config/backlog";
+import { BacklogConfig } from "../models/config/backlogConfig";
 import { BacklogService } from "../services/backlog/backlogService";
 
 export class BacklogServiceFactory {

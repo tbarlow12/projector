@@ -1,2 +1,2 @@
-export * from "./azureDevOps";
+export * from "./azureDevOpsBacklogService";
 export * from "./backlogServiceProvider";
