@@ -1,1 +1,1 @@
-export { playbookIssues } from "./playbookIssues";
+export { playbookIssues } from "./issues";

@@ -1,13 +1,20 @@
 import { Command as CommanderCommand, CommandOptions } from "commander";
 import { CseCliConfig } from "../models/config/cliConfig";
+import { Link } from "../models/general/link";
 import { ConfigService } from "../services";
+import { urlCommand } from "./urlCommand";
 
 export class Command extends CommanderCommand {
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public addCommands(commandImport: any, opts?: CommandOptions): Command {
     const commands: Command[] = Object.values(commandImport);
-    commands.forEach(command => this.addCommand(command, opts));
+    commands.forEach((command: Command) => {
+      if (!this.validateCommand(command)) {
+        return;
+      }
+      this.addCommand(command);
+    });
     return this;
   }
 
@@ -24,5 +31,13 @@ export class Command extends CommanderCommand {
       await action(config, options);
     });
     return this;
+  }
+
+  public addLinkCommands(links: Link[]): void {
+    links.forEach((link: Link) => this.addCommand(urlCommand(link)));
+  }
+
+  private validateCommand(command: Command): boolean {
+    return !!(command && command.name())
   }
 }

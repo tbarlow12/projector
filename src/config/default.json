@@ -1,0 +1,14 @@
+{
+  "links": [
+    {
+      "name": "snowball",
+      "url": "https://snowballv2.azurewebsites.net/",
+      "description": "Used for tracking work"
+    },
+    {
+      "name": "playbook",
+      "url": "https://github.com/Microsoft/code-with-engineering-playbook",
+      "description": "CSE playbook for the way we do work"
+    }
+  ]
+}

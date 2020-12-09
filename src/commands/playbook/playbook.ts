@@ -1,6 +1,6 @@
-import { UrlConstants } from "../../constants/urlConstants";
-import { urlCommand } from "../../extensions/urlCommand";
-import * as subCommands from "./commands";
+import { urlCommand } from "../../extensions";
+import { ConfigUtils } from "../../utils";
+import * as subCommands from "./commands/issues";
 
-export const playbook = urlCommand("playbook", "Open CSE Playbook", UrlConstants.CsePlaybook)
+export const playbook = urlCommand(ConfigUtils.getLink("playbook"))
   .addCommands(subCommands)

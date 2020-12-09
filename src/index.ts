@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+import { join } from "path";
+process.env.NODE_CONFIG_DIR = join(__dirname, "config");
+
 import { Command } from "./extensions";
 import * as commands from "./commands";
 import { registerProviders } from "./initialization/registerProviders";
