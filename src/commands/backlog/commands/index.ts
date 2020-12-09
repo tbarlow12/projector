@@ -1,1 +1,1 @@
-export { init } from "./init"
+export { backlogInit } from "./init"
