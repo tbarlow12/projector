@@ -14,4 +14,5 @@ new Command()
   })
   .asciiArt("CSE")
   .addCommands(commands)
-  .parse(process.argv);
+  .printHelp()
+  .parse();

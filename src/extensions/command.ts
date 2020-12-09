@@ -6,7 +6,15 @@ import { ConfigService } from "../services";
 import { urlCommand } from "./urlCommand";
 import figlet from "figlet";
 
+type ActionHandler = () => void|Promise<void>;
+
 export class Command extends CommanderCommand {
+  private actions: ActionHandler[];
+
+  constructor() {
+    super();
+    this.actions = [];
+  }
 
   public addCommands(commandImport: any, opts?: CommandOptions): Command {
     const commands: Command[] = Object.values(commandImport);
@@ -27,7 +35,7 @@ export class Command extends CommanderCommand {
   public execute(action: (config: CseCliConfig, options: any) => Promise<void>|void): Command {
     this.parse();
     const options = this.opts();
-    this.action(async () => {
+    this.addAction(async () => {
       const config = ConfigService.createFromArgs(options);
       await action(config, options);
     });
@@ -40,9 +48,25 @@ export class Command extends CommanderCommand {
   }
 
   public asciiArt(message: string): Command {
-    this.action(() => {
+    this.addAction(() => {
       console.log(chalk.cyanBright(figlet.textSync(message)));
     });
     return this;
+  }
+
+  public printHelp(): Command {
+    this.addAction(() => {
+      console.log(this.helpInformation())
+    });
+    return this;
+  }
+
+  public addAction(action: ActionHandler) {
+    this.actions.push(action);
+    this.action(() => {
+      this.actions.forEach((action) => {
+        action();
+      });
+    })
   }
 }
