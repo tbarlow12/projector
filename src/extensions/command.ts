@@ -1,16 +1,17 @@
+import chalk from "chalk";
 import { Command as CommanderCommand, CommandOptions } from "commander";
 import { CseCliConfig } from "../models/config/cliConfig";
 import { Link } from "../models/general/link";
 import { ConfigService } from "../services";
 import { urlCommand } from "./urlCommand";
+import figlet from "figlet";
 
 export class Command extends CommanderCommand {
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public addCommands(commandImport: any, opts?: CommandOptions): Command {
     const commands: Command[] = Object.values(commandImport);
     commands.forEach((command: Command) => {
-      if (!this.validateCommand(command)) {
+      if (!(command && command.name())) {
         return;
       }
       this.addCommand(command);
@@ -33,11 +34,15 @@ export class Command extends CommanderCommand {
     return this;
   }
 
-  public addLinkCommands(links: Link[]): void {
+  public addLinkCommands(links: Link[]): Command {
     links.forEach((link: Link) => this.addCommand(urlCommand(link)));
+    return this;
   }
 
-  private validateCommand(command: Command): boolean {
-    return !!(command && command.name())
+  public asciiArt(message: string): Command {
+    this.action(() => {
+      console.log(chalk.cyanBright(figlet.textSync(message)));
+    });
+    return this;
   }
 }

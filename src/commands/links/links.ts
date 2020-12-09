@@ -1,7 +1,5 @@
-import { Command } from "../../extensions";
-import { writeFileSync } from "fs"
-import { ConfigService } from "../../services/config/configServices";
 import config from "config";
+import { Command } from "../../extensions";
 
 export const links = new Command()
   .name("links")

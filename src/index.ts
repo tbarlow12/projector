@@ -12,5 +12,7 @@ new Command()
   .initialize(() => {
     registerProviders();
   })
+  .asciiArt("CSE")
   .addCommands(commands)
-  .parse(process.argv);
+  .parse(process.argv)
+  .help();
