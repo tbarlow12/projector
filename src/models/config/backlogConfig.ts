@@ -1,4 +1,3 @@
 import { ProviderConfig } from "./providerConfig";
 
-export interface BacklogConfig extends ProviderConfig {
-}
+export type BacklogConfig = ProviderConfig

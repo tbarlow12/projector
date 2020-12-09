@@ -1,7 +1,8 @@
 import { CseCliConfig } from "../../models/config/cliConfig";
 
 export class ConfigService {
-  public static createInitialConfig(args: any[]): CseCliConfig {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public static createInitialConfig(options: { [name: string]: string }): CseCliConfig {
     return {
       backlog: {
         providerName: "",
@@ -10,6 +11,7 @@ export class ConfigService {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public static createFromArgs(options: { [name: string]: string }): CseCliConfig {
     return {
       backlog: {

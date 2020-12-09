@@ -9,12 +9,6 @@ export interface JiraBacklogConfig extends BacklogConfig {
 } 
 
 export class JiraBacklogService extends BaseBacklogService {
-
-  constructor(config: JiraBacklogConfig) {
-    super(config);
-    const { baseUrl } = config.providerOptions;
-  }
-
   createBacklogItem = async (item: BacklogItem): Promise<BacklogItem> => {
     console.log(`${this.config.providerName} created backlog item ${JSON.stringify(item, null, 4)}`);
     return item;

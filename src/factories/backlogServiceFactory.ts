@@ -5,7 +5,8 @@ import { BacklogServiceProvider } from "../services/backlog/providers";
 export class BacklogServiceFactory {
   private static registry: { [providerName: string]: any } = {};
 
-  public static register(providerName: BacklogServiceProvider, service: any) {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  public static register(providerName: BacklogServiceProvider, service: any): void {
     this.registry[providerName] = service;
   }
 

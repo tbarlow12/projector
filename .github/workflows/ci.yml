@@ -1,0 +1,28 @@
+on:
+  pull_request:
+    branches:
+      - master
+name: Build, Test and Coverage
+jobs:
+  all:
+    name: Build, Test and Coverage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Cache node_modules
+      id: cache-modules
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+    - name: npm install
+      if: steps.cache-modules.outputs.cache-hit != 'true'
+      run: npm install
+    - name: build
+      run: tsc
+    - name: Test coverage
+      run: npm run test:coverage
+    - uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        fail_ci_if_error: true

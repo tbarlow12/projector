@@ -1,8 +1,6 @@
 import { Command } from "../../../../extensions";
 import { BacklogServiceFactory } from "../../../../factories/backlogServiceFactory";
-import { BacklogItem, BacklogItemType, CseCliConfig } from "../../../../models";
-import { readFileSync } from "fs";
-import { join } from "path";
+import { BacklogItem, CseCliConfig } from "../../../../models";
 import { FileUtils } from "../../../../utils";
 
 export interface BacklogInitializationOptions {
