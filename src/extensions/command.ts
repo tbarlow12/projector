@@ -14,10 +14,12 @@ export class Command extends CommanderCommand {
     return this;
   }
 
-  public execute(action: (config: CseCliConfig) => Promise<void>|void): Command {
+  public execute(action: (config: CseCliConfig, options: any) => Promise<void>|void): Command {
+    this.parse();
+    const options = this.opts();
     this.action(async (args: any[]) => {
-      const config = ConfigService.createFromArgs(args);
-      await action(config);
+      const config = ConfigService.createFromArgs(options);
+      await action(config, options);
     });
     return this;
   }

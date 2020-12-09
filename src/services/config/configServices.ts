@@ -10,7 +10,7 @@ export class ConfigService {
     };
   }
 
-  public static createFromArgs(args: string[]): CseCliConfig {
+  public static createFromArgs(options: { [name: string]: string }): CseCliConfig {
     return {
       backlog: {
         providerName: "azdo",
