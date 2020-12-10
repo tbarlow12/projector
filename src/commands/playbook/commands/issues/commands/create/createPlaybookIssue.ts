@@ -1,7 +1,7 @@
 import { urlCommand } from "../../../../../../extensions";
-import { ConfigUtils } from "../../../../../../utils";
+import { Config } from "../../../../../../utils";
 
-const playbookLink = ConfigUtils.getLink("playbook");
+const playbookLink = Config.getLink("playbook");
 
 export const createPlaybookIssue = urlCommand({
   name: "create",
