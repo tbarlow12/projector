@@ -8,20 +8,31 @@ jobs:
     name: Build, Test and Coverage
     runs-on: ubuntu-latest
     steps:
+    # Check out repo
     - uses: actions/checkout@master
+
+    # Cache node modules
     - name: Cache node_modules
       id: cache-modules
       uses: actions/cache@v1
       with:
         path: node_modules
         key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+
+    # Install dependencies - use cache if possible
     - name: npm install
       if: steps.cache-modules.outputs.cache-hit != 'true'
       run: npm install
+
+    # Build package
     - name: build
-      run: tsc
+      run: npm run build
+    
+    # Run tests and output code coverage
     - name: Test coverage
       run: npm run test:coverage
+    
+    # Validate code coverage using codecov.yml
     - uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}

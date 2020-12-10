@@ -1,3 +1,4 @@
+# On all pushes to master, version package and push to NPM
 on:
   push:
     branches:
@@ -9,23 +10,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+
+    # Cache node modules
     - name: Cache node_modules
       id: cache-modules
       uses: actions/cache@v1
       with:
         path: node_modules
         key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+
+    # Install dependencies - cache if possible
     - name: npm install
       if: steps.cache-modules.outputs.cache-hit != 'true'
       run: npm install
+    
+    # Build the package
     - name: build
-      run: tsc
+      run: npm run build
+    
+    # Run test coverage on branch
     - name: Test coverage
       run: npm run test:coverage
     - uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: true
+    
+    # Version the package and release on NPM
     - name: Release
       uses: mikeal/merge-release@v4.0.7
       env:
