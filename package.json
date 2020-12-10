@@ -1,7 +1,10 @@
 {
   "name": "cse-cli",
-  "version": "0.0.1",
-  "description": "CLI tool to bootstrap CSE engagement projects",
+  "version": "0.0.0",
+  "description": "⌨ The CLI for all things Commercial Software Engineering",
+  "repository": {
+    "url": "https://github.com/tbarlow12/cse-cli"
+  },
   "bin": {
     "cse": "./lib/index.js"
   },
