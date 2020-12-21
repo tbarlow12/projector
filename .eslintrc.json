@@ -3,6 +3,7 @@
   "plugins": ["@typescript-eslint"],
   "extends": ["plugin:@typescript-eslint/recommended"],
   "rules": {
+    "eol-last": "error",
     "quotes": ["error", "double"],
     "@typescript-eslint/indent": [
       "error",

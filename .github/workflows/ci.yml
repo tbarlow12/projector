@@ -31,6 +31,8 @@ jobs:
     # Run tests and output code coverage
     - name: Test coverage
       run: npm run test:coverage
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     # Validate code coverage using codecov.yml
     - uses: codecov/codecov-action@v1
