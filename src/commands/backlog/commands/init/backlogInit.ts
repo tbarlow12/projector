@@ -3,7 +3,7 @@ import { Command } from "../../../../extensions";
 import { BaseBacklogService } from "../../../../services";
 
 export const backlogInit = new Command()
-  .name("init")
+  .name("hi")
   .description("Backlog Initialization")
   .execute(() => {
     const sampleBacklogItems = BaseBacklogService.createSampleBacklogItems();

@@ -7,4 +7,6 @@ export interface RepoItem {
   type: RepoItemType;
   name: string;
   path: string;
+  content?: string;
+  children?: RepoItem[];
 }

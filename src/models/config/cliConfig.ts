@@ -1,4 +1,4 @@
-import { BacklogConfig } from "./backlogConfig";
+import { ProviderConfig } from "./providerConfig";
 export interface CseCliConfig {
-  backlog: BacklogConfig;
+  backlog: ProviderConfig;
 }

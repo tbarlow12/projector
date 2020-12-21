@@ -1,1 +1,1 @@
-export * from "./init"
+export { init } from "./init"

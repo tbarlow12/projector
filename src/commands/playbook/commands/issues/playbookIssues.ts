@@ -1,6 +1,8 @@
-import { urlCommand } from "../../../../extensions";
-import { Config } from "../../../../utils";
-import * as subCommands from "./commands";
+import { Command } from "../../../../extensions";
+import { playbookIssueCreate, playbookIssuesOpen } from "./commands";
 
-export const playbookIssues = urlCommand(Config.getLink("playbook-issues"))
-  .addCommands(subCommands)
+export const playbookIssues = new Command()
+  .name("issues")
+  .description("CSE Playbook Issues")
+  .addCommand(playbookIssueCreate)
+  .addCommand(playbookIssuesOpen)

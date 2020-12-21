@@ -1,7 +1,11 @@
 import { Command } from "../../extensions";
-import * as commands from "./commands";
+import {
+  backlogCreate,
+  backlogInit,
+} from "./commands";
 
 export const backlog = new Command()
   .name("backlog")
   .description("Backlog management")
-  .addCommands(commands);
+  .addCommand(backlogCreate)
+  .addCommand(backlogInit)

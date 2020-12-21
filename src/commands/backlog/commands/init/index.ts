@@ -1,1 +1,1 @@
-export * from "./backlogInit";
+export { backlogInit } from "./backlogInit";

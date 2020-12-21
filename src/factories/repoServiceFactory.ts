@@ -1,4 +1,4 @@
-import { BacklogConfig, RepoService } from "../models";
+import { ProviderConfig, RepoService } from "../models";
 import { RepoServiceProvider } from "../services";
 
 export class RepoServiceFactory {
@@ -9,7 +9,7 @@ export class RepoServiceFactory {
     this.registry[providerName] = service;
   }
 
-  public static get(config: BacklogConfig): RepoService {
+  public static get(config: ProviderConfig): RepoService {
     const { providerName } = config;
     const service = this.registry[providerName];
 
@@ -18,4 +18,8 @@ export class RepoServiceFactory {
     }
     return new service(config);
   }
+
+  // public static get(provider: RepoServiceProvider): RepoService {
+
+  // }
 }

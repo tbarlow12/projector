@@ -1,9 +1,11 @@
 #!/usr/bin/env node
-import { join } from "path";
+import { config } from "dotenv";
+config();
 process.env.NODE_CONFIG_DIR = join(__dirname, "config");
 
+import { join } from "path";
+import { backlog, init, links, playbook } from "./commands";
 import { Command } from "./extensions";
-import * as commands from "./commands";
 import { registerProviders } from "./initialization/registerProviders";
 
 new Command()
@@ -13,6 +15,11 @@ new Command()
     registerProviders();
   })
   .asciiArt("CSE")
-  .addCommands(commands)
+  .passCommandToAction(false)
+  .addCommand(backlog)
+  .addCommand(init)
+  .addCommand(links)
+  .addCommand(playbook)
   .printHelp()
-  .parse();
+  .parse(process.argv);
+
