@@ -8,6 +8,7 @@ jobs:
   all:
     name: Publish
     runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@master
 
@@ -31,6 +32,10 @@ jobs:
     # Run test coverage on branch
     - name: Test coverage
       run: npm run test:coverage
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # Validate code coverage using codecov.yml
     - uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
