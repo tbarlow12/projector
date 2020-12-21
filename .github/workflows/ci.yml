@@ -2,6 +2,15 @@ on:
   pull_request:
     branches:
       - master
+    paths-ignore:
+      - '.vscode/**'
+      - 'docs/**'
+      - 'README.md'
+      - '.env.sample'
+      - '.gitignore'
+      - 'codecov.yml'
+      - 'jest.*.js'
+
 name: Build, Test and Coverage
 jobs:
   all:
