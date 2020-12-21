@@ -1,8 +1,7 @@
-import { BacklogItem, Sprint } from "../../../models";
-import { BacklogConfig } from "../../../models/config/backlogConfig";
-import { BaseBacklogService } from "../backlogService";
+import { BacklogItem, ProviderConfig, Sprint } from "../../../models";
+import { BaseBacklogService } from "../baseBacklogService";
 
-export interface JiraBacklogConfig extends BacklogConfig {
+export interface JiraBacklogConfig extends ProviderConfig {
   providerOptions: {
     baseUrl: string;
   }

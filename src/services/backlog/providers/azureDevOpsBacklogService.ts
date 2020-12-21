@@ -1,9 +1,8 @@
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
-import { BacklogItem, Sprint } from "../../../models";
-import { BacklogConfig } from "../../../models/config/backlogConfig";
-import { BaseBacklogService } from "../backlogService";
+import { BacklogItem, ProviderConfig, Sprint } from "../../../models";
+import { BaseBacklogService } from "../baseBacklogService";
 
-export interface AzureDevOpsBacklogConfig extends BacklogConfig {
+export interface AzureDevOpsBacklogConfig extends ProviderConfig {
   providerOptions: {
     baseUrl: string;
     projectName: string;

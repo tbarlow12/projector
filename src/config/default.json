@@ -9,6 +9,15 @@
       "name": "playbook",
       "url": "https://github.com/Microsoft/code-with-engineering-playbook",
       "description": "CSE playbook for the way we do work"
+    },
+    {
+      "name": "playbook",
+      "url": "https://github.com/Microsoft/code-with-engineering-playbook",
+      "description": "Issues in the CSE Playbook"
     }
-  ]
+  ],
+  "playbook": {
+    "owner": "microsoft",
+    "repo": "code-with-engineering-playbook"
+  }
 }

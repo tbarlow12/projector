@@ -1,12 +1,12 @@
 import chalk from "chalk";
-import { Command as CommanderCommand, CommandOptions } from "commander";
+import { Command as CommanderCommand } from "commander";
+import figlet from "figlet";
 import { CseCliConfig } from "../models/config/cliConfig";
 import { Link } from "../models/general/link";
 import { ConfigService } from "../services";
 import { urlCommand } from "./urlCommand";
-import figlet from "figlet";
 
-type ActionHandler = () => void|Promise<void>;
+export type ActionHandler = (options: { [key: string]: any}) => void|Promise<void>;
 
 export class Command extends CommanderCommand {
   private actions: ActionHandler[];
@@ -16,27 +16,14 @@ export class Command extends CommanderCommand {
     this.actions = [];
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types 
-  public addCommands(commandImport: any, opts?: CommandOptions): Command {
-    const commands: Command[] = Object.values(commandImport);
-    commands.forEach((command: Command) => {
-      if (!(command && command.name())) {
-        return;
-      }
-      this.addCommand(command, opts);
-    });
-    return this;
-  }
-
   public initialize(initializeAction: (args: string[]) => void): Command {
     initializeAction(this.args);
     return this;
   }
 
   public execute(action: (config: CseCliConfig, options: any) => Promise<void>|void): Command {
-    this.parse();
-    const options = this.opts();
     this.addAction(async () => {
+      const options = this.opts();
       const config = ConfigService.createFromArgs(options);
       await action(config, options);
     });
@@ -65,8 +52,9 @@ export class Command extends CommanderCommand {
   public addAction(action: ActionHandler): Command {
     this.actions.push(action);
     this.action(() => {
+      const options = this.opts();
       this.actions.forEach((action) => {
-        action();
+        action(options);
       });
     });
     return this;

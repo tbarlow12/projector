@@ -1,2 +1,2 @@
-export * from "./backlogService";
+export * from "./baseBacklogService";
 export * from "./backlogServiceProvider";
