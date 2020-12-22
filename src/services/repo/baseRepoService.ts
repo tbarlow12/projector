@@ -8,7 +8,6 @@ export abstract class BaseRepoService implements RepoService {
 
   public async downloadRepoItem(owner: string, repo: string, path?: string, branch?: string, outputPath: string = process.cwd()): Promise<void> {
     const repoItem = await this.getRepoItem(owner, repo, path, true, branch);
-
     await this.writeRepoItem(repoItem, outputPath);
   }
 

@@ -1,24 +1,20 @@
-import fs from "fs"
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
-import { promisify } from "util"
-
-const writeFile = promisify(fs.writeFile);
-const readFile = promisify(fs.readFile);
-const mkdir = promisify(fs.mkdir);
 
 export class FileUtils {
-  public static async readJson(relativePath: string): Promise<any> {
-    const fileContent = await readFile(join(process.cwd(), relativePath)).toString()
-    return JSON.parse(fileContent)
+  public static readJson(relativePath: string): any {
+    const path = join(process.cwd(), relativePath);
+    const fileContent = readFileSync(path).toString();
+    return JSON.parse(fileContent);
   }
 
-  public static async mkdirIfNotExists(path: string): Promise<void> {
-    if (!fs.existsSync(path)) {
-      await mkdir(path);
+  public static mkdirIfNotExists(path: string): void {
+    if (!existsSync(path)) {
+      mkdirSync(path);
     }
   }
 
-  public static async writeFile(path: string, data: string): Promise<void> {
-    return writeFile(path, data);
+  public static writeFile(path: string, data: string): void {
+    writeFileSync(path, data);
   }
 }

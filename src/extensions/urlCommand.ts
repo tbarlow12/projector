@@ -1,5 +1,5 @@
-import { Command } from "./command"
-import open from "open"
+import { Command } from "./command";
+import open from "open";
 import { Link } from "../models/general/link";
 
 export function urlCommand(link: Link, path?: string): Command {
@@ -8,6 +8,6 @@ export function urlCommand(link: Link, path?: string): Command {
     .name(name)
     .description(description)
     .addAction(async () => {
-      await open(`${url}${path}`);
+      await open(`${url}${path ? path : ""}`);
     });
 }

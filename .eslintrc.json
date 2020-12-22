@@ -5,6 +5,7 @@
   "ignorePatterns": ["**/lib/*"],
   "rules": {
     "eol-last": "error",
+    "semi": [2, "always"],
     "quotes": ["error", "double"],
     "@typescript-eslint/indent": [
       "error",

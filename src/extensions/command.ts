@@ -16,27 +16,8 @@ export class Command extends CommanderCommand {
     this.actions = [];
   }
 
-  public initialize(initializeAction: (args: string[]) => void): Command {
-    initializeAction(this.args);
-    return this;
-  }
-
-  public addLinkCommands(links: Link[]): Command {
-    links.forEach((link: Link) => this.addCommand(urlCommand(link)));
-    return this;
-  }
-
-  public asciiArt(message: string): Command {
-    this.addAction(() => {
-      console.log(chalk.cyanBright(figlet.textSync(message)));
-    });
-    return this;
-  }
-
-  public printHelp(): Command {
-    this.addAction(() => {
-      console.log(this.helpInformation())
-    });
+  public initialize(initializeAction: () => void): Command {
+    initializeAction();
     return this;
   }
 
@@ -49,6 +30,25 @@ export class Command extends CommanderCommand {
         action(options, config);
       });
     });
+    return this;
+  }
+
+  public printHelp(): Command {
+    this.addAction(() => {
+      console.log(this.helpInformation());
+    });
+    return this;
+  }
+
+  public asciiArt(message: string): Command {
+    this.addAction(() => {
+      console.log(chalk.cyanBright(figlet.textSync(message)));
+    });
+    return this;
+  }
+
+  public addLinkCommands(links: Link[]): Command {
+    links.forEach((link: Link) => this.addCommand(urlCommand(link)));
     return this;
   }
 }

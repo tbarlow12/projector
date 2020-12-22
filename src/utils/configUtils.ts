@@ -21,10 +21,10 @@ export class Config {
   }
 
   public static getLink(name: string): Link {
-    const links = this.getValue<Link[]>(ConfigValue.Links)
+    const links = this.getValue<Link[]>(ConfigValue.Links);
     const link = links.find(link => link.name === name);
     if (!link) {
-      throw new Error(`Missing link ${name} in config`)
+      throw new Error(`Missing link ${name} in config`);
     }
     return link;
   }
