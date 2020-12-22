@@ -8,7 +8,7 @@ export abstract class BaseBacklogService implements BacklogService {
   // Static functions
 
   public static createSampleBacklogItems(empty = false): BacklogItem[] {
-    return empty ? emptyBacklogItems : defaultBacklogItems
+    return empty ? emptyBacklogItems : defaultBacklogItems;
   }
 
   // Base functions

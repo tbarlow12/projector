@@ -4,8 +4,8 @@ import { join } from "path";
 export class FileUtils {
   public static readJson(relativePath: string): any {
     const path = join(process.cwd(), relativePath);
-    const fileContent = readFileSync(path).toString()
-    return JSON.parse(fileContent)
+    const fileContent = readFileSync(path).toString();
+    return JSON.parse(fileContent);
   }
 
   public static mkdirIfNotExists(path: string): void {

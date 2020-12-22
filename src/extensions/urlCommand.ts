@@ -1,5 +1,5 @@
-import { Command } from "./command"
-import open from "open"
+import { Command } from "./command";
+import open from "open";
 import { Link } from "../models/general/link";
 
 export function urlCommand(link: Link, path?: string): Command {

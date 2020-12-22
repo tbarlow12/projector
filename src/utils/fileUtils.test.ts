@@ -1,5 +1,5 @@
 import mockFs from "mock-fs";
-import { FileUtils } from "./fileUtils"
+import { FileUtils } from "./fileUtils";
 import fs from "fs";
 
 describe("File Utils", () => {
@@ -8,7 +8,7 @@ describe("File Utils", () => {
       dir1: {
         file1: "content"
       },
-      "file.json": '{"name": "jack"}'
+      "file.json": "{\"name\": \"jack\"}"
     }, { createCwd: true, createTmp: true});
   });
 

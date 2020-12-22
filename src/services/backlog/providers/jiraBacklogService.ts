@@ -15,6 +15,6 @@ export class JiraBacklogService extends BaseBacklogService {
 
   createSprint = async (sprint: Sprint): Promise<Sprint> => {
     console.log(`${this.config.providerName} created sprint ${JSON.stringify(sprint, null, 4)}`);
-    return sprint
+    return sprint;
   }
 }

@@ -5,4 +5,4 @@ export const emptyBacklogItems: BacklogItem[] = [
     name: "",
     type: BacklogItemType.Epic
   }
-]
+];

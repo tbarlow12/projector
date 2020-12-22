@@ -5,4 +5,4 @@ export const playbook = new Command()
   .name("playbook")
   .description("Interacting with the CSE Playbook")
   .addCommand(playbookIssues)
-  .addCommand(playbookTemplate)
+  .addCommand(playbookTemplate);

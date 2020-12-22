@@ -35,7 +35,7 @@ export class Command extends CommanderCommand {
 
   public printHelp(): Command {
     this.addAction(() => {
-      console.log(this.helpInformation())
+      console.log(this.helpInformation());
     });
     return this;
   }

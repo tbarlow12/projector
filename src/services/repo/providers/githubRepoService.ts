@@ -35,7 +35,7 @@ export class GitHubRepoService extends BaseRepoService {
           type: RepoItemType.Directory,
           path,
           children,
-        }
+        };
       } else {
         const { download_url } = data as any;
         return {
@@ -43,7 +43,7 @@ export class GitHubRepoService extends BaseRepoService {
           type: RepoItemType.File,
           path,
           content: includeContent ? (await axios.get(download_url)).data : undefined,
-        }
+        };
       }
     } catch (err) {
       const { status } = err;
@@ -51,7 +51,7 @@ export class GitHubRepoService extends BaseRepoService {
         const message = "API rate limit exceeded. Try setting GITHUB_TOKEN in your local .env file with a token from GitHub";
         throw new Error(message);
       } else {
-        throw new Error(`Ran into problem getting items from GitHub: \n\n${JSON.stringify(err, null, 2)}`)
+        throw new Error(`Ran into problem getting items from GitHub: \n\n${JSON.stringify(err, null, 2)}`);
       }
     }
   }

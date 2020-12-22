@@ -5,4 +5,4 @@ export const playbookIssues = new Command()
   .name("issues")
   .description("CSE Playbook Issues")
   .addCommand(playbookIssueCreate)
-  .addCommand(playbookIssuesOpen)
+  .addCommand(playbookIssuesOpen);

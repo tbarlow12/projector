@@ -1,5 +1,5 @@
 import { ConfigValue } from "../constants";
-import { Config } from "./configUtils"
+import { Config } from "./configUtils";
 
 describe("Config Utils", () => {
   const envVarValue1 = "env var 1";
@@ -27,7 +27,7 @@ describe("Config Utils", () => {
   });
 
   it("gets a default if no configured value", () => {
-    const defaulValue = "default"
-    expect(Config.getValueWithDefault("fake" as ConfigValue, defaulValue)).toEqual(defaulValue)
+    const defaulValue = "default";
+    expect(Config.getValueWithDefault("fake" as ConfigValue, defaulValue)).toEqual(defaulValue);
   });
 });
