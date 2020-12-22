@@ -5,7 +5,10 @@ jest.mock("azure-devops-node-api/WorkItemTrackingApi");
 
 describe("Backlog Service Factory", () => {
   it("registers a provider and instantiates instance", () => {
+    // Act
     BacklogServiceFactory.register(BacklogServiceProvider.AzureDevOps, AzureDevOpsBacklogService);
+    
+    // Assert
     expect(BacklogServiceFactory.get({providerName: BacklogServiceProvider.AzureDevOps, providerOptions: {}}))
       .toBeDefined();
   });

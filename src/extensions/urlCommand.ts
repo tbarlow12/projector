@@ -8,6 +8,6 @@ export function urlCommand(link: Link, path?: string): Command {
     .name(name)
     .description(description)
     .addAction(async () => {
-      await open(`${url}${path}`);
+      await open(`${url}${path ? path : ""}`);
     });
 }

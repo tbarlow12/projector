@@ -15,6 +15,7 @@ class MockBacklogService extends BaseBacklogService {
 
 describe("Base Backlog Service", () => {
   it("calls abstract function to create backlog items and returns result", async () => {
+    // Setup
     const createBacklogItem = jest.fn((item: BacklogItem) => Promise.resolve({
       ...item,
       id: 1
@@ -37,8 +38,10 @@ describe("Base Backlog Service", () => {
       }
     ];
 
+    // Act
     const result = await service.createBacklogItems(backlogItems);
 
+    // Assert
     expect(createBacklogItem).toBeCalledTimes(backlogItems.length);
     expect(result).toEqual(backlogItems.map(item => {
       return {
@@ -49,10 +52,12 @@ describe("Base Backlog Service", () => {
   });
 
   it("returns empty sample backlog items", () => {
+    // Act & Assert
     expect(MockBacklogService.createSampleBacklogItems(true)).toEqual(emptyBacklogItems);
   });
 
   it("returns default sample backlog items", () => {
+    // Act & Assert
     expect(MockBacklogService.createSampleBacklogItems(false)).toEqual(defaultBacklogItems);
   });
 });

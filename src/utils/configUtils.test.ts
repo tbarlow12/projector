@@ -11,23 +11,30 @@ describe("Config Utils", () => {
   });
 
   it("gets a value from the test configuration json file", () => {
+    // Act & Assert
     expect(Config.getValue("test.variable" as ConfigValue)).toEqual("json");
   });
 
   it("gets a value from the default configuration json file", () => {
+    // Act & Assert
     expect(Config.getValue(ConfigValue.PlaybookRepoName)).toEqual("code-with-engineering-playbook");
   });
 
   it("gets a value from environment variables", () => {
+    // Act & Assert
     expect(Config.getValue("test.variable2" as ConfigValue)).toEqual(envVarValue2);
   });
 
   it("uses environment variable over json file if configured", () => {
+    // Act & Assert
     expect(Config.getValue("test.variable1" as ConfigValue)).toEqual(envVarValue1);
   });
 
   it("gets a default if no configured value", () => {
+    // Setup
     const defaulValue = "default";
+    
+    // Act & Assert
     expect(Config.getValueWithDefault("fake" as ConfigValue, defaulValue)).toEqual(defaulValue);
   });
 });
