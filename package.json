@@ -12,11 +12,12 @@
     "lib/"
   ],
   "scripts": {
-    "lint": "eslint src/**/*.ts",
+    "lint": "eslint src/**/*.ts --max-warnings=0",
     "lint:fix": "eslint src/**/*.ts --fix",
     "build": "tsc",
     "test": "jest",
-    "test:coverage": "npm run test -- --coverage"
+    "test:coverage": "npm run test -- --coverage",
+    "check": "npm run lint && npm run build && npm run test"
   },
   "keywords": [
     "cli",

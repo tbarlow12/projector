@@ -6,7 +6,7 @@ import { Link } from "../models/general/link";
 import { ConfigService } from "../services";
 import { urlCommand } from "./urlCommand";
 
-export type ActionHandler = (options: { [key: string]: any}) => void|Promise<void>;
+export type ActionHandler = (options: any, config: CseCliConfig) => void|Promise<void>;
 
 export class Command extends CommanderCommand {
   private actions: ActionHandler[];
@@ -18,15 +18,6 @@ export class Command extends CommanderCommand {
 
   public initialize(initializeAction: (args: string[]) => void): Command {
     initializeAction(this.args);
-    return this;
-  }
-
-  public execute(action: (config: CseCliConfig, options: any) => Promise<void>|void): Command {
-    this.addAction(async () => {
-      const options = this.opts();
-      const config = ConfigService.createFromArgs(options);
-      await action(config, options);
-    });
     return this;
   }
 
@@ -53,8 +44,9 @@ export class Command extends CommanderCommand {
     this.actions.push(action);
     this.action(() => {
       const options = this.opts();
+      const config = ConfigService.createFromArgs(options);
       this.actions.forEach((action) => {
-        action(options);
+        action(options, config);
       });
     });
     return this;
