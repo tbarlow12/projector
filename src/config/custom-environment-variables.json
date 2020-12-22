@@ -1,5 +1,9 @@
 {
   "github": {
     "accessToken": "GITHUB_TOKEN"
+  },
+  "test": {
+    "variable1": "TEST_CONFIG_ENV_VAR_1",
+    "variable2": "TEST_CONFIG_ENV_VAR_2"
   }
 }

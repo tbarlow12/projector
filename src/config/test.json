@@ -1,1 +1,6 @@
-{}
+{
+  "test": {
+    "variable": "json",
+    "variable1": "json"
+  }
+}
