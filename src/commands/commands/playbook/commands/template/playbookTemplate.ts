@@ -1,4 +1,4 @@
-import { Command } from "../../../../extensions";
+import { Command } from "../../../../../extensions";
 import { playbookTemplateCopy } from "./commands";
 
 export const playbookTemplate = new Command()

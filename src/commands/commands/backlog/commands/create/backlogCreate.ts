@@ -1,9 +1,9 @@
 import { writeFileSync } from "fs";
-import { Command } from "../../../../extensions";
-import { BacklogServiceFactory } from "../../../../factories/backlogServiceFactory";
-import { BacklogItem, CseCliConfig } from "../../../../models";
-import { BaseBacklogService } from "../../../../services";
-import { FileUtils } from "../../../../utils";
+import { Command } from "../../../../../extensions";
+import { BacklogServiceFactory } from "../../../../../factories/backlogServiceFactory";
+import { BacklogItem, CseCliConfig } from "../../../../../models";
+import { BaseBacklogService } from "../../../../../services";
+import { FileUtils } from "../../../../../utils";
 
 export interface BacklogInitializationOptions {
   file: string;

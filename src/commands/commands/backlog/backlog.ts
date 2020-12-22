@@ -1,4 +1,4 @@
-import { Command } from "../../extensions";
+import { Command } from "../../../extensions";
 import {
   backlogCreate,
   backlogInit,

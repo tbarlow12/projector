@@ -1,5 +1,5 @@
-import { urlCommand } from "../../../../../../extensions";
-import { Config } from "../../../../../../utils";
+import { urlCommand } from "../../../../../../../extensions";
+import { Config } from "../../../../../../../utils";
 
 export const playbookIssuesOpen = urlCommand(Config.getLink("playbook"), "/issues")
   .name("open")

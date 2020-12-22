@@ -1,6 +1,6 @@
 import { writeFileSync } from "fs";
-import { Command } from "../../../../extensions";
-import { BaseBacklogService } from "../../../../services";
+import { Command } from "../../../../../extensions";
+import { BaseBacklogService } from "../../../../../services";
 
 export const backlogInit = new Command()
   .name("hi")

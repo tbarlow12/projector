@@ -1,4 +1,4 @@
-import { Command } from "../../extensions";
+import { Command } from "../../../extensions";
 import { playbookIssues, playbookTemplate } from "./commands";
 
 export const playbook = new Command()

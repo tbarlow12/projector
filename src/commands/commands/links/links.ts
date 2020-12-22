@@ -1,5 +1,5 @@
 import config from "config";
-import { Command } from "../../extensions";
+import { Command } from "../../../extensions";
 
 export const links = new Command()
   .name("links")

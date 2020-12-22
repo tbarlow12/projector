@@ -1,5 +1,5 @@
-import { urlCommand } from "../../../../../../extensions";
-import { Config } from "../../../../../../utils";
+import { urlCommand } from "../../../../../../../extensions";
+import { Config } from "../../../../../../../utils";
 
 const playbookLink = Config.getLink("playbook");
 
