@@ -1,6 +1,6 @@
 import { writeFileSync } from "fs";
 import { Command } from "../../extensions";
-import { ConfigService } from "../../services/config/configServices";
+import { ConfigService } from "../../services/config/configService";
 
 export const init = new Command()
   .name("init")
