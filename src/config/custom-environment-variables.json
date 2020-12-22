@@ -1,9 +1,14 @@
 {
-  "github": {
-    "accessToken": "GITHUB_TOKEN"
-  },
   "test": {
     "variable1": "TEST_CONFIG_ENV_VAR_1",
-    "variable2": "TEST_CONFIG_ENV_VAR_2"
+    "variable2": "TEST_CONFIG_ENV_VAR_2",
+    "azdo": {
+      "accessToken": "AZURE_DEVOPS_ACCESS_TOKEN",
+      "baseUrl": "AZURE_DEVOPS_BASE_URL",
+      "projectName": "AZURE_DEVOPS_PROJECT_NAME"
+    },
+    "github": {
+      "accessToken": "GITHUB_TOKEN"
+    }
   }
 }

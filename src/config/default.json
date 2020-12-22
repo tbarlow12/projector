@@ -19,5 +19,11 @@
   "playbook": {
     "owner": "microsoft",
     "repo": "code-with-engineering-playbook"
+  },
+  "backlog": {
+    "sprints": {
+      "defaultSprintLength": 0,
+      "defaultNumberOfSprints": 0
+    }
   }
 }

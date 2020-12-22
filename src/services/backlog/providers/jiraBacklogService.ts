@@ -8,13 +8,13 @@ export interface JiraBacklogConfig extends ProviderConfig {
 } 
 
 export class JiraBacklogService extends BaseBacklogService {
-  createBacklogItem = async (item: BacklogItem): Promise<BacklogItem> => {
-    console.log(`${this.config.providerName} created backlog item ${JSON.stringify(item, null, 4)}`);
-    return item;
+  createProviderBacklogItems = async (items: BacklogItem[]): Promise<BacklogItem[]> => {
+    console.log(`${this.config.providerName} created backlog item ${JSON.stringify(items, null, 4)}`);
+    return items;
   }
 
-  createSprint = async (sprint: Sprint): Promise<Sprint> => {
-    console.log(`${this.config.providerName} created sprint ${JSON.stringify(sprint, null, 4)}`);
-    return sprint;
+  createProviderSprints = async (sprints: Sprint[]): Promise<Sprint[]> => {
+    console.log(`${this.config.providerName} created sprint ${JSON.stringify(sprints, null, 4)}`);
+    return sprints;
   }
 }

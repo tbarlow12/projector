@@ -1,4 +1,5 @@
 export interface ProviderConfig {
   providerName: string;
-  providerOptions?: { [id: string]: string }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  providerOptions?: any;
 }

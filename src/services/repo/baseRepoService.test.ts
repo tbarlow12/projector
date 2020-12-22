@@ -7,6 +7,7 @@ class MockRepoService extends BaseRepoService {
   getRepoItem: (owner: string, repo: string, path?: string, includeContent?: boolean, branch?: string) => Promise<RepoItem>;
   latestCommit: (owner: string, repo: string, branch: string) => Promise<string>;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(getRepoItemJestFn: any, latestCommitJestFn: any) {
     super();
     this.getRepoItem = getRepoItemJestFn;
@@ -91,6 +92,7 @@ describe("Base Repo Service", () => {
     // For TypeScript's benefit
     if (children) {
       expect(children.length).toBeTruthy();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect((FileUtils.mkdirIfNotExists as any).mock.calls).toEqual([
         // Called to ensure output path exists
         [outputPath],
@@ -99,6 +101,7 @@ describe("Base Repo Service", () => {
         // Because it is a recursive call, will call to ensure repo directory exists each time
         ...children.map(() => [join(outputPath, name)]),
       ]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect((FileUtils.writeFile as any).mock.calls).toEqual([
         ...children.map((child: RepoItem) => [join(outputPath, name, child.name), child.content]),
       ]);

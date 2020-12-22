@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
 export class FileUtils {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static readJson(relativePath: string): any {
     const path = join(process.cwd(), relativePath);
     const fileContent = readFileSync(path).toString();
