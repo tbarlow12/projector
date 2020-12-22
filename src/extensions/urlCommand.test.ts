@@ -13,7 +13,9 @@ describe("URL Command", () => {
     };
 
     // Act
-    urlCommand(link).parse();
+    urlCommand(link)
+      .parse(["node.exe", "index.js", "commandName"]);
+
     
     // Assert
     expect(open).toBeCalledWith(link.url);
@@ -29,7 +31,9 @@ describe("URL Command", () => {
     const urlPath = "/tbarlow12";
 
     // Act
-    urlCommand(link, urlPath).parse();
+    urlCommand(link, urlPath)
+      .parse(["node.exe", "index.js", "commandName"]);
+
 
     // Assert
     expect(open).toBeCalledWith(`${link.url}${urlPath}`);

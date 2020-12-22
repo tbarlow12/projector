@@ -24,7 +24,7 @@ describe("Command", () => {
     // Act
     new Command()
       .initialize(initializeAction)
-      .parse();
+      .parse(["node.exe", "index.js", "commandName"]);
 
     // Assert
     expect(initializeAction).toBeCalled();
@@ -40,7 +40,7 @@ describe("Command", () => {
       .addAction(action1)
       .addAction(action2)
       .addAction(action3)
-      .parse();
+      .parse(["node.exe", "index.js", "commandName"]);
     
     expect(action1).toBeCalled();
     expect(action2).toBeCalled();
@@ -76,7 +76,7 @@ describe("Command", () => {
     // Act
     new Command()
       .printHelp()
-      .parse();
+      .parse(["node.exe", "index.js", "commandName"]);
 
     // Assert
     const { calls } = (console.log as any).mock;
@@ -95,7 +95,7 @@ describe("Command", () => {
     // Act
     new Command()
       .asciiArt(originalText)
-      .parse();
+      .parse(["node.exe", "index.js", "commandName"]);
 
     // Assert
     expect(figlet.textSync).toBeCalledWith(originalText);
