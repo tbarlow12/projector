@@ -1,4 +1,4 @@
 export { backlog } from "./backlog";
-export { init } from "./init";
+export { project } from "./project";
 export { links } from "./links";
 export { playbook } from "./playbook";

@@ -5,5 +5,5 @@ config();
 import { join } from "path";
 process.env.NODE_CONFIG_DIR = join(__dirname, "config");
 
-import { root } from "./commands"
-root.parse(process.argv);
+import { cse } from "./commands";
+cse.parse(process.argv);

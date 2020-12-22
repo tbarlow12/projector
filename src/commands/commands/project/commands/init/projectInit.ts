@@ -1,8 +1,8 @@
 import { writeFileSync } from "fs";
-import { Command } from "../../../extensions";
-import { ConfigService } from "../../../services/config/configService";
+import { Command } from "../../../../../extensions";
+import { ConfigService } from "../../../../../services";
 
-export const init = new Command()
+export const projectInit = new Command()
   .name("init")
   .description("Local Configuration Initialization")
   .action((args: any[]) => {
