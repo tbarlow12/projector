@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import { config } from "dotenv";
 config();
-process.env.NODE_CONFIG_DIR = join(__dirname, "config");
 
 import { join } from "path";
+process.env.NODE_CONFIG_DIR = join(__dirname, "config");
+
 import { backlog, init, links, playbook } from "./commands";
 import { Command } from "./extensions";
 import { registerProviders } from "./initialization/registerProviders";
