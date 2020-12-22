@@ -12,7 +12,7 @@ export interface BacklogInitializationOptions {
 export const backlogCreate = new Command()
   .name("create")
   .description("Backlog Creation")
-  .execute(async (config: CseCliConfig, options: BacklogInitializationOptions) => {
+  .addAction(async (options: BacklogInitializationOptions, config: CseCliConfig) => {
     const { backlog } = config;
     const backlogService = BacklogServiceFactory.get(backlog);
     const { file } = options;

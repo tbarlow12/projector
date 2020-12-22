@@ -7,7 +7,7 @@ export function urlCommand(link: Link, path?: string): Command {
   return new Command()
     .name(name)
     .description(description)
-    .execute(async () => {
+    .addAction(async () => {
       await open(`${url}${path}`);
     });
 }
