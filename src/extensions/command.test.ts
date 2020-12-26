@@ -1,5 +1,6 @@
 import { Link } from "../models";
 import { Command } from "./command";
+import mockFs from "mock-fs";
 jest.mock("chalk");
 import chalk from "chalk";
 
@@ -8,6 +9,16 @@ import figlet from "figlet";
 
 describe("Command", () => {
   const originalLogFunction = console.log;
+
+  beforeAll(() => {
+    mockFs({
+      "cse.json": "{}"
+    }, { createCwd: true, createTmp: true });
+  });
+
+  afterAll(() => {
+    mockFs.restore();
+  });
   
   beforeEach(() => {
     console.log = jest.fn();
@@ -79,6 +90,7 @@ describe("Command", () => {
       .parse(["node.exe", "index.js", "commandName"]);
 
     // Assert
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { calls } = (console.log as any).mock;
     expect(calls).toHaveLength(1);
     expect(calls[0][0]).toContain("Options:\n  -h, --help  display help for command");
@@ -90,6 +102,7 @@ describe("Command", () => {
     const figletText = "figlet text";
     figlet.textSync = jest.fn(() => figletText);
     const chalkText = "chalk text";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (chalk as any).cyanBright = jest.fn(() => chalkText);
     
     // Act
@@ -99,6 +112,7 @@ describe("Command", () => {
 
     // Assert
     expect(figlet.textSync).toBeCalledWith(originalText);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((chalk as any).cyanBright).toBeCalledWith(figletText);
     expect(console.log).toBeCalledWith(chalkText);
   });

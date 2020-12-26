@@ -6,6 +6,7 @@ import { Link } from "../models/general/link";
 import { ConfigService } from "../services";
 import { urlCommand } from "./urlCommand";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ActionHandler = (options: any, config: CseCliConfig) => void|Promise<void>;
 
 export class Command extends CommanderCommand {
@@ -25,7 +26,7 @@ export class Command extends CommanderCommand {
     this.actions.push(action);
     this.action(() => {
       const options = this.opts();
-      const config = ConfigService.createFromArgs(options);
+      const config = ConfigService.createConfig(options);
       this.actions.forEach((action) => {
         action(options, config);
       });

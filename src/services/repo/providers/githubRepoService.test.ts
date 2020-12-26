@@ -1,8 +1,12 @@
+import { ConfigValue } from "../../../constants";
+import { Config } from "../../../utils";
 import { GitHubRepoService } from "./githubRepoService";
 
 describe("GitHub Repo Service", () => {
   // Setup
-  const service = new GitHubRepoService();
+  const service = new GitHubRepoService({
+    personalAccessToken: Config.getValue(ConfigValue.TestGithubAccessToken)
+  });
 
   it("gets the latest commit hash", async () => {
     // Act

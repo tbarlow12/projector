@@ -1,9 +1,20 @@
 import { Link } from "../models";
 import { urlCommand } from "./urlCommand";
+import mockFs from "mock-fs";
 jest.mock("open");
 import open from "open";
 
 describe("URL Command", () => {
+  beforeAll(() => {
+    mockFs({
+      "cse.json": "{}"
+    }, { createCwd: true, createTmp: true });
+  });
+
+  afterAll(() => {
+    mockFs.restore();
+  });
+  
   it("creates a URL command with base path", () => {
     // Setup
     const link: Link = {
@@ -33,7 +44,6 @@ describe("URL Command", () => {
     // Act
     urlCommand(link, urlPath)
       .parse(["node.exe", "index.js", "commandName"]);
-
 
     // Assert
     expect(open).toBeCalledWith(`${link.url}${urlPath}`);

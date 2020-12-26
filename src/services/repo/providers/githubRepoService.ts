@@ -1,17 +1,19 @@
 import { Octokit } from "@octokit/rest";
 import axios from "axios";
 import { basename } from "path";
-import { ConfigValue } from "../../../constants";
-import { RepoItem, RepoItemType } from "../../../models";
-import { Config } from "../../../utils";
+import { GitHubConfig, RepoItem, RepoItemType } from "../../../models";
 import { BaseRepoService } from "../baseRepoService";
+
+export interface GitHubRepoServiceProviderOptions {
+  personalAccessToken: string;
+}
 
 export class GitHubRepoService extends BaseRepoService {
   private github: Octokit;
 
-  constructor() {
+  constructor(config?: GitHubConfig) {
     super();
-    const accessToken = Config.getValueWithDefault(ConfigValue.GithubAccessToken);
+    const accessToken = config?.personalAccessToken;
     this.github = new Octokit({
       userAgent: "cse-cli",
       auth: accessToken,
@@ -27,6 +29,7 @@ export class GitHubRepoService extends BaseRepoService {
         ref: branch,
       });
       if (data instanceof Array) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const children: RepoItem[] = await Promise.all((data as any[]).map(async (item) => {
           return await this.getRepoItem(owner, repo, item.path, includeContent);
         }));
@@ -37,6 +40,7 @@ export class GitHubRepoService extends BaseRepoService {
           children,
         };
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { download_url } = data as any;
         return {
           name: basename(path),
@@ -55,8 +59,6 @@ export class GitHubRepoService extends BaseRepoService {
       }
     }
   }
-
-
 
   latestCommit = async (owner: string, repo: string, branch: string): Promise<string> => {
     const { data } = await this.github.repos.getCommit({

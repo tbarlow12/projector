@@ -1,8 +1,6 @@
-import { writeFileSync } from "fs";
 import { Command } from "../../../../../extensions";
 import { BacklogServiceFactory } from "../../../../../factories/backlogServiceFactory";
 import { BacklogItem, CseCliConfig } from "../../../../../models";
-import { BaseBacklogService } from "../../../../../services";
 import { FileUtils } from "../../../../../utils";
 
 export interface BacklogInitializationOptions {
@@ -13,11 +11,17 @@ export const backlogCreate = new Command()
   .name("create")
   .description("Backlog Creation")
   .addAction(async (options: BacklogInitializationOptions, config: CseCliConfig) => {
-    const { backlog } = config;
-    const backlogService = BacklogServiceFactory.get(backlog);
+    const { backlog: backlogConfig } = config;
+    if (!backlogConfig) {
+      throw new Error("Section backlog is required for this operation");
+    }
+    // Instantiate backlog service from factory
+    const backlogService = BacklogServiceFactory.get(backlogConfig);
+
+    // Read backlog items from provided file
     const { file } = options;
     const backlogItems: BacklogItem[] = await FileUtils.readJson(file);
+    
+    // Create Backlog Items
     await backlogService.createBacklogItems(backlogItems);
-    const sampleBacklogItems = BaseBacklogService.createSampleBacklogItems();
-    writeFileSync("backlogItems.json", JSON.stringify(sampleBacklogItems, null, 4));
   });

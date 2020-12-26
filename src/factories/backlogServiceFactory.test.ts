@@ -1,5 +1,5 @@
 import { BacklogServiceProvider } from "../services";
-import { AzureDevOpsBacklogService } from "../services/backlog/providers";
+import { AzureDevOpsBacklogService, AzureDevOpsProviderOptions } from "../services/backlog/providers";
 import { BacklogServiceFactory } from "./backlogServiceFactory";
 jest.mock("azure-devops-node-api/WorkItemTrackingApi");
 
@@ -9,7 +9,12 @@ describe("Backlog Service Factory", () => {
     BacklogServiceFactory.register(BacklogServiceProvider.AzureDevOps, AzureDevOpsBacklogService);
     
     // Assert
-    expect(BacklogServiceFactory.get({providerName: BacklogServiceProvider.AzureDevOps, providerOptions: {}}))
+    const providerOptions: AzureDevOpsProviderOptions = {
+      baseUrl: "https://url.com",
+      personalAccessToken: "token",
+      projectName: "myproject"
+    };
+    expect(BacklogServiceFactory.get({providerName: BacklogServiceProvider.AzureDevOps, providerOptions}))
       .toBeDefined();
   });
 });
