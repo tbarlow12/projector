@@ -20,5 +20,5 @@ export async function retryAsync<T=any>(action: () => Promise<T>, retriesAllowed
       await sleep(sleepBetweenRetries);
     }
   }
-  throw new Error();
+  throw new Error(`Reached max number of retries: ${retriesAllowed}`);
 }

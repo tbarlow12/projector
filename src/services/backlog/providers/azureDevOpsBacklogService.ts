@@ -6,7 +6,7 @@ import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
 import { BacklogItem, Sprint } from "../../../models";
 import { BacklogConfig } from "../../../models/config/backlog/backlogConfig";
-import { retryAsync } from "../../../utils/retry";
+import { retryAsync } from "../../../utils";
 import { BaseBacklogService } from "../baseBacklogService";
 
 export interface AzureDevOpsProviderOptions {
