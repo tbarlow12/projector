@@ -1,7 +1,7 @@
-import { backlog } from "./backlog";
+import { agile } from "./agile";
 
 describe("Backlog Command", () => {
   it("contains correct number of sub-commands", () => {
-    expect(backlog.commands).toHaveLength(2);
+    expect(agile.commands).toHaveLength(2);
   });
 });

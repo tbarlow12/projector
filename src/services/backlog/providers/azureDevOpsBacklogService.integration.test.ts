@@ -1,12 +1,11 @@
+import { random } from "@supercharge/strings";
 import { ConfigValue, NumberConstants } from "../../../constants";
 import { BacklogServiceFactory } from "../../../factories";
 import { registerProviders } from "../../../initialization/registerProviders";
 import { BacklogItemType, Sprint } from "../../../models";
-import { Config } from "../../../utils";
+import { Config, retryAsync } from "../../../utils";
 import { BacklogServiceProvider } from "../backlogServiceProvider";
 import { AzureDevOpsProviderOptions } from "./azureDevOpsBacklogService";
-import { random } from "@supercharge/strings";
-import { sleep } from "../../../utils/sleep";
 
 describe("Azure DevOps Backlog Service", () => {
   registerProviders();
@@ -51,10 +50,8 @@ describe("Azure DevOps Backlog Service", () => {
         throw new Error("ID should be defined");
       }
 
-      await sleep(5);
-
       // Get created sprint
-      const fetchedSprint = await service.getSprint(id);
+      const fetchedSprint = await retryAsync(() => service.getSprint(id), 10, 2);
       expect(fetchedSprint.name).toEqual(name);
       expect(fetchedSprint.id).toEqual(id);
       expect(fetchedSprint.startDate).toEqual(startDate);

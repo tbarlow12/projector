@@ -7,7 +7,7 @@ export interface BacklogInitializationOptions {
   file: string;
 }
 
-export const backlogCreate = new Command()
+export const agileCreate = new Command()
   .name("create")
   .description("Backlog Creation")
   .addAction(async (options: BacklogInitializationOptions, config: CseCliConfig) => {
