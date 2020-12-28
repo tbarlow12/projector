@@ -40,6 +40,7 @@
     "open": "7.3.0"
   },
   "devDependencies": {
+    "@supercharge/strings": "^1.17.1",
     "@types/config": "0.0.37",
     "@types/figlet": "1.2.1",
     "@types/jest": "26.0.19",
