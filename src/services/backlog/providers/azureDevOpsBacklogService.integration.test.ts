@@ -1,16 +1,18 @@
-import { NumberConstants } from "../../../constants";
+import { ConfigValue, NumberConstants } from "../../../constants";
 import { BacklogServiceFactory } from "../../../factories";
 import { registerProviders } from "../../../initialization/registerProviders";
 import { BacklogItemType } from "../../../models";
+import { Config } from "../../../utils";
 import { BacklogServiceProvider } from "../backlogServiceProvider";
 import { AzureDevOpsProviderOptions } from "./azureDevOpsBacklogService";
 
-xdescribe("Azure DevOps Backlog Service", () => {
+describe("Azure DevOps Backlog Service", () => {
   registerProviders();
+
   const providerOptions: AzureDevOpsProviderOptions = {
-    baseUrl: "https://dev.azure.com/fireflies-crew",
-    personalAccessToken: "",
-    projectName: "team1",
+    baseUrl: Config.getValue(ConfigValue.TestAzDOBaseUrl),
+    personalAccessToken: Config.getValue(ConfigValue.TestAzDOAccessToken),
+    projectName: Config.getValue(ConfigValue.TestAzDOProjectName),
   };
 
   const service = BacklogServiceFactory.get({
