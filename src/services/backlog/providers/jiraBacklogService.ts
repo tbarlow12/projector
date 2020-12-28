@@ -17,4 +17,12 @@ export class JiraBacklogService extends BaseBacklogService {
     console.log(`${this.config.providerName} created sprint ${JSON.stringify(sprints, null, 4)}`);
     return sprints;
   }
+
+  getSprint = async (): Promise<Sprint> => {
+    throw new Error("Not implemented");
+  }
+
+  deleteSprint = async (): Promise<void> => {
+    throw new Error("Not implemented");
+  }
 }
