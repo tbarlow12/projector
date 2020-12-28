@@ -60,7 +60,6 @@ export abstract class BaseAgileService implements AgileService {
     if (await UserUtils.confirmAction()) {
       console.log("Creating sprints...");
       const createdSprints = await this.createProviderSprints(sprints);
-      console.log(JSON.stringify(createdSprints, null, 2));
       return createdSprints;
     } else {
       console.log("Operation cancelled");

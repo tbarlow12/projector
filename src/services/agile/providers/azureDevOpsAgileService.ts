@@ -6,7 +6,7 @@ import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
 import { BacklogItem, Project, Sprint } from "../../../models";
 import { AgileConfig } from "../../../models/config/agile/agileConfig";
-import { retryAsync } from "../../../utils";
+import { Guard, retryAsync } from "../../../utils";
 import { BaseAgileService } from "../baseAgileService";
 
 export interface AzureDevOpsProviderOptions {
@@ -64,18 +64,18 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
     return {
       id,
-      name,
+      name: name || "",
       startDate: attributes?.startDate, 
       finishDate: attributes?.finishDate,
     };
   }
 
   createProviderSprints = async (sprints: Sprint[]): Promise<Sprint[]> => {
-    const createdSprints: Sprint[] = [];
-    for (const s of sprints) {
-      createdSprints.push(await this.createProviderSprint(s));
-    }
-    return createdSprints
+    const teamContext = await this.getTeamContext();
+
+    return await Promise.all(sprints.map((sprint: Sprint) => {
+      return this.createProviderSprint(sprint, teamContext);
+    }));
   }
 
   deleteSprint = async (id: string): Promise<void> => {
@@ -85,20 +85,12 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
   // Private functions
 
-  private async createProviderSprint(sprint: Sprint): Promise<Sprint> {
-    const teamContext = await this.getTeamContext();
+  private async createProviderSprint(sprint: Sprint, teamContext: TeamContext): Promise<Sprint> {
+    const { name, startDate, finishDate } = sprint;
+    console.log(`Creating sprint '${name}'`);
 
     // Creates classification node and returns identifier required for sprint ID
-    const identifier = await this.createClassificationNode(sprint);
-
-    // Check to see if iteration exists - delete if so
-    const iteration = await this.workApi.getTeamIteration(teamContext, identifier);
-    if (iteration && iteration.id) {
-      console.warn(JSON.stringify(iteration, null, 4));
-      await this.workApi.deleteTeamIteration(teamContext, iteration.id)
-    }
-
-    const { name, startDate, finishDate } = sprint;
+    const identifier = await this.createOrUpdateClassificationNode(sprint, teamContext);
 
     // Create new iteration
     const result = await this.workApi.postTeamIteration({
@@ -115,18 +107,12 @@ export class AzureDevOpsAgileService extends BaseAgileService {
     return sprint;
   }
 
-  private async createClassificationNode(sprint: Sprint): Promise<string> {
-    const teamContext = await this.getTeamContext();
+  private async createOrUpdateClassificationNode(sprint: Sprint, teamContext: TeamContext): Promise<string> {
     const { name, startDate, finishDate } = sprint;
-    const node = await this.workItemTracking.getClassificationNode(this.projectName, TreeStructureGroup.Iterations, name);
-    if (node && node.identifier) {
-      console.warn(`Deleting identifier: ${node.identifier} ${name}`);
-      await this.workApi.deleteTeamIteration(teamContext, node.identifier);
-      console.warn(`Deleted identifier ${node.identifier}`);
-      await this.workItemTracking.deleteClassificationNode(this.projectName, TreeStructureGroup.Iterations, name);
-      console.warn(`Deleted classification node ${node.identifier}`);
-    }
-    console.warn("Creating classificaiton node");
+    Guard.empty(name);
+
+    await this.deleteNodeAndIterationIfExists(name, teamContext);
+    
     const { identifier } = await this.workItemTracking.createOrUpdateClassificationNode({
       name,
       attributes: {
@@ -134,12 +120,19 @@ export class AzureDevOpsAgileService extends BaseAgileService {
         finishDate: finishDate?.toISOString(),
       }
     }, this.projectName, TreeStructureGroup.Iterations);
-    console.warn("Created classification node")
+
     if (!identifier) {
       throw new Error(`Was not able to retrieve identifier for ${this.projectName}`);
     }
-    console.log(identifier);
     return identifier;
+  }
+
+  private async deleteNodeAndIterationIfExists(name: string, teamContext: TeamContext) {
+    const node = await this.workItemTracking.getClassificationNode(this.projectName, TreeStructureGroup.Iterations, name);
+    if (node && node.identifier) {
+      await this.workApi.deleteTeamIteration(teamContext, node.identifier);
+      await this.workItemTracking.deleteClassificationNode(this.projectName, TreeStructureGroup.Iterations, name);
+    }
   }
 
   private async getTeamContext(): Promise<TeamContext> {
