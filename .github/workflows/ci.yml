@@ -33,6 +33,10 @@ jobs:
       if: steps.cache-modules.outputs.cache-hit != 'true'
       run: npm install
 
+    # Run linting
+    - name: lint
+      run: npm run lint
+
     # Build package
     - name: build
       run: npm run build
