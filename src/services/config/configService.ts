@@ -1,3 +1,4 @@
+import { ProjectCreationOptions } from "../../commands/commands/project/commands/init/projectInit";
 import { ConfigValue, FileConstants } from "../../constants";
 import { AgileConfig, CseCliConfig, GitHubConfig } from "../../models";
 import { Config, FileUtils } from "../../utils";
@@ -8,17 +9,13 @@ export interface ConfigOptions {
   configFilePath?: string;
 }
 
-export interface ConfigInitializationOptions {
-  agileProvider?: AgileServiceProvider;
-}
-
 /**
  * Class dealing with the CSE configuration.
  * TODO - implement more than just stubs
  */
 export class ConfigService {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-module-boundary-types 
-  public static createInitialConfig(options: ConfigInitializationOptions): CseCliConfig {
+  public static createInitialConfig(options: ProjectCreationOptions): CseCliConfig {
     const { agileProvider } = options;
     return {
       agile: agileProvider ? this.createAgileConfig(agileProvider) : undefined,
@@ -40,7 +37,10 @@ export class ConfigService {
       sprints: {
         startDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`,
         lengthOfSprintInDays: Config.getValue(ConfigValue.DefaultSprintLength),
+        daysBetweenSprints: Config.getValue(ConfigValue.DefaultDaysBetweenSprints),
         numberOfSprints: Config.getValue(ConfigValue.DefaultNumberOfSprints),
+        sprintIndexStart: Config.getValue(ConfigValue.DefaultSprintStartIndex),
+        sprintNamePattern: Config.getValue(ConfigValue.DefaultSprintNamePattern),
       }
     };
   }

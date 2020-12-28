@@ -4,7 +4,7 @@ import { TeamContext } from "azure-devops-node-api/interfaces/CoreInterfaces";
 import { TreeStructureGroup } from "azure-devops-node-api/interfaces/WorkItemTrackingInterfaces";
 import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
-import { BacklogItem, Sprint } from "../../../models";
+import { BacklogItem, Project, Sprint } from "../../../models";
 import { AgileConfig } from "../../../models/config/agile/agileConfig";
 import { retryAsync } from "../../../utils";
 import { BaseAgileService } from "../baseAgileService";
@@ -37,6 +37,21 @@ export class AzureDevOpsAgileService extends BaseAgileService {
     this.workApi = new WorkApi(baseUrl, [authHandler]);
   }
 
+  // Projects
+
+  createProject = async (project: Project): Promise<Project> => {
+    throw new Error("Not implemented");
+  }
+
+  // Backlog Items
+
+  createProviderBacklogItems = async (items: BacklogItem[]): Promise<BacklogItem[]> => {
+    // await this.workItemTracking.createWorkItem()
+    return items;
+  }
+
+  // Sprints
+
   getSprint = async (id: string): Promise<Sprint> => {
     const teamContext = await this.getTeamContext();
     const teamIteration = await retryAsync(() => this.workApi.getTeamIteration(teamContext, id));
@@ -55,34 +70,12 @@ export class AzureDevOpsAgileService extends BaseAgileService {
     };
   }
 
-  createProviderBacklogItems = async (items: BacklogItem[]): Promise<BacklogItem[]> => {
-    // await this.workItemTracking.createWorkItem()
-    return items;
-  }
-
   createProviderSprints = async (sprints: Sprint[]): Promise<Sprint[]> => {
-    const teamContext = await this.getTeamContext();
-
-    return Promise.all(sprints.map(async (sprint: Sprint) => {
-      // Creates classification node and returns identifier required for sprint ID
-      const identifier = await this.createClassificationNode(sprint);
-
-      const { name, startDate, finishDate } = sprint;
-
-      // Create new iteration
-      const result = await this.workApi.postTeamIteration({
-        id: identifier,
-        name,
-        attributes: {
-          startDate,
-          finishDate,
-        },
-      }, teamContext);
-
-      // Assign generated ID from Azure DevOps to sprint
-      sprint.id = result.id;
-      return sprint;
-    }));
+    const createdSprints: Sprint[] = [];
+    for (const s of sprints) {
+      createdSprints.push(await this.createProviderSprint(s));
+    }
+    return createdSprints
   }
 
   deleteSprint = async (id: string): Promise<void> => {
@@ -90,8 +83,50 @@ export class AzureDevOpsAgileService extends BaseAgileService {
     await this.workApi.deleteTeamIteration(teamContext, id);
   }
 
-  private async createClassificationNode(sprint: Sprint): Promise<string> {
+  // Private functions
+
+  private async createProviderSprint(sprint: Sprint): Promise<Sprint> {
+    const teamContext = await this.getTeamContext();
+
+    // Creates classification node and returns identifier required for sprint ID
+    const identifier = await this.createClassificationNode(sprint);
+
+    // Check to see if iteration exists - delete if so
+    const iteration = await this.workApi.getTeamIteration(teamContext, identifier);
+    if (iteration && iteration.id) {
+      console.warn(JSON.stringify(iteration, null, 4));
+      await this.workApi.deleteTeamIteration(teamContext, iteration.id)
+    }
+
     const { name, startDate, finishDate } = sprint;
+
+    // Create new iteration
+    const result = await this.workApi.postTeamIteration({
+      id: identifier,
+      name,
+      attributes: {
+        startDate,
+        finishDate,
+      },
+    }, teamContext);
+
+    // Assign generated ID from Azure DevOps to sprint
+    sprint.id = result.id;
+    return sprint;
+  }
+
+  private async createClassificationNode(sprint: Sprint): Promise<string> {
+    const teamContext = await this.getTeamContext();
+    const { name, startDate, finishDate } = sprint;
+    const node = await this.workItemTracking.getClassificationNode(this.projectName, TreeStructureGroup.Iterations, name);
+    if (node && node.identifier) {
+      console.warn(`Deleting identifier: ${node.identifier} ${name}`);
+      await this.workApi.deleteTeamIteration(teamContext, node.identifier);
+      console.warn(`Deleted identifier ${node.identifier}`);
+      await this.workItemTracking.deleteClassificationNode(this.projectName, TreeStructureGroup.Iterations, name);
+      console.warn(`Deleted classification node ${node.identifier}`);
+    }
+    console.warn("Creating classificaiton node");
     const { identifier } = await this.workItemTracking.createOrUpdateClassificationNode({
       name,
       attributes: {
@@ -99,10 +134,11 @@ export class AzureDevOpsAgileService extends BaseAgileService {
         finishDate: finishDate?.toISOString(),
       }
     }, this.projectName, TreeStructureGroup.Iterations);
+    console.warn("Created classification node")
     if (!identifier) {
       throw new Error(`Was not able to retrieve identifier for ${this.projectName}`);
     }
-
+    console.log(identifier);
     return identifier;
   }
 

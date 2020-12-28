@@ -1,7 +1,7 @@
 import { agile } from "./agile";
 
-describe("Backlog Command", () => {
+describe("Agile Command", () => {
   it("contains correct number of sub-commands", () => {
-    expect(agile.commands).toHaveLength(2);
+    expect(agile.commands).toHaveLength(3);
   });
 });

@@ -1,4 +1,4 @@
-import { AgileConfig, BacklogService } from "../models";
+import { AgileConfig, AgileService } from "../models";
 import { AgileServiceProvider } from "../services";
 
 export class AgileServiceFactory {
@@ -10,7 +10,7 @@ export class AgileServiceFactory {
     this.registry[providerName] = service;
   }
 
-  public static get(config: AgileConfig): BacklogService {
+  public static get(config: AgileConfig): AgileService {
     const { providerName } = config;
     const service = this.registry[providerName];
 

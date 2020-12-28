@@ -1,8 +1,10 @@
-import { NumberConstants } from "../../constants";
-import { AgileConfig, BacklogItem, BacklogService, Sprint } from "../../models";
+import { ConfigValue, NumberConstants } from "../../constants";
+import { AgileConfig, AgileService, BacklogItem, Project, Sprint } from "../../models";
 import { defaultBacklogItems, emptyBacklogItems } from "../../samples";
+import { Config, DateUtils } from "../../utils";
+import { UserUtils } from "../../utils/userUtils";
 
-export abstract class BaseAgileService implements BacklogService {
+export abstract class BaseAgileService implements AgileService {
   constructor(protected config: AgileConfig){}
 
   // Static functions
@@ -22,39 +24,60 @@ export abstract class BaseAgileService implements BacklogService {
     return this.createProviderSprints(sprints);
   }
 
-  // Abstract functions
-  
-  abstract getSprint: (id: string) => Promise<Sprint>;
-  abstract createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
-  abstract createProviderSprints: (sprints: Sprint[]) => Promise<Sprint[]>;
-  abstract deleteSprint: (id: string) => Promise<void>;
-
-  // Private functions
-
-  private createSprintsFromConfig(): Sprint[] {
+  public async createSprintsFromConfig(): Promise<Sprint[]> {
     const { sprints: sprintConfig } = this.config;
     
     if (!sprintConfig) {
       throw new Error("Section agile.sprints of cse.json is required for this operation");
     }
 
-    const { startDate, lengthOfSprintInDays, numberOfSprints } = sprintConfig;
+    const { startDate, lengthOfSprintInDays, numberOfSprints, daysBetweenSprints, sprintNamePattern, sprintIndexStart } = sprintConfig;
+
+    const namePattern: string = sprintNamePattern || Config.getValue(ConfigValue.DefaultSprintNamePattern);
+    const indexStart: number = sprintIndexStart || Config.getValue(ConfigValue.DefaultSprintStartIndex);
+
     const sprints: Sprint[] = [];
 
     const timezoneOffset = new Date().getTimezoneOffset() * NumberConstants.millisecondsInAMinute;
 
     let currentStartDate = new Date(Date.parse(startDate) + timezoneOffset);
 
-    for (let i = 0; i < numberOfSprints; i++) {
-      const finishDate = new Date(currentStartDate.getTime() + NumberConstants.millisecondsInADay * lengthOfSprintInDays);
+    for (let i = indexStart; i <= numberOfSprints; i++) {
+      const finishDate = DateUtils.addDays(currentStartDate, lengthOfSprintInDays - 1);
       sprints.push({
-        name: `Sprint ${i + 1}`,
+        name: namePattern.replace("${sprintIndex}", i.toString()),
         startDate: currentStartDate,
         finishDate,
       });
-      currentStartDate = finishDate;
+      currentStartDate = DateUtils.addDays(finishDate, daysBetweenSprints);
     }
 
-    return sprints;
+    console.log("The following sprints will be created:\n")
+    sprints.forEach((sprint: Sprint) => {
+      const { name, startDate, finishDate } = sprint;
+      console.log(`${name}:\t${DateUtils.toSimpleDateString(startDate)}\t${DateUtils.toSimpleDateString(finishDate)}`);
+    });
+    if (await UserUtils.confirmAction()) {
+      console.log("Creating sprints...");
+      const createdSprints = await this.createProviderSprints(sprints);
+      console.log(JSON.stringify(createdSprints, null, 2));
+      return createdSprints;
+    } else {
+      console.log("Operation cancelled");
+      return []
+    }
   }
+
+  // Abstract functions
+
+  // Backlog Items
+  abstract createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
+
+  // Projects
+  abstract createProject: (project: Project) => Promise<Project>;
+  
+  // Sprints
+  abstract getSprint: (id: string) => Promise<Sprint>;
+  abstract createProviderSprints: (sprints: Sprint[]) => Promise<Sprint[]>;
+  abstract deleteSprint: (id: string) => Promise<void>;
 }

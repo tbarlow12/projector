@@ -1,4 +1,4 @@
-import { AgileConfig, BacklogItem, Sprint } from "../../../models";
+import { AgileConfig, BacklogItem, Project, Sprint } from "../../../models";
 import { BaseAgileService } from "../baseAgileService";
 
 export interface JiraAgileConfig extends AgileConfig {
@@ -8,6 +8,10 @@ export interface JiraAgileConfig extends AgileConfig {
 } 
 
 export class JiraAgileService extends BaseAgileService {
+  createProject = async (project: Project): Promise<Project> => {
+    throw new Error("Not implemented");
+  }
+  
   createProviderBacklogItems = async (items: BacklogItem[]): Promise<BacklogItem[]> => {
     console.log(`${this.config.providerName} created backlog item ${JSON.stringify(items, null, 4)}`);
     return items;

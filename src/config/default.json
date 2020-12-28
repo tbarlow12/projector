@@ -22,8 +22,11 @@
   },
   "agile": {
     "sprints": {
-      "defaultSprintLength": 0,
-      "defaultNumberOfSprints": 0
+      "defaultSprintLength": 5,
+      "defaultNumberOfSprints": 10,
+      "defaultDaysBetweenSprints": 3,
+      "defaultSprintNamePattern": "Sprint ${sprintIndex}",
+      "defaultSprintStartIndex": 1
     }
   }
 }

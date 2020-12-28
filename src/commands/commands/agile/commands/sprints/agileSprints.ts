@@ -1,7 +1,7 @@
 import { Command } from "../../../../../extensions";
-import { agileSprintsInit } from "./commands";
+import { agileSprintsCreate } from "./commands";
 
 export const agileSprints = new Command()
   .name("sprints")
-  .addCommand(agileSprintsInit);
-  
+  .description("Sprint Management")
+  .addCommand(agileSprintsCreate);

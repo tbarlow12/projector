@@ -1,4 +1,5 @@
 export * from "./backlogItem";
 export * from "./backlogItemType";
-export * from "./backlogService";
+export * from "./agileService";
 export * from "./sprint";
+export * from "./project";
