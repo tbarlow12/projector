@@ -7,6 +7,7 @@ import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
 import { BacklogItem, Sprint } from "../../../models";
 import { BacklogConfig } from "../../../models/config/backlog/backlogConfig";
+import { retryAsync } from "../../../utils/retry";
 import { BaseBacklogService } from "../baseBacklogService";
 
 export interface AzureDevOpsProviderOptions {
@@ -39,7 +40,7 @@ export class AzureDevOpsBacklogService extends BaseBacklogService {
 
   getSprint = async (id: string): Promise<Sprint> => {
     const teamContext = await this.getTeamContext();
-    const teamIteration = await this.workApi.getTeamIteration(teamContext, id);
+    const teamIteration = await retryAsync(() => this.workApi.getTeamIteration(teamContext, id));
 
     if (!teamIteration) {
       throw new Error(`Could not retrieve sprint ${id}`);

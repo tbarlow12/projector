@@ -6,6 +6,7 @@ import { Config } from "../../../utils";
 import { BacklogServiceProvider } from "../backlogServiceProvider";
 import { AzureDevOpsProviderOptions } from "./azureDevOpsBacklogService";
 import { random } from "@supercharge/strings"
+import { sleep } from "../../../utils/sleep";
 
 describe("Azure DevOps Backlog Service", () => {
   registerProviders();
@@ -49,6 +50,8 @@ describe("Azure DevOps Backlog Service", () => {
       if (!id) {
         throw new Error("ID should be defined");
       }
+
+      await sleep(5);
 
       // Get created sprint
       const fetchedSprint = await service.getSprint(id);
