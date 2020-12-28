@@ -5,7 +5,7 @@ import { BacklogItemType, Sprint } from "../../../models";
 import { Config } from "../../../utils";
 import { BacklogServiceProvider } from "../backlogServiceProvider";
 import { AzureDevOpsProviderOptions } from "./azureDevOpsBacklogService";
-import { random } from "@supercharge/strings"
+import { random } from "@supercharge/strings";
 import { sleep } from "../../../utils/sleep";
 
 describe("Azure DevOps Backlog Service", () => {
@@ -32,7 +32,7 @@ describe("Azure DevOps Backlog Service", () => {
         name: `Sprint ${num} ${random(10)}`,
         startDate: start,
         finishDate: end,
-      }   
+      };   
     });
 
     const sprints = await service.createSprints(initialSprints);

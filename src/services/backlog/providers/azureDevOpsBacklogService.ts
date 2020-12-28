@@ -1,7 +1,6 @@
 import { getPersonalAccessTokenHandler } from "azure-devops-node-api";
 import { CoreApi } from "azure-devops-node-api/CoreApi";
 import { TeamContext } from "azure-devops-node-api/interfaces/CoreInterfaces";
-import { TimeFrame } from "azure-devops-node-api/interfaces/WorkInterfaces";
 import { TreeStructureGroup } from "azure-devops-node-api/interfaces/WorkItemTrackingInterfaces";
 import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
@@ -53,7 +52,7 @@ export class AzureDevOpsBacklogService extends BaseBacklogService {
       name,
       startDate: attributes?.startDate, 
       finishDate: attributes?.finishDate,
-    }
+    };
   }
 
   createProviderBacklogItems = async (items: BacklogItem[]): Promise<BacklogItem[]> => {
@@ -99,7 +98,7 @@ export class AzureDevOpsBacklogService extends BaseBacklogService {
         startDate: startDate?.toISOString(),
         finishDate: finishDate?.toISOString(),
       }
-    }, this.projectName, TreeStructureGroup.Iterations)
+    }, this.projectName, TreeStructureGroup.Iterations);
     if (!identifier) {
       throw new Error(`Was not able to retrieve identifier for ${this.projectName}`);
     }
