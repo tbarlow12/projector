@@ -1,6 +1,6 @@
-import { BacklogServiceFactory, RepoServiceFactory } from "../factories";
-import { BacklogServiceProvider, BaseBacklogService, BaseRepoService, RepoServiceProvider } from "../services";
-import { AzureDevOpsProviderOptions } from "../services/backlog/providers";
+import { AgileServiceFactory, RepoServiceFactory } from "../factories";
+import { AgileServiceProvider, BaseAgileService, BaseRepoService, RepoServiceProvider } from "../services";
+import { AzureDevOpsProviderOptions } from "../services/agile/providers";
 import { registerProviders } from "./registerProviders";
 jest.mock("azure-devops-node-api/WorkItemTrackingApi");
 
@@ -9,10 +9,10 @@ describe("Register Providers", () => {
     registerProviders();
   });
 
-  it("registers all backlog providers", () => {
+  it("registers all agile providers", () => {
     // Setup
     const providers = [
-      BacklogServiceProvider.AzureDevOps
+      AgileServiceProvider.AzureDevOps
     ];
 
     const azureDevOpsOptions: AzureDevOpsProviderOptions = {
@@ -25,13 +25,13 @@ describe("Register Providers", () => {
       azureDevOpsOptions
     ];
 
-    providers.forEach((provider: BacklogServiceProvider, index: number) => {
+    providers.forEach((provider: AgileServiceProvider, index: number) => {
       // Act
-      const backlogService = BacklogServiceFactory.get({providerName: provider, providerOptions: options[index]});
+      const agileService = AgileServiceFactory.get({providerName: provider, providerOptions: options[index]});
       
       // Assert
-      expect(backlogService).toBeDefined();
-      expect(backlogService).toBeInstanceOf(BaseBacklogService);
+      expect(agileService).toBeDefined();
+      expect(agileService).toBeInstanceOf(BaseAgileService);
     });
   });
 

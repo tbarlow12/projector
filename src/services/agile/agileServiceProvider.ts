@@ -1,4 +1,4 @@
-export enum BacklogServiceProvider {
+export enum AgileServiceProvider {
   AzureDevOps = "azdo",
   Jira = "jira",
 }

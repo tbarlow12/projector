@@ -5,20 +5,20 @@ import { TreeStructureGroup } from "azure-devops-node-api/interfaces/WorkItemTra
 import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
 import { BacklogItem, Sprint } from "../../../models";
-import { BacklogConfig } from "../../../models/config/backlog/backlogConfig";
+import { AgileConfig } from "../../../models/config/agile/agileConfig";
 import { retryAsync } from "../../../utils";
-import { BaseBacklogService } from "../baseBacklogService";
+import { BaseAgileService } from "../baseAgileService";
 
 export interface AzureDevOpsProviderOptions {
   baseUrl: string;
   projectName: string;
   personalAccessToken: string;
 }
-export interface AzureDevOpsBacklogConfig extends BacklogConfig {
+export interface AzureDevOpsBacklogConfig extends AgileConfig {
   providerOptions: AzureDevOpsProviderOptions;
 } 
 
-export class AzureDevOpsBacklogService extends BaseBacklogService {
+export class AzureDevOpsAgileService extends BaseAgileService {
   private projectName: string;
   private workItemTracking: WorkItemTrackingApi;
   private workApi: WorkApi;

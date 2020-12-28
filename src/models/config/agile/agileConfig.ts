@@ -1,6 +1,6 @@
 import { ProviderConfig } from "../providerConfig";
 import { SprintConfig } from "./sprintConfig";
 
-export interface BacklogConfig extends ProviderConfig {
+export interface AgileConfig extends ProviderConfig {
   sprints?: SprintConfig;
 }

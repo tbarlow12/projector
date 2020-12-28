@@ -1,9 +1,9 @@
-import { BacklogConfig } from "./backlog";
+import { AgileConfig } from "./agile";
 import { PlaybookConfig } from "./cse";
 import { GitHubConfig } from "./github";
 
 export interface CseCliConfig {
-  backlog?: BacklogConfig;
+  backlog?: AgileConfig;
   github?: GitHubConfig;
   playbook?: PlaybookConfig
 }

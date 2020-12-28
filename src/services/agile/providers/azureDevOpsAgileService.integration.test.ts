@@ -1,11 +1,11 @@
 import { random } from "@supercharge/strings";
 import { ConfigValue, NumberConstants } from "../../../constants";
-import { BacklogServiceFactory } from "../../../factories";
+import { AgileServiceFactory } from "../../../factories";
 import { registerProviders } from "../../../initialization/registerProviders";
 import { BacklogItemType, Sprint } from "../../../models";
 import { Config, retryAsync } from "../../../utils";
-import { BacklogServiceProvider } from "../backlogServiceProvider";
-import { AzureDevOpsProviderOptions } from "./azureDevOpsBacklogService";
+import { AgileServiceProvider } from "../agileServiceProvider";
+import { AzureDevOpsProviderOptions } from "./azureDevOpsAgileService";
 
 describe("Azure DevOps Backlog Service", () => {
   registerProviders();
@@ -16,8 +16,8 @@ describe("Azure DevOps Backlog Service", () => {
     projectName: Config.getValue(ConfigValue.TestAzDOProjectName),
   };
 
-  const service = BacklogServiceFactory.get({
-    providerName: BacklogServiceProvider.AzureDevOps,
+  const service = AgileServiceFactory.get({
+    providerName: AgileServiceProvider.AzureDevOps,
     providerOptions,
   });
 

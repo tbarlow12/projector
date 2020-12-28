@@ -1,7 +1,7 @@
 
-import { BacklogServiceFactory, RepoServiceFactory } from "../factories";
-import { BacklogServiceProvider, GitHubRepoService, RepoServiceProvider } from "../services";
-import { AzureDevOpsBacklogService, JiraBacklogService } from "../services/backlog/providers";
+import { AgileServiceFactory, RepoServiceFactory } from "../factories";
+import { AgileServiceProvider, GitHubRepoService, RepoServiceProvider } from "../services";
+import { AzureDevOpsAgileService, JiraAgileService } from "../services/agile/providers";
 
 /**
  *
@@ -15,8 +15,8 @@ export function registerProviders(): void {
  *
  */
 function registerBacklogServiceProviders() {
-  BacklogServiceFactory.register(BacklogServiceProvider.AzureDevOps, AzureDevOpsBacklogService);
-  BacklogServiceFactory.register(BacklogServiceProvider.Jira, JiraBacklogService);
+  AgileServiceFactory.register(AgileServiceProvider.AzureDevOps, AzureDevOpsAgileService);
+  AgileServiceFactory.register(AgileServiceProvider.Jira, JiraAgileService);
 }
 
 /**

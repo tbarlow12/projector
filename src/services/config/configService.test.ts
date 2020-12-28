@@ -1,7 +1,7 @@
 import { ConfigValue } from "../../constants";
 import { CseCliConfig } from "../../models";
 import { Config } from "../../utils";
-import { BacklogServiceProvider } from "../backlog";
+import { AgileServiceProvider } from "../agile";
 import { ConfigService } from "./configService";
 
 describe("Config Service", () => {
@@ -26,6 +26,6 @@ describe("Config Service", () => {
     };
 
     // Act & Assert
-    expect(ConfigService.createInitialConfig({backlogProvider: "azdo" as BacklogServiceProvider})).toEqual(expectedConfig);
+    expect(ConfigService.createInitialConfig({backlogProvider: "azdo" as AgileServiceProvider})).toEqual(expectedConfig);
   });
 });

@@ -1,15 +1,15 @@
 import { ConfigValue, FileConstants } from "../../constants";
-import { BacklogConfig, CseCliConfig, GitHubConfig } from "../../models";
+import { AgileConfig, CseCliConfig, GitHubConfig } from "../../models";
 import { Config, FileUtils } from "../../utils";
-import { BacklogServiceProvider } from "../backlog";
-import { AzureDevOpsProviderOptions } from "../backlog/providers";
+import { AgileServiceProvider } from "../agile";
+import { AzureDevOpsProviderOptions } from "../agile/providers";
 
 export interface ConfigOptions {
   configFilePath?: string;
 }
 
 export interface ConfigInitializationOptions {
-  backlogProvider?: BacklogServiceProvider;
+  backlogProvider?: AgileServiceProvider;
 }
 
 /**
@@ -32,7 +32,7 @@ export class ConfigService {
     return existingConfig;
   }
 
-  private static createBacklogConfig(provider: BacklogServiceProvider): BacklogConfig {
+  private static createBacklogConfig(provider: AgileServiceProvider): AgileConfig {
     const now = new Date();
     return {
       providerName: provider,
@@ -52,9 +52,9 @@ export class ConfigService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private static getProviderOptions(provider: BacklogServiceProvider): any {
+  private static getProviderOptions(provider: AgileServiceProvider): any {
     switch (provider) {
-      case BacklogServiceProvider.AzureDevOps:
+      case AgileServiceProvider.AzureDevOps:
       default:
         const azDoProviderOptions: AzureDevOpsProviderOptions = {
           baseUrl: "{Base URL for Azure DevOps organization}",

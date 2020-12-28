@@ -1,8 +1,8 @@
 import { BacklogItem, BacklogItemType, BacklogService, Sprint } from "../../models";
-import { BaseBacklogService } from "./baseBacklogService";
+import { BaseAgileService } from "./baseAgileService";
 import { defaultBacklogItems, emptyBacklogItems } from "../../samples";
 
-class MockBacklogService extends BaseBacklogService {
+class MockBacklogService extends BaseAgileService {
   getSprint: (id: string) => Promise<Sprint>;
   deleteSprint: (id: string) => Promise<void>;
   createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;

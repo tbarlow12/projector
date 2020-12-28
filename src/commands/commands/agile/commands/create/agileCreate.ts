@@ -1,5 +1,5 @@
 import { Command } from "../../../../../extensions";
-import { BacklogServiceFactory } from "../../../../../factories/backlogServiceFactory";
+import { AgileServiceFactory } from "../../../../../factories";
 import { BacklogItem, CseCliConfig } from "../../../../../models";
 import { FileUtils } from "../../../../../utils";
 
@@ -16,7 +16,7 @@ export const agileCreate = new Command()
       throw new Error("Section backlog is required for this operation");
     }
     // Instantiate backlog service from factory
-    const backlogService = BacklogServiceFactory.get(backlogConfig);
+    const backlogService = AgileServiceFactory.get(backlogConfig);
 
     // Read backlog items from provided file
     const { file } = options;

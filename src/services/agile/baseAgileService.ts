@@ -2,11 +2,11 @@ import { NumberConstants } from "../../constants";
 import { BacklogService } from "../../models";
 import { BacklogItem } from "../../models/backlog/backlogItem";
 import { Sprint } from "../../models/backlog/sprint";
-import { BacklogConfig } from "../../models/config/backlog/backlogConfig";
+import { AgileConfig } from "../../models/config/agile/agileConfig";
 import { defaultBacklogItems, emptyBacklogItems } from "../../samples";
 
-export abstract class BaseBacklogService implements BacklogService {
-  constructor(protected config: BacklogConfig){}
+export abstract class BaseAgileService implements BacklogService {
+  constructor(protected config: AgileConfig){}
 
   // Static functions
 

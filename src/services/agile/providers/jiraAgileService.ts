@@ -1,13 +1,13 @@
-import { BacklogItem, ProviderConfig, Sprint } from "../../../models";
-import { BaseBacklogService } from "../baseBacklogService";
+import { AgileConfig, BacklogItem, Sprint } from "../../../models";
+import { BaseAgileService } from "../baseAgileService";
 
-export interface JiraBacklogConfig extends ProviderConfig {
+export interface JiraAgileConfig extends AgileConfig {
   providerOptions: {
     baseUrl: string;
   }
 } 
 
-export class JiraBacklogService extends BaseBacklogService {
+export class JiraAgileService extends BaseAgileService {
   createProviderBacklogItems = async (items: BacklogItem[]): Promise<BacklogItem[]> => {
     console.log(`${this.config.providerName} created backlog item ${JSON.stringify(items, null, 4)}`);
     return items;
