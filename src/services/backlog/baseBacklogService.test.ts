@@ -3,14 +3,18 @@ import { BaseBacklogService } from "./baseBacklogService";
 import { defaultBacklogItems, emptyBacklogItems } from "../../samples";
 
 class MockBacklogService extends BaseBacklogService {
+  getSprint: (id: string) => Promise<Sprint>;
+  deleteSprint: (id: string) => Promise<void>;
   createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
   createProviderSprints: (sprints: Sprint[]) => Promise<Sprint[]>;
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(createBacklogItemsJestFn: any, createSprintsJestFn: any) {
+  constructor(createBacklogItemsJestFn: any, createSprintsJestFn: any, getSprint: any, deleteSprint: any) {
     super({providerName: "test"});
     this.createProviderBacklogItems = createBacklogItemsJestFn;
     this.createProviderSprints = createSprintsJestFn;
+    this.getSprint = getSprint;
+    this.deleteSprint = deleteSprint;
   }
 }
 
@@ -31,7 +35,7 @@ describe("Base Backlog Service", () => {
       };
     })));
     
-    const service: BacklogService = new MockBacklogService(createBacklogItems, createSprints);
+    const service: BacklogService = new MockBacklogService(createBacklogItems, createSprints, jest.fn(), jest.fn());
     const backlogItems: BacklogItem[] = [
       {
         name: "Story 1",
