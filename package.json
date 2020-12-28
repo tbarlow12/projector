@@ -16,6 +16,8 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "build": "tsc",
     "test": "jest",
+    "test:unit": "jest -c jest.config.unit.js",
+    "test:int": "jest -c jest.config.integration.js",
     "test:coverage": "npm run test -- --coverage",
     "check": "npm run lint && npm run build && npm run test"
   },
