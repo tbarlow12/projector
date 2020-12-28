@@ -1,36 +1,71 @@
-import { NumberConstants } from "../../../constants";
+import { ConfigValue, NumberConstants } from "../../../constants";
 import { BacklogServiceFactory } from "../../../factories";
 import { registerProviders } from "../../../initialization/registerProviders";
-import { BacklogItemType } from "../../../models";
+import { BacklogItemType, Sprint } from "../../../models";
+import { Config } from "../../../utils";
 import { BacklogServiceProvider } from "../backlogServiceProvider";
 import { AzureDevOpsProviderOptions } from "./azureDevOpsBacklogService";
+import { random } from "@supercharge/strings";
+import { sleep } from "../../../utils/sleep";
 
-xdescribe("Azure DevOps Backlog Service", () => {
+describe("Azure DevOps Backlog Service", () => {
   registerProviders();
+
   const providerOptions: AzureDevOpsProviderOptions = {
-    baseUrl: "https://dev.azure.com/fireflies-crew",
-    personalAccessToken: "",
-    projectName: "team1",
+    baseUrl: Config.getValue(ConfigValue.TestAzDOBaseUrl),
+    personalAccessToken: Config.getValue(ConfigValue.TestAzDOAccessToken),
+    projectName: Config.getValue(ConfigValue.TestAzDOProjectName),
   };
 
   const service = BacklogServiceFactory.get({
     providerName: BacklogServiceProvider.AzureDevOps,
     providerOptions,
-    sprints: {
-      lengthOfSprintInDays: 7,
-      numberOfSprints: 10,
-      startDate: "2020-12-25"
-    }
   });
 
-  it("can create sprints", async () => {
-    const now = new Date();
-    const end = new Date(now.getTime() + NumberConstants.millisecondsInADay * 7);
-    await service.createSprints([{
-      name: "Sprint 1",
-      startDate: now,
-      finishDate: end,
-    }]);
+  fit("can create sprints", async () => {
+    const start = new Date();
+    start.setFullYear(2021);
+    start.setUTCHours(0, 0, 0, 0);
+    const end = new Date(start.getTime() + NumberConstants.millisecondsInADay * 7);
+    const initialSprints: Sprint[] = [1, 2, 3].map((num: number) => {
+      return {
+        name: `Sprint ${num} ${random(10)}`,
+        startDate: start,
+        finishDate: end,
+      };   
+    });
+
+    const sprints = await service.createSprints(initialSprints);
+
+    expect(sprints).toHaveLength(initialSprints.length);
+
+    for (const sprint of sprints) {
+      const { id, name, startDate, finishDate } = sprint;
+      
+      expect(id).toBeDefined();
+      expect(name).toBeDefined();
+      expect(startDate).toBeDefined();
+      expect(finishDate).toBeDefined();
+
+      if (!id) {
+        throw new Error("ID should be defined");
+      }
+
+      await sleep(5);
+
+      // Get created sprint
+      const fetchedSprint = await service.getSprint(id);
+      expect(fetchedSprint.name).toEqual(name);
+      expect(fetchedSprint.id).toEqual(id);
+      expect(fetchedSprint.startDate).toEqual(startDate);
+      expect(fetchedSprint.finishDate).toEqual(finishDate);
+
+      // Clean up test sprint
+      await service.deleteSprint(id);
+      
+      // Sprint ID should not exist anymore
+      await expect(service.getSprint(id)).rejects.toThrow();
+    }
   }, 60000);
   
   it("can create an epic", async () => {

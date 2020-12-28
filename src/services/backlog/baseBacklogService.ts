@@ -20,15 +20,17 @@ export abstract class BaseBacklogService implements BacklogService {
     return this.createProviderBacklogItems(items);
   }
 
-  public async createSprints(): Promise<Sprint[]> {
-    const sprints = this.createSprintsFromConfig();
+  public async createSprints(sprints: Sprint[]): Promise<Sprint[]> {
+    sprints = sprints || this.createSprintsFromConfig();
     return this.createProviderSprints(sprints);
   }
 
   // Abstract functions
   
+  abstract getSprint: (id: string) => Promise<Sprint>;
   abstract createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
   abstract createProviderSprints: (sprints: Sprint[]) => Promise<Sprint[]>;
+  abstract deleteSprint: (id: string) => Promise<void>;
 
   // Private functions
 

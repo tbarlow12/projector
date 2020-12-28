@@ -6,6 +6,7 @@ import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
 import { BacklogItem, Sprint } from "../../../models";
 import { BacklogConfig } from "../../../models/config/backlog/backlogConfig";
+import { retryAsync } from "../../../utils/retry";
 import { BaseBacklogService } from "../baseBacklogService";
 
 export interface AzureDevOpsProviderOptions {
@@ -22,6 +23,7 @@ export class AzureDevOpsBacklogService extends BaseBacklogService {
   private workItemTracking: WorkItemTrackingApi;
   private workApi: WorkApi;
   private coreApi: CoreApi;
+  private teamContext?: TeamContext;
 
   constructor(config: AzureDevOpsBacklogConfig) {
     super(config);
@@ -35,6 +37,24 @@ export class AzureDevOpsBacklogService extends BaseBacklogService {
     this.workApi = new WorkApi(baseUrl, [authHandler]);
   }
 
+  getSprint = async (id: string): Promise<Sprint> => {
+    const teamContext = await this.getTeamContext();
+    const teamIteration = await retryAsync(() => this.workApi.getTeamIteration(teamContext, id));
+
+    if (!teamIteration) {
+      throw new Error(`Could not retrieve sprint ${id}`);
+    }
+
+    const { name, attributes } = teamIteration;
+
+    return {
+      id,
+      name,
+      startDate: attributes?.startDate, 
+      finishDate: attributes?.finishDate,
+    };
+  }
+
   createProviderBacklogItems = async (items: BacklogItem[]): Promise<BacklogItem[]> => {
     // await this.workItemTracking.createWorkItem()
     return items;
@@ -42,26 +62,43 @@ export class AzureDevOpsBacklogService extends BaseBacklogService {
 
   createProviderSprints = async (sprints: Sprint[]): Promise<Sprint[]> => {
     const teamContext = await this.getTeamContext();
-    const identifier = await this.getIterationIdentifier();
 
     return Promise.all(sprints.map(async (sprint: Sprint) => {
+      // Creates classification node and returns identifier required for sprint ID
+      const identifier = await this.createClassificationNode(sprint);
+
+      const { name, startDate, finishDate } = sprint;
+
+      // Create new iteration
       const result = await this.workApi.postTeamIteration({
-        id: identifier?.toString(),
-        // name,
-        // attributes: {
-        //   startDate,
-        //   finishDate,
-        //   // timeFrame: TimeFrame.Current
-        // },
+        id: identifier,
+        name,
+        attributes: {
+          startDate,
+          finishDate,
+        },
       }, teamContext);
 
+      // Assign generated ID from Azure DevOps to sprint
       sprint.id = result.id;
       return sprint;
     }));
   }
 
-  private async getIterationIdentifier(): Promise<string> {
-    const { identifier } = await this.workItemTracking.getClassificationNode(this.projectName, TreeStructureGroup.Iterations);
+  deleteSprint = async (id: string): Promise<void> => {
+    const teamContext = await this.getTeamContext();
+    await this.workApi.deleteTeamIteration(teamContext, id);
+  }
+
+  private async createClassificationNode(sprint: Sprint): Promise<string> {
+    const { name, startDate, finishDate } = sprint;
+    const { identifier } = await this.workItemTracking.createOrUpdateClassificationNode({
+      name,
+      attributes: {
+        startDate: startDate?.toISOString(),
+        finishDate: finishDate?.toISOString(),
+      }
+    }, this.projectName, TreeStructureGroup.Iterations);
     if (!identifier) {
       throw new Error(`Was not able to retrieve identifier for ${this.projectName}`);
     }
@@ -69,18 +106,22 @@ export class AzureDevOpsBacklogService extends BaseBacklogService {
     return identifier;
   }
 
-  private async getTeamContext(): Promise<TeamContext> {    
+  private async getTeamContext(): Promise<TeamContext> {
+    if (this.teamContext) {
+      return this.teamContext;
+    }
     const {
       name,
       id,
       defaultTeam
     } = await this.coreApi.getProject(this.projectName);
 
-    return {
+    this.teamContext = {
       project: name,
       projectId: id,
       team: defaultTeam?.name,
       teamId: defaultTeam?.id,
     };
+    return this.teamContext;
   }
 }

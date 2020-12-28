@@ -47,6 +47,9 @@ jobs:
       run: npm run test:coverage
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        AZURE_DEVOPS_PROJECT_NAME: ${{ secrets.AZURE_DEVOPS_PROJECT_NAME }}
+        AZURE_DEVOPS_BASE_URL: ${{ secrets.AZURE_DEVOPS_BASE_URL }}
+        AZURE_DEVOPS_ACCESS_TOKEN: ${{ secrets.AZURE_DEVOPS_ACCESS_TOKEN }}
 
     # Validate code coverage using codecov.yml
     - uses: codecov/codecov-action@v1
