@@ -3,7 +3,7 @@ import { PlaybookConfig } from "./cse";
 import { GitHubConfig } from "./github";
 
 export interface CseCliConfig {
-  backlog?: AgileConfig;
+  agile?: AgileConfig;
   github?: GitHubConfig;
   playbook?: PlaybookConfig
 }

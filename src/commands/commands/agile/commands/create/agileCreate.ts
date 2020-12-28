@@ -3,25 +3,25 @@ import { AgileServiceFactory } from "../../../../../factories";
 import { BacklogItem, CseCliConfig } from "../../../../../models";
 import { FileUtils } from "../../../../../utils";
 
-export interface BacklogInitializationOptions {
+export interface AgileInitializationOptions {
   file: string;
 }
 
 export const agileCreate = new Command()
   .name("create")
   .description("Backlog Creation")
-  .addAction(async (options: BacklogInitializationOptions, config: CseCliConfig) => {
-    const { backlog: backlogConfig } = config;
-    if (!backlogConfig) {
-      throw new Error("Section backlog is required for this operation");
+  .addAction(async (options: AgileInitializationOptions, config: CseCliConfig) => {
+    const { agile: agileConfig } = config;
+    if (!agileConfig) {
+      throw new Error("Section agile is required for this operation");
     }
-    // Instantiate backlog service from factory
-    const backlogService = AgileServiceFactory.get(backlogConfig);
+    // Instantiate agile service from factory
+    const agileService = AgileServiceFactory.get(agileConfig);
 
-    // Read backlog items from provided file
+    // Read agile items from provided file
     const { file } = options;
-    const backlogItems: BacklogItem[] = await FileUtils.readJson(file);
+    const agileItems: BacklogItem[] = await FileUtils.readJson(file);
     
     // Create Backlog Items
-    await backlogService.createBacklogItems(backlogItems);
+    await agileService.createBacklogItems(agileItems);
   });

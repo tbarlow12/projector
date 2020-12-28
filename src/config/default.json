@@ -20,7 +20,7 @@
     "owner": "microsoft",
     "repo": "code-with-engineering-playbook"
   },
-  "backlog": {
+  "agile": {
     "sprints": {
       "defaultSprintLength": 0,
       "defaultNumberOfSprints": 0

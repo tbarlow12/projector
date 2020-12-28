@@ -1,8 +1,5 @@
 import { NumberConstants } from "../../constants";
-import { BacklogService } from "../../models";
-import { BacklogItem } from "../../models/backlog/backlogItem";
-import { Sprint } from "../../models/backlog/sprint";
-import { AgileConfig } from "../../models/config/agile/agileConfig";
+import { AgileConfig, BacklogItem, BacklogService, Sprint } from "../../models";
 import { defaultBacklogItems, emptyBacklogItems } from "../../samples";
 
 export abstract class BaseAgileService implements BacklogService {
@@ -38,7 +35,7 @@ export abstract class BaseAgileService implements BacklogService {
     const { sprints: sprintConfig } = this.config;
     
     if (!sprintConfig) {
-      throw new Error("Section backlog.sprints of cse.json is required for this operation");
+      throw new Error("Section agile.sprints of cse.json is required for this operation");
     }
 
     const { startDate, lengthOfSprintInDays, numberOfSprints } = sprintConfig;

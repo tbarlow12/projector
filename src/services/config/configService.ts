@@ -9,7 +9,7 @@ export interface ConfigOptions {
 }
 
 export interface ConfigInitializationOptions {
-  backlogProvider?: AgileServiceProvider;
+  agileProvider?: AgileServiceProvider;
 }
 
 /**
@@ -19,9 +19,9 @@ export interface ConfigInitializationOptions {
 export class ConfigService {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-module-boundary-types 
   public static createInitialConfig(options: ConfigInitializationOptions): CseCliConfig {
-    const { backlogProvider } = options;
+    const { agileProvider } = options;
     return {
-      backlog: backlogProvider ? this.createBacklogConfig(backlogProvider) : undefined,
+      agile: agileProvider ? this.createAgileConfig(agileProvider) : undefined,
       github: this.createGithubConfig()
     };
   }
@@ -32,7 +32,7 @@ export class ConfigService {
     return existingConfig;
   }
 
-  private static createBacklogConfig(provider: AgileServiceProvider): AgileConfig {
+  private static createAgileConfig(provider: AgileServiceProvider): AgileConfig {
     const now = new Date();
     return {
       providerName: provider,
