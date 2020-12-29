@@ -1,8 +1,28 @@
-import { BacklogItem, BacklogItemType } from "../../models";
+import { BacklogItemTemplate, BacklogItemType } from "../../models";
 
-export const emptyBacklogItems: BacklogItem[] = [
-  {
-    name: "",
-    type: BacklogItemType.Epic
-  }
-];
+export const emptyBacklogItemTemplate: BacklogItemTemplate = {
+  name: "empty",
+  description: "Empty Backlog Items",
+  items: [
+    {
+      name: "",
+      type: BacklogItemType.Epic
+    },
+    {
+      name: "",
+      type: BacklogItemType.Feature
+    },
+    {
+      name: "",
+      type: BacklogItemType.Story
+    },
+    {
+      name: "",
+      type: BacklogItemType.Task
+    },
+    {
+      name: "",
+      type: BacklogItemType.Bug
+    },
+  ] 
+};

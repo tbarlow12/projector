@@ -1,10 +1,10 @@
 import { random } from "@supercharge/strings";
-import { ConfigValue, NumberConstants } from "../../../constants";
-import { AgileServiceFactory } from "../../../factories";
-import { registerProviders } from "../../../initialization/registerProviders";
-import { BacklogItemType, Sprint } from "../../../models";
-import { Config, retryAsync, UserUtils } from "../../../utils";
-import { AgileServiceProvider } from "../agileServiceProvider";
+import { ConfigValue, NumberConstants } from "../../../../constants";
+import { AgileServiceFactory } from "../../../../factories";
+import { registerProviders } from "../../../../initialization/registerProviders";
+import { BacklogItem, BacklogItemType, Sprint } from "../../../../models";
+import { Config, retryAsync, UserUtils } from "../../../../utils";
+import { AgileServiceProvider } from "../../agileServiceProvider";
 import { AzureDevOpsProviderOptions } from "./azureDevOpsAgileService";
 
 describe("Azure DevOps Backlog Service", () => {
@@ -32,7 +32,7 @@ describe("Azure DevOps Backlog Service", () => {
     providerOptions,
   });
 
-  it("can create sprints", async () => {
+  it("can create, get and delete sprints", async () => {
     const start = new Date();
     start.setFullYear(2021);
     start.setUTCHours(0, 0, 0, 0);
@@ -76,5 +76,55 @@ describe("Azure DevOps Backlog Service", () => {
       // Sprint ID should not exist anymore
       await expect(service.getSprint(id)).rejects.toThrow();
     }
+  }, 60000);
+
+  it("can create, get and delete hierarchical work items", async () => {
+    const initialBacklogItem: BacklogItem = {
+      name: "My Sample Story with Tasks",
+      type: BacklogItemType.Story,
+      description: "This is my sample story",
+      acceptanceCriteria: [
+        "This should work",
+        "This whould work well",
+      ],
+      children: [
+        {
+          name: "My Task",
+          type: BacklogItemType.Task
+        }
+      ]
+    };
+
+    const createdBacklogItems = await service.createBacklogItems([initialBacklogItem]);
+
+    expect(createdBacklogItems).toHaveLength(1);
+
+    const createdBacklogItem = createdBacklogItems[0];
+    expect(createdBacklogItem).toEqual({
+      ...initialBacklogItem,
+      id: expect.any(String),
+      url: expect.any(String),
+      description: expect.stringMatching(new RegExp(`.*${initialBacklogItem.description}.*`)),
+      acceptanceCriteria: expect.stringMatching(new RegExp(`.*${initialBacklogItem.acceptanceCriteria![0]}.*${initialBacklogItem.acceptanceCriteria![1]}.*`)),
+      children: [
+        {
+          ...initialBacklogItem.children![0],
+          id: expect.any(String),
+          url: expect.any(String),
+        }
+      ]
+    });
+
+    // Retrieve backlog item with same ID
+    const retrievedBacklogItems = await service.getBacklogItems([createdBacklogItem.id!]);
+
+    // Should be the same as the created backlog item
+    expect(retrievedBacklogItems).toEqual(createdBacklogItems);
+
+    // Clean up created backlog item
+    await service.deleteBacklogItems([createdBacklogItem.id!]);
+
+    // Backlog item should no longer exist
+    await expect(service.getBacklogItems([createdBacklogItem.id!])).rejects.toThrow();
   }, 60000);
 });

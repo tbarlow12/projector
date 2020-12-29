@@ -7,7 +7,29 @@ export interface AgileService {
   createProject: (project: Project) => Promise<Project>;
   
   // Backlog Items
+
+  /**
+   * Get backlog items by ID from agile provider
+   * 
+   * @param {string[]} ids List of backlog item IDs
+   * @returns {BacklogItem[]} List of backlog items corresponding to IDs
+   */
+  getBacklogItems: (ids: string[]) => Promise<BacklogItem[]>;
+
+  /**
+   * Create backlog items with agile provider
+   * 
+   * @param {BacklogItem[]} items List of backlog items to create
+   * @returns {BacklogItem[]} Newly created backlog items
+   */
   createBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
+
+  /**
+   * Delete backlog items from agile provider
+   * 
+   * @param {string[]} ids List of backlog item IDs to delete
+   */
+  deleteBacklogItems: (ids: string[]) => Promise<void>;
 
   // Sprints
 
