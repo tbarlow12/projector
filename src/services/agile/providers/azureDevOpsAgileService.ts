@@ -73,7 +73,13 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
   createProviderBacklogItems = async (items: BacklogItem[]): Promise<BacklogItem[]> => {
     // await this.workItemTracking.createWorkItem()
-    return items;
+    const workItem = await this.workItemTracking.createWorkItem(undefined, [{
+      op: "add",
+      path: "/fields/System.Title",
+      from: null,
+      value: "Sample Task"
+    }], this.projectName, "task");
+    return [];
   }
 
   // Sprints
