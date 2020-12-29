@@ -7,6 +7,7 @@ export interface AgileService {
   createProject: (project: Project) => Promise<Project>;
   
   // Backlog Items
+  getBacklogItems: (ids: string[]) => Promise<BacklogItem[]>;
   createBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
 
   // Sprints

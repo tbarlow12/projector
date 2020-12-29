@@ -1,10 +1,10 @@
 import { random } from "@supercharge/strings";
-import { ConfigValue, NumberConstants } from "../../../constants";
-import { AgileServiceFactory } from "../../../factories";
-import { registerProviders } from "../../../initialization/registerProviders";
-import { BacklogItemType, Sprint } from "../../../models";
-import { Config, retryAsync, UserUtils } from "../../../utils";
-import { AgileServiceProvider } from "../agileServiceProvider";
+import { ConfigValue, NumberConstants } from "../../../../constants";
+import { AgileServiceFactory } from "../../../../factories";
+import { registerProviders } from "../../../../initialization/registerProviders";
+import { BacklogItemType, Sprint } from "../../../../models";
+import { Config, retryAsync, UserUtils } from "../../../../utils";
+import { AgileServiceProvider } from "../../agileServiceProvider";
 import { AzureDevOpsProviderOptions } from "./azureDevOpsAgileService";
 
 describe("Azure DevOps Backlog Service", () => {
@@ -76,5 +76,33 @@ describe("Azure DevOps Backlog Service", () => {
       // Sprint ID should not exist anymore
       await expect(service.getSprint(id)).rejects.toThrow();
     }
+  }, 60000);
+
+  it("can get a hierarchical work item", async () => {
+    const backlogItems = await service.getBacklogItems(["14"]);
+    expect(backlogItems).toHaveLength(1);
+    const { children } = backlogItems[0];
+    expect(children).toBeDefined();
+    expect(children!.length).toBeTruthy();
+  }, 60000);
+
+  fit("can create a hierarchical work item", async () => {
+    await service.createBacklogItems([
+      {
+        name: "My Sample Story with Tasks",
+        type: BacklogItemType.Story,
+        description: "This is my sample story",
+        acceptanceCriteria: [
+          "This should work",
+          "This whould work well",
+        ],
+        children: [
+          {
+            name: "My Task",
+            type: BacklogItemType.Task
+          }
+        ]
+      }
+    ]);
   }, 60000);
 });

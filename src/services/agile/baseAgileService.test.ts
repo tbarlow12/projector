@@ -1,6 +1,6 @@
-import { BacklogItem, BacklogItemType, AgileService, Sprint, Project } from "../../models";
-import { BaseAgileService } from "./baseAgileService";
+import { AgileService, BacklogItem, BacklogItemType, Project, Sprint } from "../../models";
 import { defaultBacklogItems, emptyBacklogItems } from "../../samples";
+import { BaseAgileService } from "./baseAgileService";
 
 class MockAgileService extends BaseAgileService {
   createProject: (project: Project) => Promise<Project>;

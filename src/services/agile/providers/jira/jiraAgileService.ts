@@ -1,5 +1,5 @@
-import { AgileConfig, BacklogItem, Project, Sprint } from "../../../models";
-import { BaseAgileService } from "../baseAgileService";
+import { AgileConfig, BacklogItem, Project, Sprint } from "../../../../models";
+import { BaseAgileService } from "../../baseAgileService";
 
 export interface JiraAgileConfig extends AgileConfig {
   providerOptions: {
