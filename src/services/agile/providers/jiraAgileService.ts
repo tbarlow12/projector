@@ -8,7 +8,7 @@ export interface JiraAgileConfig extends AgileConfig {
 } 
 
 export class JiraAgileService extends BaseAgileService {
-  createProject = async (project: Project): Promise<Project> => {
+  createProject = async (): Promise<Project> => {
     throw new Error("Not implemented");
   }
   

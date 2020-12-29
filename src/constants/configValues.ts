@@ -7,8 +7,8 @@ export enum ConfigValue {
   DefaultDaysBetweenSprints = "agile.sprints.defaultDaysBetweenSprints",
   DefaultSprintNamePattern = "agile.sprints.defaultSprintNamePattern",
   DefaultSprintStartIndex = "agile.sprints.defaultSprintStartIndex",
-  TestGithubAccessToken = "test.github.accessToken",
-  TestAzDOAccessToken = "test.azdo.accessToken",
-  TestAzDOBaseUrl = "test.azdo.baseUrl",
-  TestAzDOProjectName = "test.azdo.projectName",
+  GithubAccessToken = "github.accessToken",
+  AzDOAccessToken = "azdo.accessToken",
+  AzDOBaseUrl = "azdo.baseUrl",
+  AzDOProjectName = "azdo.projectName",
 }

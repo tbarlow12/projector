@@ -4,9 +4,10 @@ import { TeamContext } from "azure-devops-node-api/interfaces/CoreInterfaces";
 import { TreeStructureGroup } from "azure-devops-node-api/interfaces/WorkItemTrackingInterfaces";
 import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
+import { ConfigValue } from "../../../constants";
 import { BacklogItem, Project, Sprint } from "../../../models";
 import { AgileConfig } from "../../../models/config/agile/agileConfig";
-import { Guard, retryAsync } from "../../../utils";
+import { Config, Guard, retryAsync } from "../../../utils";
 import { BaseAgileService } from "../baseAgileService";
 
 export interface AzureDevOpsProviderOptions {
@@ -19,19 +20,44 @@ export interface AzureDevOpsBacklogConfig extends AgileConfig {
 } 
 
 export class AzureDevOpsAgileService extends BaseAgileService {
+  /* Name of Azure DevOps Project */
   private projectName: string;
+  /* Work Item Tracking API */
   private workItemTracking: WorkItemTrackingApi;
+  /* Work API */
   private workApi: WorkApi;
+  /* Core API */
   private coreApi: CoreApi;
+  /* Team Context */
   private teamContext?: TeamContext;
 
   constructor(config: AzureDevOpsBacklogConfig) {
     super(config);
     
-    const { baseUrl, personalAccessToken, projectName } = config.providerOptions;
+    const { providerOptions } = config;
+
+
+    const projectName = Config.getValueWithDefault(ConfigValue.AzDOProjectName, providerOptions.projectName);
+    if (!projectName) {
+      throw new Error("Need to configure an AzDO project name in config file or environment variable");
+    }
+
+    this.projectName = projectName;
+
+    const personalAccessToken = Config.getValueWithDefault(ConfigValue.AzDOAccessToken, providerOptions.personalAccessToken);
+    if (!personalAccessToken) {
+      throw new Error("Need to configure an AzDO personal access token in config file or environment variable");
+    }
+
+    const baseUrl = Config.getValueWithDefault(ConfigValue.AzDOBaseUrl, providerOptions.baseUrl);
+    if (!baseUrl) {
+      throw new Error("Need to configure an AzDO base URL in config file or environment variable");
+    }
+
+    // Instantiate auth handler to be used in API clients
     const authHandler = getPersonalAccessTokenHandler(personalAccessToken);
     
-    this.projectName = projectName;
+    // Instantiate various API clients
     this.coreApi = new CoreApi(baseUrl, [authHandler]);
     this.workItemTracking = new WorkItemTrackingApi(baseUrl, [authHandler]);
     this.workApi = new WorkApi(baseUrl, [authHandler]);
@@ -39,7 +65,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
   // Projects
 
-  createProject = async (project: Project): Promise<Project> => {
+  createProject = async (): Promise<Project> => {
     throw new Error("Not implemented");
   }
 
@@ -73,9 +99,14 @@ export class AzureDevOpsAgileService extends BaseAgileService {
   createProviderSprints = async (sprints: Sprint[]): Promise<Sprint[]> => {
     const teamContext = await this.getTeamContext();
 
-    return await Promise.all(sprints.map((sprint: Sprint) => {
-      return this.createProviderSprint(sprint, teamContext);
-    }));
+    console.log(`Creating ${sprints.length} sprints`);
+
+    const createdSprints: Sprint[] = [];
+
+    for (const sprint of sprints) {
+      createdSprints.push(await this.createProviderSprint(sprint, teamContext));
+    }
+    return sprints;
   }
 
   deleteSprint = async (id: string): Promise<void> => {
@@ -87,8 +118,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
   private async createProviderSprint(sprint: Sprint, teamContext: TeamContext): Promise<Sprint> {
     const { name, startDate, finishDate } = sprint;
-    console.log(`Creating sprint '${name}'`);
-
+    
     // Creates classification node and returns identifier required for sprint ID
     const identifier = await this.createOrUpdateClassificationNode(sprint, teamContext);
 
@@ -104,6 +134,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
     // Assign generated ID from Azure DevOps to sprint
     sprint.id = result.id;
+    console.log(`Sprint '${name}' created`);
     return sprint;
   }
 

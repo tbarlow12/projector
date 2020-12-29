@@ -1,7 +1,9 @@
 import { Octokit } from "@octokit/rest";
 import axios from "axios";
 import { basename } from "path";
+import { ConfigValue } from "../../../constants";
 import { GitHubConfig, RepoItem, RepoItemType } from "../../../models";
+import { Config } from "../../../utils";
 import { BaseRepoService } from "../baseRepoService";
 
 export interface GitHubRepoServiceProviderOptions {
@@ -13,7 +15,10 @@ export class GitHubRepoService extends BaseRepoService {
 
   constructor(config?: GitHubConfig) {
     super();
-    const accessToken = config?.personalAccessToken;
+    // Prefer environment variable over config
+    const accessToken = Config.getValueWithDefault(
+      ConfigValue.GithubAccessToken, config?.personalAccessToken);
+
     this.github = new Octokit({
       userAgent: "cse-cli",
       auth: accessToken,

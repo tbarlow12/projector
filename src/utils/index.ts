@@ -5,3 +5,4 @@ export * from "./guard";
 export * from "./retry";
 export * from "./sleep";
 export * from "./typeUtils";
+export * from "./userUtils";

@@ -24,7 +24,7 @@
     "sprints": {
       "defaultSprintLength": 5,
       "defaultNumberOfSprints": 10,
-      "defaultDaysBetweenSprints": 3,
+      "defaultDaysBetweenSprints": 2,
       "defaultSprintNamePattern": "Sprint ${sprintIndex}",
       "defaultSprintStartIndex": 1
     }

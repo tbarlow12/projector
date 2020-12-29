@@ -18,6 +18,9 @@ describe("Config Service", () => {
           lengthOfSprintInDays: Config.getValue(ConfigValue.DefaultSprintLength),
           numberOfSprints: Config.getValue(ConfigValue.DefaultNumberOfSprints),
           startDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`,
+          daysBetweenSprints: Config.getValue(ConfigValue.DefaultDaysBetweenSprints),
+          sprintIndexStart: Config.getValue(ConfigValue.DefaultSprintStartIndex),
+          sprintNamePattern: Config.getValue(ConfigValue.DefaultSprintNamePattern),
         },
       },
       github: {

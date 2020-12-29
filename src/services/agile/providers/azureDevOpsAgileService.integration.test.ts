@@ -3,17 +3,28 @@ import { ConfigValue, NumberConstants } from "../../../constants";
 import { AgileServiceFactory } from "../../../factories";
 import { registerProviders } from "../../../initialization/registerProviders";
 import { BacklogItemType, Sprint } from "../../../models";
-import { Config, retryAsync } from "../../../utils";
+import { Config, retryAsync, UserUtils } from "../../../utils";
 import { AgileServiceProvider } from "../agileServiceProvider";
 import { AzureDevOpsProviderOptions } from "./azureDevOpsAgileService";
 
 describe("Azure DevOps Backlog Service", () => {
   registerProviders();
 
+  const originalLogFunction = console.log;
+
+  beforeEach(() => {
+    UserUtils.confirmAction = jest.fn(() => Promise.resolve(true));
+    console.log = jest.fn();
+  });
+
+  afterEach(() => {
+    console.log = originalLogFunction;
+  });
+
   const providerOptions: AzureDevOpsProviderOptions = {
-    baseUrl: Config.getValue(ConfigValue.TestAzDOBaseUrl),
-    personalAccessToken: Config.getValue(ConfigValue.TestAzDOAccessToken),
-    projectName: Config.getValue(ConfigValue.TestAzDOProjectName),
+    baseUrl: Config.getValue(ConfigValue.AzDOBaseUrl),
+    personalAccessToken: Config.getValue(ConfigValue.AzDOAccessToken),
+    projectName: Config.getValue(ConfigValue.AzDOProjectName),
   };
 
   const service = AgileServiceFactory.get({
@@ -35,6 +46,8 @@ describe("Azure DevOps Backlog Service", () => {
     });
 
     const sprints = await service.createSprints(initialSprints);
+
+    expect(UserUtils.confirmAction).toBeCalled();
 
     expect(sprints).toHaveLength(initialSprints.length);
 

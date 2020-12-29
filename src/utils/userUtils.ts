@@ -17,6 +17,6 @@ export class UserUtils {
     return new Promise((resolve) => read.question(question, (answer: string) => {
       read.close();
       resolve(answer);
-    }))
+    }));
   }
 }
