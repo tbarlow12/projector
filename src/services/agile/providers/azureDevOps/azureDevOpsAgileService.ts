@@ -4,11 +4,13 @@ import { TeamContext } from "azure-devops-node-api/interfaces/CoreInterfaces";
 import { TreeStructureGroup } from "azure-devops-node-api/interfaces/WorkItemTrackingInterfaces";
 import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
-import { ConfigValue } from "../../../constants";
-import { BacklogItem, Project, Sprint } from "../../../models";
-import { AgileConfig } from "../../../models/config/agile/agileConfig";
-import { Config, Guard, retryAsync } from "../../../utils";
-import { BaseAgileService } from "../baseAgileService";
+import { ConfigValue } from "../../../../constants";
+import { BacklogItem, Project, Sprint } from "../../../../models";
+import { AgileConfig } from "../../../../models/config/agile/agileConfig";
+import { Config, Guard, retryAsync } from "../../../../utils";
+import { BaseAgileService } from "../../baseAgileService";
+import { AzureDevOpsUtils } from "./azureDevOpsUtils";
+import { AzureDevOpsWorkItemType } from "./azureDevOpsWorkItemType";
 
 export interface AzureDevOpsProviderOptions {
   baseUrl: string;
@@ -71,15 +73,23 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
   // Backlog Items
 
+  getBacklogItems = async (): Promise<BacklogItem[]> => {
+    const workItems = await this.workItemTracking.getWorkItems([6]);
+    return workItems.map(AzureDevOpsUtils.mapWorkItem);
+  }
+
   createProviderBacklogItems = async (items: BacklogItem[]): Promise<BacklogItem[]> => {
     // await this.workItemTracking.createWorkItem()
-    const workItem = await this.workItemTracking.createWorkItem(undefined, [{
-      op: "add",
-      path: "/fields/System.Title",
-      from: null,
-      value: "Sample Task"
-    }], this.projectName, "task");
-    return [];
+    const backlogItems: BacklogItem[] = [];
+    for (const item of items) {
+      const workItem = await this.workItemTracking.createWorkItem(
+        undefined,
+        AzureDevOpsUtils.createPatchDocument(item),
+        this.projectName,
+        AzureDevOpsUtils.getWorkItemType(item));
+      backlogItems.push(AzureDevOpsUtils.mapWorkItem(workItem));
+    }
+    return backlogItems;
   }
 
   // Sprints

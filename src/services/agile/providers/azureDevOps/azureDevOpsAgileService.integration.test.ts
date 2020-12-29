@@ -1,10 +1,10 @@
 import { random } from "@supercharge/strings";
-import { ConfigValue, NumberConstants } from "../../../constants";
-import { AgileServiceFactory } from "../../../factories";
-import { registerProviders } from "../../../initialization/registerProviders";
-import { BacklogItemType, Sprint } from "../../../models";
-import { Config, retryAsync, UserUtils } from "../../../utils";
-import { AgileServiceProvider } from "../agileServiceProvider";
+import { ConfigValue, NumberConstants } from "../../../../constants";
+import { AgileServiceFactory } from "../../../../factories";
+import { registerProviders } from "../../../../initialization/registerProviders";
+import { BacklogItemType, Sprint } from "../../../../models";
+import { Config, retryAsync, UserUtils } from "../../../../utils";
+import { AgileServiceProvider } from "../../agileServiceProvider";
 import { AzureDevOpsProviderOptions } from "./azureDevOpsAgileService";
 
 describe("Azure DevOps Backlog Service", () => {
@@ -78,11 +78,16 @@ describe("Azure DevOps Backlog Service", () => {
     }
   }, 60000);
 
-  fit("can create a task", async () => {
+  fit("can create a story", async () => {
     await service.createBacklogItems([
       {
-        name: "My Sample Task",
-        type: BacklogItemType.Task,
+        name: "My Sample Story",
+        type: BacklogItemType.Story,
+        description: "This is my sample story",
+        acceptanceCriteria: [
+          "This should work",
+          "This whould work well",
+        ]
       }
     ]);
   }, 60000);
