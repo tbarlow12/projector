@@ -1,19 +1,48 @@
-import { BacklogItem, BacklogItemType, AgileService, Sprint, Project } from "../../models";
-import { BaseAgileService } from "./baseAgileService";
+import { AgileService, BacklogItem, BacklogItemType, Project, Sprint } from "../../models";
 import { defaultBacklogItems, emptyBacklogItems } from "../../samples";
+import { BaseAgileService } from "./baseAgileService";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+interface MockAgileServiceFunctions {
+  getBacklogItems: any;
+  createBacklogItems: any;
+  deleteBacklogItems: any;
+  getSprint: any;
+  createSprints: any;
+  deleteSprint: any;
+  createProject: any;
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 
 class MockAgileService extends BaseAgileService {
   createProject: (project: Project) => Promise<Project>;
-  getSprint: (id: string) => Promise<Sprint>;
-  deleteSprint: (id: string) => Promise<void>;
+
+  getBacklogItems: (ids: string[], includeChildren?: boolean) => Promise<BacklogItem[]>;
   createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
+  deleteBacklogItems: (ids: string[]) => Promise<void>;
+
+  getSprint: (id: string) => Promise<Sprint>;
   createProviderSprints: (sprints: Sprint[]) => Promise<Sprint[]>;
+  deleteSprint: (id: string) => Promise<void>;
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(createBacklogItemsJestFn: any, createSprintsJestFn: any, getSprint: any, deleteSprint: any, createProject: any) {
+  constructor(mockFunctions: MockAgileServiceFunctions) {
     super({providerName: "test"});
-    this.createProviderBacklogItems = createBacklogItemsJestFn;
-    this.createProviderSprints = createSprintsJestFn;
+    const {
+      getBacklogItems,
+      createBacklogItems,
+      deleteBacklogItems,
+      createProject,
+      createSprints,
+      deleteSprint,
+      getSprint,
+    } = mockFunctions;
+    
+    this.getBacklogItems = getBacklogItems;
+    this.createProviderBacklogItems = createBacklogItems;
+    this.deleteBacklogItems = deleteBacklogItems;
+    this.createProviderSprints = createSprints;
     this.getSprint = getSprint;
     this.deleteSprint = deleteSprint;
     this.createProject = createProject;
@@ -37,7 +66,16 @@ describe("Base Backlog Service", () => {
       };
     })));
     
-    const service: AgileService = new MockAgileService(createBacklogItems, createSprints, jest.fn(), jest.fn(), jest.fn());
+    const service: AgileService = new MockAgileService({
+      createBacklogItems,
+      createSprints,
+      createProject: jest.fn(),
+      getBacklogItems: jest.fn(),
+      deleteBacklogItems: jest.fn(),
+      deleteSprint: jest.fn(),
+      getSprint: jest.fn(),
+    });
+    
     const backlogItems: BacklogItem[] = [
       {
         name: "Story 1",

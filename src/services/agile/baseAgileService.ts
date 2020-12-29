@@ -25,13 +25,18 @@ export abstract class BaseAgileService implements AgileService {
 
   // Abstract functions
 
-  // Backlog Items
-  abstract createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
-
   // Projects
+
   abstract createProject: (project: Project) => Promise<Project>;
+
+  // Backlog Items
+
+  abstract getBacklogItems: (ids: string[], includeChildren?: boolean) => Promise<BacklogItem[]>;
+  abstract createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
+  abstract deleteBacklogItems: (ids: string[], includeChildren?: boolean) => Promise<void>;
   
   // Sprints
+  
   abstract getSprint: (id: string) => Promise<Sprint>;
   abstract createProviderSprints: (sprints: Sprint[]) => Promise<Sprint[]>;
   abstract deleteSprint: (id: string) => Promise<void>;

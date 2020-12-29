@@ -14,6 +14,16 @@ export class Config {
     return config.get(valueName) as T;
   }
 
+  public static getRequiredValueWithDefault<T=string>(valueName: ConfigValue, defaultValue: T, errorMessage?: string): T {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const config = require("config");
+    const value: T = (config.has(valueName)) ? config.get(valueName) : defaultValue;
+    if (!value) {
+      throw new Error(errorMessage || `Config value '${valueName}' required`);
+    }
+    return value;
+  }
+
   public static getValueWithDefault<T=string>(valueName: ConfigValue, defaultValue?: T): T|undefined {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const config = require("config");
