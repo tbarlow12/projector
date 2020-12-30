@@ -1,20 +1,22 @@
-import { BacklogItem, BacklogItemType, BacklogService, Sprint } from "../../models";
+import { BacklogItem, BacklogItemType, AgileService, Sprint, Project } from "../../models";
 import { BaseAgileService } from "./baseAgileService";
 import { defaultBacklogItems, emptyBacklogItems } from "../../samples";
 
-class MockBacklogService extends BaseAgileService {
+class MockAgileService extends BaseAgileService {
+  createProject: (project: Project) => Promise<Project>;
   getSprint: (id: string) => Promise<Sprint>;
   deleteSprint: (id: string) => Promise<void>;
   createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
   createProviderSprints: (sprints: Sprint[]) => Promise<Sprint[]>;
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(createBacklogItemsJestFn: any, createSprintsJestFn: any, getSprint: any, deleteSprint: any) {
+  constructor(createBacklogItemsJestFn: any, createSprintsJestFn: any, getSprint: any, deleteSprint: any, createProject: any) {
     super({providerName: "test"});
     this.createProviderBacklogItems = createBacklogItemsJestFn;
     this.createProviderSprints = createSprintsJestFn;
     this.getSprint = getSprint;
     this.deleteSprint = deleteSprint;
+    this.createProject = createProject;
   }
 }
 
@@ -35,7 +37,7 @@ describe("Base Backlog Service", () => {
       };
     })));
     
-    const service: BacklogService = new MockBacklogService(createBacklogItems, createSprints, jest.fn(), jest.fn());
+    const service: AgileService = new MockAgileService(createBacklogItems, createSprints, jest.fn(), jest.fn(), jest.fn());
     const backlogItems: BacklogItem[] = [
       {
         name: "Story 1",
@@ -62,11 +64,11 @@ describe("Base Backlog Service", () => {
 
   it("returns empty sample backlog items", () => {
     // Act & Assert
-    expect(MockBacklogService.createSampleBacklogItems(true)).toEqual(emptyBacklogItems);
+    expect(MockAgileService.createSampleBacklogItems(true)).toEqual(emptyBacklogItems);
   });
 
   it("returns default sample backlog items", () => {
     // Act & Assert
-    expect(MockBacklogService.createSampleBacklogItems(false)).toEqual(defaultBacklogItems);
+    expect(MockAgileService.createSampleBacklogItems(false)).toEqual(defaultBacklogItems);
   });
 });
