@@ -4,9 +4,24 @@
 
 A command-line interface for all things Commercial Software Engineering.
 
+## Getting Started
+
+### Running CLI from src
+
+In the root of the repo, run `npm link` to create a symbolic link in your local npm configuration.
+If you'd like to use the CSE cli in a separate directory, navigate to that directory and run `npm link cse-cli`.
+
+You will then be able to execute commands with the `cse` executable inside that directory.
+
+### Running Tests
+
+In order to run tests (both unit and integration), set the environment variables specified in the `.env.sample` file.
+
+The tests have already been configured to read variables from the `.env` file.
+
 ## Installation
 
-Simply run `npm i` at root.
+Run `npm i` at root.
 
 ## Configuration
 
@@ -22,4 +37,4 @@ At root, run `npm run test`.
 
 ## Run
 
-TODO.
+Run `cse` to see the subcommands available.
