@@ -107,7 +107,7 @@ describe("Command", () => {
     
     // Act
     new Command()
-      .asciiArt(originalText)
+      .addAsciiArt(originalText)
       .parse(["node.exe", "index.js", "commandName"]);
 
     // Assert
