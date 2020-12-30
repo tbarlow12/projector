@@ -1,15 +1,12 @@
+import { ProjectCreationOptions } from "../../commands/commands/project/commands/init/projectInit";
 import { ConfigValue, FileConstants } from "../../constants";
-import { BacklogConfig, CseCliConfig, GitHubConfig } from "../../models";
+import { AgileConfig, CseCliConfig, GitHubConfig } from "../../models";
 import { Config, FileUtils } from "../../utils";
-import { BacklogServiceProvider } from "../backlog";
-import { AzureDevOpsProviderOptions } from "../backlog/providers";
+import { AgileServiceProvider } from "../agile";
+import { AzureDevOpsProviderOptions } from "../agile/providers";
 
 export interface ConfigOptions {
   configFilePath?: string;
-}
-
-export interface ConfigInitializationOptions {
-  backlogProvider?: BacklogServiceProvider;
 }
 
 /**
@@ -18,10 +15,10 @@ export interface ConfigInitializationOptions {
  */
 export class ConfigService {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-module-boundary-types 
-  public static createInitialConfig(options: ConfigInitializationOptions): CseCliConfig {
-    const { backlogProvider } = options;
+  public static createInitialConfig(options: ProjectCreationOptions): CseCliConfig {
+    const { agileProvider } = options;
     return {
-      backlog: backlogProvider ? this.createBacklogConfig(backlogProvider) : undefined,
+      agile: agileProvider ? this.createAgileConfig(agileProvider) : undefined,
       github: this.createGithubConfig()
     };
   }
@@ -32,7 +29,7 @@ export class ConfigService {
     return existingConfig;
   }
 
-  private static createBacklogConfig(provider: BacklogServiceProvider): BacklogConfig {
+  private static createAgileConfig(provider: AgileServiceProvider): AgileConfig {
     const now = new Date();
     return {
       providerName: provider,
@@ -40,7 +37,10 @@ export class ConfigService {
       sprints: {
         startDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`,
         lengthOfSprintInDays: Config.getValue(ConfigValue.DefaultSprintLength),
+        daysBetweenSprints: Config.getValue(ConfigValue.DefaultDaysBetweenSprints),
         numberOfSprints: Config.getValue(ConfigValue.DefaultNumberOfSprints),
+        sprintIndexStart: Config.getValue(ConfigValue.DefaultSprintStartIndex),
+        sprintNamePattern: Config.getValue(ConfigValue.DefaultSprintNamePattern),
       }
     };
   }
@@ -52,9 +52,9 @@ export class ConfigService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private static getProviderOptions(provider: BacklogServiceProvider): any {
+  private static getProviderOptions(provider: AgileServiceProvider): any {
     switch (provider) {
-      case BacklogServiceProvider.AzureDevOps:
+      case AgileServiceProvider.AzureDevOps:
       default:
         const azDoProviderOptions: AzureDevOpsProviderOptions = {
           baseUrl: "{Base URL for Azure DevOps organization}",

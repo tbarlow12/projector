@@ -20,10 +20,13 @@
     "owner": "microsoft",
     "repo": "code-with-engineering-playbook"
   },
-  "backlog": {
+  "agile": {
     "sprints": {
-      "defaultSprintLength": 0,
-      "defaultNumberOfSprints": 0
+      "defaultSprintLength": 5,
+      "defaultNumberOfSprints": 10,
+      "defaultDaysBetweenSprints": 2,
+      "defaultSprintNamePattern": "Sprint ${sprintIndex}",
+      "defaultSprintStartIndex": 1
     }
   }
 }

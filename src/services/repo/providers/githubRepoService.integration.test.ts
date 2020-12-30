@@ -5,7 +5,7 @@ import { GitHubRepoService } from "./githubRepoService";
 describe("GitHub Repo Service", () => {
   // Setup
   const service = new GitHubRepoService({
-    personalAccessToken: Config.getValue(ConfigValue.TestGithubAccessToken)
+    personalAccessToken: Config.getValue(ConfigValue.GithubAccessToken)
   });
 
   it("gets the latest commit hash", async () => {

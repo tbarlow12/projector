@@ -1,3 +1,3 @@
-export * from "./backlog";
+export * from "./agile";
 export * from "./config";
 export * from "./repo";

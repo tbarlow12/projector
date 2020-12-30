@@ -1,2 +1,2 @@
-export * from "./backlogServiceFactory";
+export * from "./agileServiceFactory";
 export * from "./repoServiceFactory";

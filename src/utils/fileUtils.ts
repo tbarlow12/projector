@@ -5,8 +5,10 @@ export class FileUtils {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static readJson(relativePath: string): any {
     const path = join(process.cwd(), relativePath);
-    const fileContent = readFileSync(path).toString();
-    return JSON.parse(fileContent);
+    if (existsSync(path)) {
+      const fileContent = readFileSync(path).toString();
+      return JSON.parse(fileContent);
+    }
   }
 
   public static mkdirIfNotExists(path: string): void {

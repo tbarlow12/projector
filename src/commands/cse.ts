@@ -1,6 +1,6 @@
 import { Command } from "../extensions";
 import { registerProviders } from "../initialization/registerProviders";
-import { backlog, project, links, playbook } from "./commands";
+import { agile, project, links, playbook } from "./commands";
 
 export const cse = new Command()
   .description("CSE Bootstrap CLI")
@@ -10,7 +10,7 @@ export const cse = new Command()
   })
   .asciiArt("CSE")
   .passCommandToAction(false)
-  .addCommand(backlog)
+  .addCommand(agile)
   .addCommand(links)
   .addCommand(playbook)
   .addCommand(project)
