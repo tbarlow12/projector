@@ -1,10 +1,9 @@
-import chalk from "chalk";
 import { Command as CommanderCommand } from "commander";
-import figlet from "figlet";
 import { CseCliConfig } from "../models/config/cliConfig";
 import { Link } from "../models/general/link";
 import { ConfigService } from "../services";
 import { urlCommand } from "./urlCommand";
+import { UserUtils } from "../utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ActionHandler = (options: any, config: CseCliConfig) => void|Promise<void>;
@@ -41,9 +40,9 @@ export class Command extends CommanderCommand {
     return this;
   }
 
-  public asciiArt(message: string): Command {
+  public addAsciiArt(message: string): Command {
     this.addAction(() => {
-      console.log(chalk.cyanBright(figlet.textSync(message)));
+      console.log(UserUtils.createAsciiArt(message));
     });
     return this;
   }

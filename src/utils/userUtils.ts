@@ -1,3 +1,5 @@
+import chalk from "chalk";
+import figlet from "figlet";
 import { createInterface } from "readline";
 
 export class UserUtils {
@@ -18,5 +20,9 @@ export class UserUtils {
       read.close();
       resolve(answer);
     }));
+  }
+
+  public static createAsciiArt(message: string): string {
+    return chalk.cyanBright(figlet.textSync(message));
   }
 }
