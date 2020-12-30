@@ -78,15 +78,29 @@ describe("Azure DevOps Backlog Service", () => {
     }
   }, 60000);
 
-  fit("can create a story", async () => {
+  it("can get a hierarchical work item", async () => {
+    const backlogItems = await service.getBacklogItems(["14"]);
+    expect(backlogItems).toHaveLength(1);
+    const { children } = backlogItems[0];
+    expect(children).toBeDefined();
+    expect(children!.length).toBeTruthy();
+  }, 60000);
+
+  fit("can create a hierarchical work item", async () => {
     await service.createBacklogItems([
       {
-        name: "My Sample Story",
+        name: "My Sample Story with Tasks",
         type: BacklogItemType.Story,
         description: "This is my sample story",
         acceptanceCriteria: [
           "This should work",
           "This whould work well",
+        ],
+        children: [
+          {
+            name: "My Task",
+            type: BacklogItemType.Task
+          }
         ]
       }
     ]);

@@ -1,5 +1,65 @@
 [
   {
+    id: 9,
+    rev: 1,
+    fields: {
+      "System.AreaPath": "cli-test",
+      "System.TeamProject": "cli-test",
+      "System.IterationPath": "cli-test",
+      "System.WorkItemType": "Feature",
+      "System.State": "New",
+      "System.Reason": "New",
+      "System.CreatedDate": "2020-12-29T16:53:39.767Z",
+      "System.CreatedBy": {
+        displayName: "Tanner Barlow",
+        url: "https://spsprodcus4.vssps.visualstudio.com/A13fdf9fb-2033-4574-92d9-24dddca98215/_apis/Identities/71ec6326-10c6-6921-b274-ea5e7fa5b2ea",
+        _links: {
+          avatar: {
+            href: "https://dev.azure.com/cse-cli/_apis/GraphProfile/MemberAvatars/aad.NzFlYzYzMjYtMTBjNi03OTIxLWIyNzQtZWE1ZTdmYTViMmVh",
+          },
+        },
+        id: "71ec6326-10c6-6921-b274-ea5e7fa5b2ea",
+        uniqueName: "tabarlow@microsoft.com",
+        imageUrl: "https://dev.azure.com/cse-cli/_apis/GraphProfile/MemberAvatars/aad.NzFlYzYzMjYtMTBjNi03OTIxLWIyNzQtZWE1ZTdmYTViMmVh",
+        descriptor: "aad.NzFlYzYzMjYtMTBjNi03OTIxLWIyNzQtZWE1ZTdmYTViMmVh",
+      },
+      "System.ChangedDate": "2020-12-29T16:53:39.767Z",
+      "System.ChangedBy": {
+        displayName: "Tanner Barlow",
+        url: "https://spsprodcus4.vssps.visualstudio.com/A13fdf9fb-2033-4574-92d9-24dddca98215/_apis/Identities/71ec6326-10c6-6921-b274-ea5e7fa5b2ea",
+        _links: {
+          avatar: {
+            href: "https://dev.azure.com/cse-cli/_apis/GraphProfile/MemberAvatars/aad.NzFlYzYzMjYtMTBjNi03OTIxLWIyNzQtZWE1ZTdmYTViMmVh",
+          },
+        },
+        id: "71ec6326-10c6-6921-b274-ea5e7fa5b2ea",
+        uniqueName: "tabarlow@microsoft.com",
+        imageUrl: "https://dev.azure.com/cse-cli/_apis/GraphProfile/MemberAvatars/aad.NzFlYzYzMjYtMTBjNi03OTIxLWIyNzQtZWE1ZTdmYTViMmVh",
+        descriptor: "aad.NzFlYzYzMjYtMTBjNi03OTIxLWIyNzQtZWE1ZTdmYTViMmVh",
+      },
+      "System.CommentCount": 0,
+      "System.Title": "Test Feature",
+      "Microsoft.VSTS.Common.StateChangeDate": "2020-12-29T16:53:39.767Z",
+      "Microsoft.VSTS.Common.Priority": 2,
+      "Microsoft.VSTS.Common.ValueArea": "Business",
+    },
+    relations: [
+      {
+        rel: "System.LinkTypes.Hierarchy-Forward",
+        url: "https://dev.azure.com/cse-cli/e1190f63-a699-453b-a092-3910414c4b94/_apis/wit/workItems/8",
+        attributes: {
+          isLocked: false,
+          name: "Child",
+        },
+      },
+    ],
+    url: "https://dev.azure.com/cse-cli/e1190f63-a699-453b-a092-3910414c4b94/_apis/wit/workItems/9",
+  },
+]
+
+
+[
+  {
     id: 6,
     rev: 2,
     fields: {

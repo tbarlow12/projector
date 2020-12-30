@@ -1,11 +1,12 @@
 import { getPersonalAccessTokenHandler } from "azure-devops-node-api";
 import { CoreApi } from "azure-devops-node-api/CoreApi";
 import { TeamContext } from "azure-devops-node-api/interfaces/CoreInterfaces";
-import { TreeStructureGroup } from "azure-devops-node-api/interfaces/WorkItemTrackingInterfaces";
+import { TreeStructureGroup, WorkItem, WorkItemExpand, WorkItemType } from "azure-devops-node-api/interfaces/WorkItemTrackingInterfaces";
+import { WorkItemTypeClass } from "azure-devops-node-api/interfaces/WorkItemTrackingProcessInterfaces";
 import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
 import { ConfigValue } from "../../../../constants";
-import { BacklogItem, Project, Sprint } from "../../../../models";
+import { BacklogItem, BacklogItemType, Project, Sprint } from "../../../../models";
 import { AgileConfig } from "../../../../models/config/agile/agileConfig";
 import { Config, Guard, retryAsync } from "../../../../utils";
 import { BaseAgileService } from "../../baseAgileService";
@@ -73,21 +74,24 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
   // Backlog Items
 
-  getBacklogItems = async (): Promise<BacklogItem[]> => {
-    const workItems = await this.workItemTracking.getWorkItems([6]);
-    return workItems.map(AzureDevOpsUtils.mapWorkItem);
+  getBacklogItems = async (ids: string[]): Promise<BacklogItem[]> => {
+    const workItems = await this.workItemTracking.getWorkItems(ids.map(id => +id), undefined, undefined, WorkItemExpand.Relations);
+    return await Promise.all(workItems.map((workItem: WorkItem) => this.mapWorkItem(workItem, true)));
   }
 
-  createProviderBacklogItems = async (items: BacklogItem[]): Promise<BacklogItem[]> => {
-    // await this.workItemTracking.createWorkItem()
+  createProviderBacklogItems = async (items: BacklogItem[], parent?: BacklogItem): Promise<BacklogItem[]> => {
     const backlogItems: BacklogItem[] = [];
     for (const item of items) {
       const workItem = await this.workItemTracking.createWorkItem(
         undefined,
-        AzureDevOpsUtils.createPatchDocument(item),
+        AzureDevOpsUtils.createPatchDocument(item, parent?.url),
         this.projectName,
-        AzureDevOpsUtils.getWorkItemType(item));
-      backlogItems.push(AzureDevOpsUtils.mapWorkItem(workItem));
+        AzureDevOpsUtils.getWorkItemType(item.type));
+      const createdBacklogItem = await this.mapWorkItem(workItem);
+      if (item.children) {
+        createdBacklogItem.children = await this.createProviderBacklogItems(item.children, createdBacklogItem);
+      }
+      backlogItems.push(await this.mapWorkItem(workItem));
     }
     return backlogItems;
   }
@@ -199,5 +203,38 @@ export class AzureDevOpsAgileService extends BaseAgileService {
       teamId: defaultTeam?.id,
     };
     return this.teamContext;
+  }
+
+  private async mapWorkItem(workItem: WorkItem, includeChildren: boolean = false): Promise<BacklogItem> {
+    const { id, fields, url } = workItem;
+    const workItemType: AzureDevOpsWorkItemType = fields!["System.WorkItemType"];    
+    const name: string = fields!["System.Title"];
+    return {
+      id: id!.toString(),
+      name,
+      type: AzureDevOpsUtils.getBacklogItemType(workItemType),
+      children: includeChildren ? await this.getBacklogItemChildren(workItem) : undefined,
+      url,
+    };
+  }
+
+  private async getBacklogItemChildren(workItem: WorkItem): Promise<BacklogItem[]|undefined> {
+    const { relations } = workItem;
+    if (relations) {
+      const childIds: string[] = [];
+      for (const relation of relations) {
+        const { attributes, url } = relation;
+        if (!attributes || !(attributes.name === "Child")) {
+          continue;
+        }
+        const id = url?.substr(url.lastIndexOf("/") + 1);
+        if (id) {
+          childIds.push(id);
+        }
+      }
+      if (childIds.length) {
+        return await this.getBacklogItems(childIds);
+      }
+    }
   }
 }

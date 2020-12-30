@@ -1,7 +1,6 @@
-import { WorkItem } from "azure-devops-node-api/interfaces/WorkItemTrackingInterfaces";
 import { BacklogItem, BacklogItemType } from "../../../../models";
 import { AzureDevOpsWorkItemType } from "./azureDevOpsWorkItemType";
-import { AzDOJsonPatchDocument, AzDoOp, JsonFieldPatch } from "./jsonPatchDocument";
+import { AzDOJsonPatchDocument, AzDoOp } from "./jsonPatchDocument";
 
 interface FieldValuePair {
   field: string;
@@ -9,37 +8,57 @@ interface FieldValuePair {
 }
 
 export class AzureDevOpsUtils {
-  public static createPatchDocument(backlogItem: BacklogItem): AzDOJsonPatchDocument {
+  public static createPatchDocument(backlogItem: BacklogItem, parentUrl?: string): AzDOJsonPatchDocument {
     const pairs = this.createFieldValuePairs(backlogItem);
     
     // Only include pairs whose value is defined
-    return pairs
+    const document: AzDOJsonPatchDocument = pairs
       .filter(pair => pair.value)
       .map((pair: FieldValuePair) => {
         return {
           op: AzDoOp.Add,
-          from: null,
           path: `/fields/${pair.field}`,
           value: pair.value as string,
         };
       });
-  }
-
-  public static mapWorkItem(workItem: WorkItem): BacklogItem {
-    const { id, fields } = workItem;
-    if (!id) {
-      throw new Error("ID should be defined for work item");
+    
+    if (parentUrl) {
+      document.push({
+        op: AzDoOp.Add,
+        path: "/relations/-",
+        value: {
+          rel: "System.LinkTypes.Hierarchy-Reverse",
+          url: parentUrl,
+          attributes: {
+            isLocked: false,
+            name: "Parent",
+          }
+        }
+      });
     }
-
-    return {
-      id: id.toString(),
-      name: "",
-      type: BacklogItemType.Task,
-    };
+    
+    return document;
   }
 
-  public static getWorkItemType(backlogItem: BacklogItem): AzureDevOpsWorkItemType {
-    switch (backlogItem.type) {
+  // public static getBacklogItemType(workItem: WorkItem): BacklogItemType {
+  //   switch (workItem.) {
+  //     case BacklogItemType.Task:
+  //       return AzureDevOpsWorkItemType.Task;
+  //     case BacklogItemType.Story:
+  //       return AzureDevOpsWorkItemType.UserStory;
+  //     case BacklogItemType.Feature:
+  //       return AzureDevOpsWorkItemType.Feature;
+  //     case BacklogItemType.Epic:
+  //       return AzureDevOpsWorkItemType.Epic;
+  //     case BacklogItemType.Bug:
+  //       return AzureDevOpsWorkItemType.Bug;
+  //     default:
+  //       throw new Error(`Unsupported backlog item type: ${backlogItem.type}`);
+  //   }
+  // }
+
+  public static getWorkItemType(backlogItemType: BacklogItemType): AzureDevOpsWorkItemType {
+    switch (backlogItemType) {
       case BacklogItemType.Task:
         return AzureDevOpsWorkItemType.Task;
       case BacklogItemType.Story:
@@ -51,7 +70,24 @@ export class AzureDevOpsUtils {
       case BacklogItemType.Bug:
         return AzureDevOpsWorkItemType.Bug;
       default:
-        throw new Error(`Unsupported backlog item type: ${backlogItem.type}`);
+        throw new Error(`Unsupported backlog item type: ${backlogItemType}`);
+    }
+  }
+
+  public static getBacklogItemType(workItemType: AzureDevOpsWorkItemType): BacklogItemType {
+    switch (workItemType) {
+      case AzureDevOpsWorkItemType.Task:
+        return BacklogItemType.Task;
+      case AzureDevOpsWorkItemType.UserStory:
+        return BacklogItemType.Story;
+      case AzureDevOpsWorkItemType.Feature:
+        return BacklogItemType.Feature;
+      case AzureDevOpsWorkItemType.Epic:
+        return BacklogItemType.Epic;
+      case AzureDevOpsWorkItemType.Bug:
+        return BacklogItemType.Bug;
+      default:
+        throw new Error(`Unsupported backlog item type: ${workItemType}`);
     }
   }
 
@@ -78,6 +114,6 @@ export class AzureDevOpsUtils {
       return undefined;
     }
 
-    return `<div><ul>${acceptanceCriteria.map((line: string) => `<li>${line}</li>`)}</ul></div>`
+    return `<div><ul>${acceptanceCriteria.map((line: string) => `<li>${line}</li>`).join("")}</ul></div>`
   }
 }

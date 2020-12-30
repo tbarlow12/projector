@@ -5,8 +5,8 @@ export enum AzDoOp {
 export interface JsonFieldPatch {
   op: AzDoOp;
   path: string;
-  from: string|null;
-  value: string;
+  from?: string;
+  value: any;
 }
 
 export type AzDOJsonPatchDocument = JsonFieldPatch[];
