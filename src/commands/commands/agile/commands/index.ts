@@ -1,2 +1,2 @@
 export { agileInit } from "./init";
-export { agileCreate } from "./create";
+export { agileSprints } from "./sprints";

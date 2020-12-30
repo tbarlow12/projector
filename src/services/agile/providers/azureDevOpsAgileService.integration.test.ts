@@ -32,7 +32,7 @@ describe("Azure DevOps Backlog Service", () => {
     providerOptions,
   });
 
-  fit("can create sprints", async () => {
+  it("can create sprints", async () => {
     const start = new Date();
     start.setFullYear(2021);
     start.setUTCHours(0, 0, 0, 0);
@@ -77,27 +77,4 @@ describe("Azure DevOps Backlog Service", () => {
       await expect(service.getSprint(id)).rejects.toThrow();
     }
   }, 60000);
-  
-  it("can create an epic", async () => {
-    await service.createBacklogItems([{
-      name: "My Epic",
-      type: BacklogItemType.Epic,
-    }]);
-  });
-
-  it("can create a feature", () => {
-    throw new Error("not implemented");
-  });
-
-  it("can create a story", () => {
-    throw new Error("not implemented");
-  });
-
-  it("can create a task", () => {
-    throw new Error("not implemented");
-  });
-
-  it("can create a bug", () => {
-    throw new Error("not implemented");
-  });
 });
