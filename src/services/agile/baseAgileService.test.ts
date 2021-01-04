@@ -8,6 +8,7 @@ interface MockAgileServiceFunctions {
   deleteSprint: any;
   getBacklogItems: any;
   createProviderBacklogItems: any;
+  deleteBacklogItems: any;
   createProviderSprints: any;
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
@@ -16,8 +17,9 @@ class MockAgileService extends BaseAgileService {
   createProject: (project: Project) => Promise<Project>;
   getSprint: (id: string) => Promise<Sprint>;
   deleteSprint: (id: string) => Promise<void>;
-  getBacklogItems: () => Promise<BacklogItem[]>;
+  getBacklogItems: (ids: string[]) => Promise<BacklogItem[]>;
   createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
+  deleteBacklogItems: (ids: string[]) => Promise<void>;
   createProviderSprints: (sprints: Sprint[]) => Promise<Sprint[]>;
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,12 +29,14 @@ class MockAgileService extends BaseAgileService {
       getBacklogItems,
       createProviderBacklogItems,
       createProviderSprints,
+      deleteBacklogItems,
       getSprint,
       deleteSprint,
       createProject,
     } = functions;
     this.getBacklogItems = getBacklogItems;
     this.createProviderBacklogItems = createProviderBacklogItems;
+    this.deleteBacklogItems = deleteBacklogItems;
     this.createProviderSprints = createProviderSprints;
     this.getSprint = getSprint;
     this.deleteSprint = deleteSprint;
@@ -60,6 +64,7 @@ describe("Base Backlog Service", () => {
     const service: AgileService = new MockAgileService({
       createProviderBacklogItems,
       createProviderSprints,
+      deleteBacklogItems: jest.fn(),
       createProject: jest.fn(),
       deleteSprint: jest.fn(),
       getBacklogItems: jest.fn(),
