@@ -10,15 +10,18 @@ import { Logger } from "../utils";
 
 describe("Command", () => {
   beforeAll(() => {
-    mockFs({
-      "cse.json": "{}"
-    }, { createCwd: true, createTmp: true });
+    mockFs(
+      {
+        "cse.json": "{}",
+      },
+      { createCwd: true, createTmp: true },
+    );
   });
 
   afterAll(() => {
     mockFs.restore();
   });
-  
+
   beforeEach(() => {
     Logger.log = jest.fn();
   });
@@ -28,9 +31,7 @@ describe("Command", () => {
     const initializeAction = jest.fn();
 
     // Act
-    new Command()
-      .initialize(initializeAction)
-      .parse(["node.exe", "index.js", "commandName"]);
+    new Command().initialize(initializeAction).parse(["node.exe", "index.js", "commandName"]);
 
     // Assert
     expect(initializeAction).toBeCalled();
@@ -47,7 +48,7 @@ describe("Command", () => {
       .addAction(action2)
       .addAction(action3)
       .parse(["node.exe", "index.js", "commandName"]);
-    
+
     expect(action1).toBeCalled();
     expect(action2).toBeCalled();
     expect(action3).toBeCalled();
@@ -72,7 +73,7 @@ describe("Command", () => {
     const expectedParsedOptions = {
       myOption: optionValue,
     };
-    
+
     expect(action1).toBeCalledWith(expectedParsedOptions, expect.anything());
     expect(action2).toBeCalledWith(expectedParsedOptions, expect.anything());
     expect(action3).toBeCalledWith(expectedParsedOptions, expect.anything());
@@ -80,9 +81,7 @@ describe("Command", () => {
 
   it("prints help information", () => {
     // Act
-    new Command()
-      .printHelp()
-      .parse(["node.exe", "index.js", "commandName"]);
+    new Command().printHelp().parse(["node.exe", "index.js", "commandName"]);
 
     // Assert
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -99,11 +98,9 @@ describe("Command", () => {
     const chalkText = "chalk text";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (chalk as any).cyanBright = jest.fn(() => chalkText);
-    
+
     // Act
-    new Command()
-      .asciiArt(originalText)
-      .parse(["node.exe", "index.js", "commandName"]);
+    new Command().asciiArt(originalText).parse(["node.exe", "index.js", "commandName"]);
 
     // Assert
     expect(figlet.textSync).toBeCalledWith(originalText);
@@ -123,8 +120,7 @@ describe("Command", () => {
     });
 
     // Act
-    const command = new Command()
-      .addLinkCommands(links);
+    const command = new Command().addLinkCommands(links);
 
     // Assert
     expect(command.commands).toHaveLength(links.length);

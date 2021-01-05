@@ -5,14 +5,15 @@ export const exampleBacklogItemTemplate: BacklogItemTemplate = {
   description: "",
   items: [
     {
-      name: "As a developer, I have automated linting to enforce code style for the protected branches of the ______ project",
+      name:
+        "As a developer, I have automated linting to enforce code style for the protected branches of the ______ project",
       type: BacklogItemType.Story,
       description: "We need linting. Linting is good",
       acceptanceCriteria: [
         "There is a single command to run linting from the terminal",
         "Linting is triggered on all pull requests to protected branches",
         "Linting failure causes CI pipeline to fail",
-        "CI failure blocks PR merge"
+        "CI failure blocks PR merge",
       ],
       assignedTo: "john.stockton@microsoft.com",
       children: [
@@ -23,15 +24,16 @@ export const exampleBacklogItemTemplate: BacklogItemTemplate = {
         {
           name: "Set up linting in CI pipeline",
           type: BacklogItemType.Task,
-        }
+        },
       ],
     },
     {
       name: "Sample Epic",
       type: BacklogItemType.Epic,
-      description: "This is my sample epic. A backlog item file does not need to have a hierarchical structure. " +
-      "A file could contain just a list of bugs, tasks, stories, features or epics. " +
-      "Since they all have the same data type and properties, you can structure your file as you wish.",
+      description:
+        "This is my sample epic. A backlog item file does not need to have a hierarchical structure. " +
+        "A file could contain just a list of bugs, tasks, stories, features or epics. " +
+        "Since they all have the same data type and properties, you can structure your file as you wish.",
       children: [
         {
           name: "Sample Feature",
@@ -52,15 +54,13 @@ export const exampleBacklogItemTemplate: BacklogItemTemplate = {
                   name: "Sample Bug",
                   type: BacklogItemType.Bug,
                   description: "This is my sample bug",
-                  acceptanceCriteria: [
-                    "The bug is fixed"
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                  acceptanceCriteria: ["The bug is fixed"],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
-  ]
+  ],
 };

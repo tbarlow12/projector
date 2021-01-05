@@ -1,7 +1,5 @@
 import { Command } from "../../../extensions";
-import {
-  agileSprints, agileWork
-} from "./commands";
+import { agileSprints, agileWork } from "./commands";
 
 export const agile = new Command()
   .name("agile")

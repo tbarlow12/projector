@@ -8,11 +8,8 @@ export const agileWorkTemplateList = new Command()
   .description("List available work item templates")
   .addAction(async () => {
     // Stub for now - will fetch templates from repo
-    const templates: BacklogItemTemplate[] = [
-      exampleBacklogItemTemplate,
-      emptyBacklogItemTemplate,
-    ];
+    const templates: BacklogItemTemplate[] = [exampleBacklogItemTemplate, emptyBacklogItemTemplate];
 
     Logger.logHeader("Work Item Templates");
-    templates.forEach(template => Logger.log(template.name));
+    templates.forEach((template) => Logger.log(template.name));
   });

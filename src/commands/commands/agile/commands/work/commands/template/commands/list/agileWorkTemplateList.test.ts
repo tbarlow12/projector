@@ -8,7 +8,7 @@ describe("Agile Work Template List", () => {
   const cseConfig = ModelSimulator.createTestConfig();
 
   beforeAll(() => {
-    const fileSystem: {[fileName: string]: string} = {};
+    const fileSystem: { [fileName: string]: string } = {};
     fileSystem[cseConfigFileName] = JSON.stringify(cseConfig);
     mockFs(fileSystem);
   });

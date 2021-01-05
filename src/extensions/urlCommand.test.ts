@@ -6,15 +6,18 @@ import open from "open";
 
 describe("URL Command", () => {
   beforeAll(() => {
-    mockFs({
-      "cse.json": "{}"
-    }, { createCwd: true, createTmp: true });
+    mockFs(
+      {
+        "cse.json": "{}",
+      },
+      { createCwd: true, createTmp: true },
+    );
   });
 
   afterAll(() => {
     mockFs.restore();
   });
-  
+
   it("creates a URL command with base path", () => {
     // Setup
     const link: Link = {
@@ -24,10 +27,8 @@ describe("URL Command", () => {
     };
 
     // Act
-    urlCommand(link)
-      .parse(["node.exe", "index.js", "commandName"]);
+    urlCommand(link).parse(["node.exe", "index.js", "commandName"]);
 
-    
     // Assert
     expect(open).toBeCalledWith(link.url);
   });
@@ -42,8 +43,7 @@ describe("URL Command", () => {
     const urlPath = "/tbarlow12";
 
     // Act
-    urlCommand(link, urlPath)
-      .parse(["node.exe", "index.js", "commandName"]);
+    urlCommand(link, urlPath).parse(["node.exe", "index.js", "commandName"]);
 
     // Assert
     expect(open).toBeCalledWith(`${link.url}${urlPath}`);

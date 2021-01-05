@@ -1,5 +1,5 @@
 export enum AzDoOp {
-  Add = "add"
+  Add = "add",
 }
 
 export interface JsonFieldPatch {

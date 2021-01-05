@@ -14,9 +14,11 @@ export class UserUtils {
       output: process.stdout,
     });
 
-    return new Promise((resolve) => read.question(question, (answer: string) => {
-      read.close();
-      resolve(answer);
-    }));
+    return new Promise((resolve) =>
+      read.question(question, (answer: string) => {
+        read.close();
+        resolve(answer);
+      }),
+    );
   }
 }

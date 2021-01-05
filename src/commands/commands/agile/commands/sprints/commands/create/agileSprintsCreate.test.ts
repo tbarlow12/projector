@@ -9,7 +9,7 @@ describe("Agile Sprints Create Command", () => {
   const cseConfig = ModelSimulator.createTestConfig();
 
   beforeAll(() => {
-    const fileSystem: {[fileName: string]: string} = {};
+    const fileSystem: { [fileName: string]: string } = {};
     fileSystem[cseConfigFileName] = JSON.stringify(cseConfig);
     mockFs(fileSystem);
     Logger.log = jest.fn();
@@ -19,12 +19,15 @@ describe("Agile Sprints Create Command", () => {
   afterAll(() => {
     mockFs.restore();
   });
-  
+
   it("creates sprints", async () => {
     const createSprints = jest.fn();
-    AgileServiceFactory.get = jest.fn(() => new SimulatorAgileService({
-      createProviderSprints: createSprints,
-    }));
+    AgileServiceFactory.get = jest.fn(
+      () =>
+        new SimulatorAgileService({
+          createProviderSprints: createSprints,
+        }),
+    );
 
     await agileSprintsCreate.parseAsync(CliSimulator.createArgs());
     expect(createSprints).toBeCalled();

@@ -11,11 +11,11 @@ export class ModelSimulator {
           lengthOfSprintInDays: 5,
           daysBetweenSprints: 2,
           numberOfSprints: 10,
-        }
+        },
       },
       github: {
         personalAccessToken: "myGithubToken",
-      }
+      },
     };
   }
 
@@ -32,7 +32,7 @@ export class ModelSimulator {
       {
         name: "My Task",
         type: BacklogItemType.Task,
-      }
+      },
     ];
   }
 }

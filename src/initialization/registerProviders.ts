@@ -1,4 +1,3 @@
-
 import { AgileServiceFactory, RepoServiceFactory } from "../factories";
 import { AgileServiceProvider, GitHubRepoService, RepoServiceProvider } from "../services";
 import { AzureDevOpsAgileService, JiraAgileService } from "../services/agile/providers";

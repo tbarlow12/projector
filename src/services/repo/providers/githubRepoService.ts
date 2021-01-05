@@ -16,8 +16,7 @@ export class GitHubRepoService extends BaseRepoService {
   constructor(config?: GitHubConfig) {
     super();
     // Prefer environment variable over config
-    const accessToken = Config.getValueWithDefault(
-      ConfigValue.GithubAccessToken, config?.personalAccessToken);
+    const accessToken = Config.getValueWithDefault(ConfigValue.GithubAccessToken, config?.personalAccessToken);
 
     this.github = new Octokit({
       userAgent: "cse-cli",
@@ -25,7 +24,13 @@ export class GitHubRepoService extends BaseRepoService {
     });
   }
 
-  getRepoItem = async (owner: string, repo: string, path = "", includeContent?: boolean, branch?: string): Promise<RepoItem> => {
+  getRepoItem = async (
+    owner: string,
+    repo: string,
+    path = "",
+    includeContent?: boolean,
+    branch?: string,
+  ): Promise<RepoItem> => {
     try {
       const { data } = await this.github.repos.getContent({
         owner,
@@ -34,10 +39,12 @@ export class GitHubRepoService extends BaseRepoService {
         ref: branch,
       });
       if (data instanceof Array) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const children: RepoItem[] = await Promise.all((data as any[]).map(async (item) => {
-          return await this.getRepoItem(owner, repo, item.path, includeContent);
-        }));
+        const children: RepoItem[] = await Promise.all(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (data as any[]).map(async (item) => {
+            return await this.getRepoItem(owner, repo, item.path, includeContent);
+          }),
+        );
         return {
           name: basename(path),
           type: RepoItemType.Directory,
@@ -57,13 +64,14 @@ export class GitHubRepoService extends BaseRepoService {
     } catch (err) {
       const { status } = err;
       if (status && status === 403) {
-        const message = "API rate limit exceeded. Try setting GITHUB_TOKEN in your local .env file with a token from GitHub";
+        const message =
+          "API rate limit exceeded. Try setting GITHUB_TOKEN in your local .env file with a token from GitHub";
         throw new Error(message);
       } else {
         throw new Error(`Ran into problem getting items from GitHub: \n\n${JSON.stringify(err, null, 2)}`);
       }
     }
-  }
+  };
 
   latestCommit = async (owner: string, repo: string, branch: string): Promise<string> => {
     const { data } = await this.github.repos.getCommit({
@@ -71,11 +79,11 @@ export class GitHubRepoService extends BaseRepoService {
       repo,
       ref: branch,
     });
-    
+
     const { sha } = data;
     if (!sha) {
       throw new Error(`Could not find latest commit for ${owner}/${repo}`);
     }
     return sha;
-  }
+  };
 }

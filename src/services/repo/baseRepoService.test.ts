@@ -4,7 +4,13 @@ import { FileUtils } from "../../utils";
 import { BaseRepoService } from "./baseRepoService";
 
 class MockRepoService extends BaseRepoService {
-  getRepoItem: (owner: string, repo: string, path?: string, includeContent?: boolean, branch?: string) => Promise<RepoItem>;
+  getRepoItem: (
+    owner: string,
+    repo: string,
+    path?: string,
+    includeContent?: boolean,
+    branch?: string,
+  ) => Promise<RepoItem>;
   latestCommit: (owner: string, repo: string, branch: string) => Promise<string>;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,19 +38,19 @@ describe("Base Repo Service", () => {
     type: RepoItemType.Directory,
     children: [
       {
-        name: "child 1", 
+        name: "child 1",
         path: "path/child 1",
         type: RepoItemType.File,
         content: "content 1",
       },
       {
-        name: "child 2", 
+        name: "child 2",
         path: "path/child 2",
         type: RepoItemType.File,
         content: "content 2",
       },
       {
-        name: "child 3", 
+        name: "child 3",
         path: "path/child 3",
         type: RepoItemType.File,
         content: "content 3",
@@ -66,7 +72,7 @@ describe("Base Repo Service", () => {
 
     // Act
     await service.downloadRepoItem(owner, repo, path, branch, outputPath);
-    
+
     // Assert
     expect(getRepoItemJestFn).toBeCalledWith(owner, repo, path, true, branch);
     expect(FileUtils.mkdirIfNotExists).toBeCalledWith(outputPath);
@@ -79,16 +85,16 @@ describe("Base Repo Service", () => {
     const latestCommitJestFn = jest.fn();
     const service = new MockRepoService(getRepoItemJestFn, latestCommitJestFn);
     const outputPath = "outputPath";
-    
+
     // Act
     await service.downloadRepoItem(owner, repo, path, branch, outputPath);
-    
+
     // Assert
     expect(getRepoItemJestFn).toBeCalledWith(owner, repo, path, true, branch);
 
     const { children, name } = repoItemDirectory;
     expect(children).toBeDefined();
-    
+
     // For TypeScript's benefit
     if (children) {
       expect(children.length).toBeTruthy();
@@ -113,7 +119,7 @@ describe("Base Repo Service", () => {
     const getRepoItemJestFn = jest.fn(() => Promise.resolve(repoItemDirectory));
     const latestCommitJestFn = jest.fn();
     const service = new MockRepoService(getRepoItemJestFn, latestCommitJestFn);
-    
+
     // Act
     const result = await service.listRepoItems(owner, repo, path, branch);
 
@@ -127,7 +133,7 @@ describe("Base Repo Service", () => {
     const getRepoItemJestFn = jest.fn(() => Promise.resolve(repoItemFile));
     const latestCommitJestFn = jest.fn();
     const service = new MockRepoService(getRepoItemJestFn, latestCommitJestFn);
-    
+
     // Act
     const result = await service.listRepoItems(owner, repo, path, branch);
 

@@ -6,23 +6,23 @@ export const emptyBacklogItemTemplate: BacklogItemTemplate = {
   items: [
     {
       name: "",
-      type: BacklogItemType.Epic
+      type: BacklogItemType.Epic,
     },
     {
       name: "",
-      type: BacklogItemType.Feature
+      type: BacklogItemType.Feature,
     },
     {
       name: "",
-      type: BacklogItemType.Story
+      type: BacklogItemType.Story,
     },
     {
       name: "",
-      type: BacklogItemType.Task
+      type: BacklogItemType.Task,
     },
     {
       name: "",
-      type: BacklogItemType.Bug
+      type: BacklogItemType.Bug,
     },
-  ] 
+  ],
 };

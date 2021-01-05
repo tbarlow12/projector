@@ -8,7 +8,7 @@ import { Logger } from "../utils";
 import { urlCommand } from "./urlCommand";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ActionHandler = (options: any, config: CseCliConfig) => void|Promise<void>;
+export type ActionHandler = (options: any, config: CseCliConfig) => void | Promise<void>;
 
 export class Command extends CommanderCommand {
   private actions: ActionHandler[];

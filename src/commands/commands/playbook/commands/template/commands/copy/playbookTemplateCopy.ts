@@ -24,7 +24,7 @@ export const playbookTemplateCopy = new Command()
     if (githubToken) {
       config.github = {
         ...config.github,
-        personalAccessToken: githubToken
+        personalAccessToken: githubToken,
       };
     }
 
@@ -32,7 +32,7 @@ export const playbookTemplateCopy = new Command()
 
     const githubService = RepoServiceFactory.get({
       providerName: RepoServiceProvider.GitHub,
-      ...github
+      ...github,
     });
 
     const playbookOwnerName: string = playbook?.playbookOwner || Config.getValue(ConfigValue.PlaybookOwnerName);
