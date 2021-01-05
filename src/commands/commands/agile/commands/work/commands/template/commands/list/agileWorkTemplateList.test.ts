@@ -22,7 +22,7 @@ describe("Agile Work Template List", () => {
     mockFs.restore();
   });
 
-  it("runs a test", async () => {
+  it("lists work item templates", async () => {
     await agileWorkTemplateList.parseAsync(CliSimulator.createArgs());
     expect(Logger.logHeader).toBeCalledWith("Work Item Templates");
     // Currently a stub for the predefined templates we have in this repo

@@ -1,14 +1,19 @@
 import chalk from "chalk";
 import { Command as CommanderCommand } from "commander";
 import figlet from "figlet";
-import { CseCliConfig } from "../models/config/cliConfig";
+import { createServiceCollection } from "../factories";
+import { CseCliConfig, ServiceCollection } from "../models";
 import { Link } from "../models/general/link";
 import { ConfigService } from "../services";
 import { Logger } from "../utils";
 import { urlCommand } from "./urlCommand";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ActionHandler = (options: any, config: CseCliConfig) => void | Promise<void>;
+export type ActionHandler = (
+  serviceCollection: ServiceCollection,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  options: any,
+  config: CseCliConfig,
+) => void | Promise<void>;
 
 export class Command extends CommanderCommand {
   private actions: ActionHandler[];
@@ -26,11 +31,13 @@ export class Command extends CommanderCommand {
   public addAction(action: ActionHandler): Command {
     this.actions.push(action);
     this.action(() => {
-      const options = this.opts();
-      const config = ConfigService.getExistingConfig();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const options: any = this.opts();
+      const config = ConfigService.getExistingConfig(options);
+      const serviceCollection = createServiceCollection(options);
 
       this.actions.forEach((action) => {
-        action(options, config);
+        action(serviceCollection, options, config);
       });
     });
     return this;

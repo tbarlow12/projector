@@ -1,13 +1,9 @@
 import { ProjectCreationOptions } from "../../commands/commands/project/commands/init/projectInit";
 import { ConfigValue, FileConstants } from "../../constants";
-import { AgileConfig, CseCliConfig, GitHubConfig } from "../../models";
+import { AgileConfig, CseCliConfig, GitHubConfig, SharedOptions } from "../../models";
 import { Config, FileUtils } from "../../utils";
 import { AgileServiceProvider } from "../agile";
 import { AzureDevOpsProviderOptions } from "../agile/providers";
-
-export interface ConfigOptions {
-  configFilePath?: string;
-}
 
 /**
  * Class dealing with the CSE configuration.
@@ -23,17 +19,31 @@ export class ConfigService {
     };
   }
 
-  public static getExistingConfig(filePath?: string): CseCliConfig {
-    const existingConfig: CseCliConfig = FileUtils.readJson(filePath || FileConstants.configFileName);
+  public static getExistingConfig(options?: SharedOptions): CseCliConfig {
+    const githubToken = options?.githubToken;
+    const configFile = options?.configFile;
 
-    if (!existingConfig) {
-      throw new Error(
-        "Config undefined. Make sure you have a cse.json configuration file within " +
-          "your current working directory. Run `cse project init` if you don't have one",
-      );
+    const config: CseCliConfig | undefined = FileUtils.readJson(configFile || FileConstants.configFileName);
+
+    if (!githubToken) {
+      return config ? config : {};
     }
 
-    return existingConfig;
+    if (!config) {
+      return {
+        github: {
+          personalAccessToken: githubToken,
+        },
+      };
+    }
+
+    return {
+      ...config,
+      github: {
+        ...config.github,
+        personalAccessToken: githubToken,
+      },
+    };
   }
 
   private static createAgileConfig(provider: AgileServiceProvider): AgileConfig {

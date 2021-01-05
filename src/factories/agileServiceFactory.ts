@@ -10,14 +10,16 @@ export class AgileServiceFactory {
     this.registry[providerName] = service;
   }
 
-  public static get(config: AgileConfig): AgileService {
+  public static get(config?: AgileConfig): AgileService | undefined {
+    if (!config) {
+      return undefined;
+    }
+
     const { providerName } = config;
     const service = this.registry[providerName];
 
     if (!service) {
-      throw new Error(
-        `Backlog service ${providerName} not defined. Options are ${Object.keys(this.registry).join(",")}`,
-      );
+      throw new Error(`Agile service ${providerName} not defined. Options are ${Object.keys(this.registry).join(",")}`);
     }
     return new service(config);
   }
