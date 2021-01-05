@@ -8,11 +8,7 @@ export class Guard {
 
   public static null(arg: any, name?: string, message?: string): void {
     if (!arg) {
-      throw new Error(message || `Argument '${name}' cannot be empty`);
+      throw new Error(message || `Argument '${name}' cannot be null`);
     }
-  }
-
-  public static isProviderConfig(config: any): boolean {
-    return !!config.providerName;
   }
 }
