@@ -19,8 +19,10 @@ describe("Type Utils", () => {
     expect(TypeUtils.isProviderConfig({})).toBe(false);
     expect(TypeUtils.isProviderConfig("hello")).toBe(false);
     expect(TypeUtils.isProviderConfig(1)).toBe(false);
-    expect(TypeUtils.isProviderConfig({
-      provider: "test"
-    })).toBe(false);
+    expect(
+      TypeUtils.isProviderConfig({
+        provider: "test",
+      }),
+    ).toBe(false);
   });
 });

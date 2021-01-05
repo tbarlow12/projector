@@ -16,13 +16,10 @@ export const agileWorkTemplateInit = new Command()
   .option("-o, --out-file <out-file>", "Output file for work item template")
   .addAction((options: AgileWorkTemplateInitOptions) => {
     // Stub for now - will fetch templates from repo
-    const templates: BacklogItemTemplate[] = [
-      exampleBacklogItemTemplate,
-      emptyBacklogItemTemplate,
-    ];
+    const templates: BacklogItemTemplate[] = [exampleBacklogItemTemplate, emptyBacklogItemTemplate];
 
     const { template: templateName, outFile } = options;
-    const template = templates.find(t => t.name === templateName);
+    const template = templates.find((t) => t.name === templateName);
 
     FileUtils.writeFile(outFile || FileConstants.backlogItemsFileName, JSON.stringify(template, null, 4));
   });

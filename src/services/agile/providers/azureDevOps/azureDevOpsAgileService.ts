@@ -1,7 +1,11 @@
 import { getPersonalAccessTokenHandler } from "azure-devops-node-api";
 import { CoreApi } from "azure-devops-node-api/CoreApi";
 import { TeamContext } from "azure-devops-node-api/interfaces/CoreInterfaces";
-import { TreeStructureGroup, WorkItem, WorkItemExpand } from "azure-devops-node-api/interfaces/WorkItemTrackingInterfaces";
+import {
+  TreeStructureGroup,
+  WorkItem,
+  WorkItemExpand,
+} from "azure-devops-node-api/interfaces/WorkItemTrackingInterfaces";
 import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
 import { ConfigValue } from "../../../../constants";
@@ -19,7 +23,7 @@ export interface AzureDevOpsProviderOptions {
 }
 export interface AzureDevOpsAgileConfig extends AgileConfig {
   providerOptions: AzureDevOpsProviderOptions;
-} 
+}
 
 export class AzureDevOpsAgileService extends BaseAgileService {
   /* Name of Azure DevOps Project */
@@ -44,7 +48,10 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
     this.projectName = projectName;
 
-    const personalAccessToken = Config.getValueWithDefault(ConfigValue.AzDOAccessToken, providerOptions.personalAccessToken);
+    const personalAccessToken = Config.getValueWithDefault(
+      ConfigValue.AzDOAccessToken,
+      providerOptions.personalAccessToken,
+    );
     if (!personalAccessToken) {
       throw new Error("Need to configure an AzDO personal access token in config file or environment variable");
     }
@@ -56,7 +63,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
     // Instantiate auth handler to be used in API clients
     const authHandler = getPersonalAccessTokenHandler(personalAccessToken);
-    
+
     // Instantiate various API clients
     this.coreApi = new CoreApi(baseUrl, [authHandler]);
     this.workItemTracking = new WorkItemTrackingApi(baseUrl, [authHandler]);
@@ -67,14 +74,19 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
   createProject = async (): Promise<Project> => {
     throw new Error("Not implemented");
-  }
+  };
 
   // Backlog Items
 
   getBacklogItems = async (ids: string[]): Promise<BacklogItem[]> => {
-    const workItems = await this.workItemTracking.getWorkItems(ids.map(id => +id), undefined, undefined, WorkItemExpand.Relations);
+    const workItems = await this.workItemTracking.getWorkItems(
+      ids.map((id) => +id),
+      undefined,
+      undefined,
+      WorkItemExpand.Relations,
+    );
     return await Promise.all(workItems.map((workItem: WorkItem) => this.mapWorkItem(workItem, true)));
-  }
+  };
 
   createBacklogItems = async (items: BacklogItem[], parent?: BacklogItem): Promise<BacklogItem[]> => {
     const backlogItems: BacklogItem[] = [];
@@ -84,11 +96,12 @@ export class AzureDevOpsAgileService extends BaseAgileService {
         undefined,
         AzureDevOpsUtils.createPatchDocument(item, parent?.url),
         this.projectName,
-        AzureDevOpsUtils.getWorkItemType(item.type));
+        AzureDevOpsUtils.getWorkItemType(item.type),
+      );
 
       // Map work item from AzDO model to BacklogItem
       const createdBacklogItem = await this.mapWorkItem(workItem);
-      
+
       // Create children if applicable
       if (item.children) {
         createdBacklogItem.children = await this.createBacklogItems(item.children, createdBacklogItem);
@@ -98,11 +111,11 @@ export class AzureDevOpsAgileService extends BaseAgileService {
       backlogItems.push(createdBacklogItem);
     }
     return backlogItems;
-  }
+  };
 
   deleteBacklogItems = async (ids: string[]): Promise<void> => {
-    await Promise.all(ids.map(id => this.workItemTracking.deleteWorkItem(+id, this.projectName)));
-  }
+    await Promise.all(ids.map((id) => this.workItemTracking.deleteWorkItem(+id, this.projectName)));
+  };
 
   // Sprints
 
@@ -119,10 +132,10 @@ export class AzureDevOpsAgileService extends BaseAgileService {
     return {
       id,
       name: name || "",
-      startDate: attributes?.startDate, 
+      startDate: attributes?.startDate,
       finishDate: attributes?.finishDate,
     };
-  }
+  };
 
   createProviderSprints = async (sprints: Sprint[]): Promise<Sprint[]> => {
     const teamContext = await this.getTeamContext();
@@ -135,30 +148,33 @@ export class AzureDevOpsAgileService extends BaseAgileService {
       createdSprints.push(await this.createProviderSprint(sprint, teamContext));
     }
     return sprints;
-  }
+  };
 
   deleteSprint = async (id: string): Promise<void> => {
     const teamContext = await this.getTeamContext();
     await this.workApi.deleteTeamIteration(teamContext, id);
-  }
+  };
 
   // Private functions
 
   private async createProviderSprint(sprint: Sprint, teamContext: TeamContext): Promise<Sprint> {
     const { name, startDate, finishDate } = sprint;
-    
+
     // Creates classification node and returns identifier required for sprint ID
     const identifier = await this.createOrUpdateClassificationNode(sprint, teamContext);
 
     // Create new iteration
-    const result = await this.workApi.postTeamIteration({
-      id: identifier,
-      name,
-      attributes: {
-        startDate,
-        finishDate,
+    const result = await this.workApi.postTeamIteration(
+      {
+        id: identifier,
+        name,
+        attributes: {
+          startDate,
+          finishDate,
+        },
       },
-    }, teamContext);
+      teamContext,
+    );
 
     // Assign generated ID from Azure DevOps to sprint
     sprint.id = result.id;
@@ -171,14 +187,18 @@ export class AzureDevOpsAgileService extends BaseAgileService {
     Guard.empty(name);
 
     await this.deleteNodeAndIterationIfExists(name, teamContext);
-    
-    const { identifier } = await this.workItemTracking.createOrUpdateClassificationNode({
-      name,
-      attributes: {
-        startDate: startDate?.toISOString(),
-        finishDate: finishDate?.toISOString(),
-      }
-    }, this.projectName, TreeStructureGroup.Iterations);
+
+    const { identifier } = await this.workItemTracking.createOrUpdateClassificationNode(
+      {
+        name,
+        attributes: {
+          startDate: startDate?.toISOString(),
+          finishDate: finishDate?.toISOString(),
+        },
+      },
+      this.projectName,
+      TreeStructureGroup.Iterations,
+    );
 
     if (!identifier) {
       throw new Error(`Was not able to retrieve identifier for ${this.projectName}`);
@@ -187,7 +207,11 @@ export class AzureDevOpsAgileService extends BaseAgileService {
   }
 
   private async deleteNodeAndIterationIfExists(name: string, teamContext: TeamContext) {
-    const node = await this.workItemTracking.getClassificationNode(this.projectName, TreeStructureGroup.Iterations, name);
+    const node = await this.workItemTracking.getClassificationNode(
+      this.projectName,
+      TreeStructureGroup.Iterations,
+      name,
+    );
     if (node && node.identifier) {
       await this.workApi.deleteTeamIteration(teamContext, node.identifier);
       await this.workItemTracking.deleteClassificationNode(this.projectName, TreeStructureGroup.Iterations, name);
@@ -198,11 +222,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
     if (this.teamContext) {
       return this.teamContext;
     }
-    const {
-      name,
-      id,
-      defaultTeam
-    } = await this.coreApi.getProject(this.projectName);
+    const { name, id, defaultTeam } = await this.coreApi.getProject(this.projectName);
 
     this.teamContext = {
       project: name,
@@ -216,7 +236,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
   private async mapWorkItem(workItem: WorkItem, includeChildren = false): Promise<BacklogItem> {
     const { id, fields, url } = workItem;
     const workItemType: AzureDevOpsWorkItemType = fields![AzureDevOpsFieldName.workItemType];
-     
+
     return {
       id: id!.toString(),
       name: fields![AzureDevOpsFieldName.title],
@@ -228,7 +248,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
     };
   }
 
-  private async getBacklogItemChildren(workItem: WorkItem): Promise<BacklogItem[]|undefined> {
+  private async getBacklogItemChildren(workItem: WorkItem): Promise<BacklogItem[] | undefined> {
     const { relations } = workItem;
     if (relations) {
       const childIds: string[] = [];

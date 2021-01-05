@@ -17,7 +17,6 @@ import { ConfigValue } from "../constants";
 import { Config } from "./configUtils";
 
 describe("Config Utils", () => {
-
   it("gets a value from the test configuration json file", () => {
     // Act & Assert
     expect(Config.getValue("test.variable" as ConfigValue)).toEqual("json");
@@ -41,7 +40,7 @@ describe("Config Utils", () => {
   it("gets a default if no configured value", () => {
     // Setup
     const defaulValue = "default";
-    
+
     // Act & Assert
     expect(Config.getValueWithDefault("fake" as ConfigValue, defaulValue)).toEqual(defaulValue);
   });

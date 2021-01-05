@@ -5,5 +5,5 @@ import { GitHubConfig } from "./github";
 export interface CseCliConfig {
   agile?: AgileConfig;
   github?: GitHubConfig;
-  playbook?: PlaybookConfig
+  playbook?: PlaybookConfig;
 }

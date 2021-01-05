@@ -5,7 +5,7 @@ export class DateUtils {
     if (!date) {
       return "";
     }
-    
+
     return date.toLocaleDateString(undefined, {
       weekday: "short",
       year: "numeric",

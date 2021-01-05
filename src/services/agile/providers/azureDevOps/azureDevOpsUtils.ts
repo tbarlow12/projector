@@ -11,10 +11,10 @@ interface FieldValuePair {
 export class AzureDevOpsUtils {
   public static createPatchDocument(backlogItem: BacklogItem, parentUrl?: string): AzDOJsonPatchDocument {
     const pairs = this.createFieldValuePairs(backlogItem);
-    
+
     // Only include pairs whose value is defined
     const document: AzDOJsonPatchDocument = pairs
-      .filter(pair => pair.value)
+      .filter((pair) => pair.value)
       .map((pair: FieldValuePair) => {
         return {
           op: AzDoOp.Add,
@@ -22,7 +22,7 @@ export class AzureDevOpsUtils {
           value: pair.value as string,
         };
       });
-    
+
     if (parentUrl) {
       document.push({
         op: AzDoOp.Add,
@@ -33,11 +33,11 @@ export class AzureDevOpsUtils {
           attributes: {
             isLocked: false,
             name: "Parent",
-          }
-        }
+          },
+        },
       });
     }
-    
+
     return document;
   }
 
@@ -76,7 +76,7 @@ export class AzureDevOpsUtils {
   }
 
   private static createFieldValuePairs(backlogItem: BacklogItem): FieldValuePair[] {
-    const { name, description, acceptanceCriteria, } = backlogItem;
+    const { name, description, acceptanceCriteria } = backlogItem;
     return [
       {
         field: AzureDevOpsFieldName.title,
@@ -88,12 +88,12 @@ export class AzureDevOpsUtils {
       },
       {
         field: AzureDevOpsFieldName.acceptanceCriteria,
-        value: this.stringifyAcceptanceCriteria(acceptanceCriteria)
-      }
+        value: this.stringifyAcceptanceCriteria(acceptanceCriteria),
+      },
     ];
   }
 
-  private static stringifyAcceptanceCriteria(acceptanceCriteria?: string[]): string|undefined {
+  private static stringifyAcceptanceCriteria(acceptanceCriteria?: string[]): string | undefined {
     if (!acceptanceCriteria) {
       return undefined;
     }

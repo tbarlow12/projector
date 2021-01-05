@@ -6,5 +6,5 @@ const playbookLink = Config.getLink("playbook");
 export const playbookIssueCreate = urlCommand({
   name: "create",
   description: "Create a playbook issue",
-  url: `${playbookLink.url}/issues/new/choose`
+  url: `${playbookLink.url}/issues/new/choose`,
 });

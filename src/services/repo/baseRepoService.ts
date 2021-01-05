@@ -3,10 +3,15 @@ import { RepoItem, RepoItemType, RepoService } from "../../models";
 import { FileUtils } from "../../utils";
 
 export abstract class BaseRepoService implements RepoService {
-  
   // Base functions
 
-  public async downloadRepoItem(owner: string, repo: string, path?: string, branch?: string, outputPath: string = process.cwd()): Promise<void> {
+  public async downloadRepoItem(
+    owner: string,
+    repo: string,
+    path?: string,
+    branch?: string,
+    outputPath: string = process.cwd(),
+  ): Promise<void> {
     const repoItem = await this.getRepoItem(owner, repo, path, true, branch);
     await this.writeRepoItem(repoItem, outputPath);
   }
@@ -14,12 +19,18 @@ export abstract class BaseRepoService implements RepoService {
   public async listRepoItems(owner: string, repo: string, path = "", branch?: string): Promise<RepoItem[]> {
     const repoItem = await this.getRepoItem(owner, repo, path, false, branch);
     const { type, children } = repoItem;
-    return (type === RepoItemType.Directory && children) ? children : [];
+    return type === RepoItemType.Directory && children ? children : [];
   }
 
   // Abstract functions
 
-  abstract getRepoItem: (owner: string, repo: string, path?: string, includeContent?: boolean, branch?: string) => Promise<RepoItem>;
+  abstract getRepoItem: (
+    owner: string,
+    repo: string,
+    path?: string,
+    includeContent?: boolean,
+    branch?: string,
+  ) => Promise<RepoItem>;
   abstract latestCommit: (owner: string, repo: string, branch: string) => Promise<string>;
 
   // Private functions
@@ -28,7 +39,7 @@ export abstract class BaseRepoService implements RepoService {
     const { content, children, name, type } = repoItem;
 
     await FileUtils.mkdirIfNotExists(outputPath);
-    
+
     const repoItemPath = join(outputPath, name);
 
     if (type === RepoItemType.Directory) {
@@ -36,7 +47,7 @@ export abstract class BaseRepoService implements RepoService {
       if (children) {
         await Promise.all(children.map((item: RepoItem) => this.writeRepoItem(item, repoItemPath)));
       }
-    } else if (content){
+    } else if (content) {
       await FileUtils.writeFile(repoItemPath, content);
     }
   }

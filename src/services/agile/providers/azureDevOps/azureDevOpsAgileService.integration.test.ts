@@ -36,7 +36,7 @@ describe("Azure DevOps Backlog Service", () => {
         name: `Sprint ${num} ${random(10)}`,
         startDate: start,
         finishDate: end,
-      };   
+      };
     });
 
     const sprints = await service.createSprints(initialSprints);
@@ -47,7 +47,7 @@ describe("Azure DevOps Backlog Service", () => {
 
     for (const sprint of sprints) {
       const { id, name, startDate, finishDate } = sprint;
-      
+
       expect(id).toBeDefined();
       expect(name).toBeDefined();
       expect(startDate).toBeDefined();
@@ -66,7 +66,7 @@ describe("Azure DevOps Backlog Service", () => {
 
       // Clean up test sprint
       await service.deleteSprint(id);
-      
+
       // Sprint ID should not exist anymore
       await expect(service.getSprint(id)).rejects.toThrow();
     }
@@ -77,16 +77,13 @@ describe("Azure DevOps Backlog Service", () => {
       name: "My Sample Story with Tasks",
       type: BacklogItemType.Story,
       description: "This is my sample story",
-      acceptanceCriteria: [
-        "This should work",
-        "This whould work well",
-      ],
+      acceptanceCriteria: ["This should work", "This whould work well"],
       children: [
         {
           name: "My Task",
-          type: BacklogItemType.Task
-        }
-      ]
+          type: BacklogItemType.Task,
+        },
+      ],
     };
 
     const createdBacklogItems = await service.createBacklogItems([initialBacklogItem]);
@@ -99,14 +96,16 @@ describe("Azure DevOps Backlog Service", () => {
       id: expect.any(String),
       url: expect.any(String),
       description: expect.stringMatching(new RegExp(`.*${initialBacklogItem.description}.*`)),
-      acceptanceCriteria: expect.stringMatching(new RegExp(`.*${initialBacklogItem.acceptanceCriteria![0]}.*${initialBacklogItem.acceptanceCriteria![1]}.*`)),
+      acceptanceCriteria: expect.stringMatching(
+        new RegExp(`.*${initialBacklogItem.acceptanceCriteria![0]}.*${initialBacklogItem.acceptanceCriteria![1]}.*`),
+      ),
       children: [
         {
           ...initialBacklogItem.children![0],
           id: expect.any(String),
           url: expect.any(String),
-        }
-      ]
+        },
+      ],
     });
 
     // Retrieve backlog item with same ID

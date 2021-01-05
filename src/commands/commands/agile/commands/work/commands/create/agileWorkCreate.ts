@@ -28,5 +28,5 @@ export const agileWorkCreate = new Command()
     const items = await agileService.createBacklogItems(template.items);
     Logger.logHeader("Created Items");
 
-    items.forEach(item => Logger.log(`${item.id} - ${item.name}`));
+    items.forEach((item) => Logger.log(`${item.id} - ${item.name}`));
   });

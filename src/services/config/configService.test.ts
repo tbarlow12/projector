@@ -6,7 +6,7 @@ import { ConfigService } from "./configService";
 
 describe("Config Service", () => {
   /* Config Service currently just stubs */
-  
+
   it("creates initial agile config", () => {
     const now = new Date();
 
@@ -29,6 +29,8 @@ describe("Config Service", () => {
     };
 
     // Act & Assert
-    expect(ConfigService.createInitialConfig({agileProvider: "azdo" as AgileServiceProvider})).toEqual(expectedConfig);
+    expect(ConfigService.createInitialConfig({ agileProvider: "azdo" as AgileServiceProvider })).toEqual(
+      expectedConfig,
+    );
   });
 });

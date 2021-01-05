@@ -3,7 +3,7 @@ import { AgileConfig, AgileService, BacklogItem, Project, Sprint } from "../../m
 import { Config, DateUtils, Logger, UserUtils } from "../../utils";
 
 export abstract class BaseAgileService implements AgileService {
-  constructor(protected config: AgileConfig){}
+  constructor(protected config: AgileConfig) {}
 
   // Base functions
 
@@ -21,7 +21,7 @@ export abstract class BaseAgileService implements AgileService {
 
   // Projects
   abstract createProject: (project: Project) => Promise<Project>;
-  
+
   // Sprints
   abstract getSprint: (id: string) => Promise<Sprint>;
   abstract createProviderSprints: (sprints: Sprint[]) => Promise<Sprint[]>;
@@ -34,7 +34,14 @@ export abstract class BaseAgileService implements AgileService {
     if (!sprintConfig) {
       throw new Error("Section agile.sprints of cse.json is required for this operation");
     }
-    const { startDate, lengthOfSprintInDays, numberOfSprints, daysBetweenSprints, sprintNamePattern, sprintIndexStart } = sprintConfig;
+    const {
+      startDate,
+      lengthOfSprintInDays,
+      numberOfSprints,
+      daysBetweenSprints,
+      sprintNamePattern,
+      sprintIndexStart,
+    } = sprintConfig;
 
     const namePattern: string = sprintNamePattern || Config.getValue(ConfigValue.DefaultSprintNamePattern);
     const indexStart: number = sprintIndexStart || Config.getValue(ConfigValue.DefaultSprintStartIndex);

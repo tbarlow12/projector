@@ -11,11 +11,13 @@ export class RepoServiceFactory {
   }
 
   public static get(config: ProviderConfig): RepoService {
-    const { providerName } = config;  
+    const { providerName } = config;
     const service = this.registry[providerName];
 
     if (!service) {
-      throw new Error(`Backlog service ${providerName} not defined. Options are ${Object.keys(this.registry).join(",")}`);
+      throw new Error(
+        `Backlog service ${providerName} not defined. Options are ${Object.keys(this.registry).join(",")}`,
+      );
     }
     return new service(config);
   }

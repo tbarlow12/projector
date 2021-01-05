@@ -12,7 +12,7 @@ describe("Agile Work Create Command", () => {
   const cseConfig = ModelSimulator.createTestConfig();
 
   beforeAll(() => {
-    const fileSystem: {[fileName: string]: string} = {};
+    const fileSystem: { [fileName: string]: string } = {};
     fileSystem[backlogItemFileName] = JSON.stringify(backlogItemTemplate);
     fileSystem[cseConfigFileName] = JSON.stringify(cseConfig);
     mockFs(fileSystem);
@@ -28,21 +28,32 @@ describe("Agile Work Create Command", () => {
   });
 
   it("runs a test", async () => {
-    const createBacklogItems = jest.fn((items: BacklogItem[]) => Promise.resolve(items.map(item => {
-      return {
-        ...item,
-        id: "itemId"
-      };
-    })));
-    
-    AgileServiceFactory.get = jest.fn(() => new SimulatorAgileService({
-      createBacklogItems,
-    }));
+    const createBacklogItems = jest.fn((items: BacklogItem[]) =>
+      Promise.resolve(
+        items.map((item) => {
+          return {
+            ...item,
+            id: "itemId",
+          };
+        }),
+      ),
+    );
 
-    await agileWorkCreate.parseAsync(CliSimulator.createArgs([{
-      name: "--file",
-      value: backlogItemFileName,
-    }]));
+    AgileServiceFactory.get = jest.fn(
+      () =>
+        new SimulatorAgileService({
+          createBacklogItems,
+        }),
+    );
+
+    await agileWorkCreate.parseAsync(
+      CliSimulator.createArgs([
+        {
+          name: "--file",
+          value: backlogItemFileName,
+        },
+      ]),
+    );
 
     expect(createBacklogItems).toBeCalledWith(backlogItemTemplate.items);
     // Log header and one line for each backlog item

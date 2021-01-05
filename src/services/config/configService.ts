@@ -14,12 +14,12 @@ export interface ConfigOptions {
  * TODO - implement more than just stubs
  */
 export class ConfigService {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-module-boundary-types 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-module-boundary-types
   public static createInitialConfig(options: ProjectCreationOptions): CseCliConfig {
     const { agileProvider } = options;
     return {
       agile: agileProvider ? this.createAgileConfig(agileProvider) : undefined,
-      github: this.createGithubConfig()
+      github: this.createGithubConfig(),
     };
   }
 
@@ -27,10 +27,12 @@ export class ConfigService {
     const existingConfig: CseCliConfig = FileUtils.readJson(filePath || FileConstants.configFileName);
 
     if (!existingConfig) {
-      throw new Error("Config undefined. Make sure you have a cse.json configuration file within " +
-        "your current working directory. Run `cse project init` if you don't have one");
+      throw new Error(
+        "Config undefined. Make sure you have a cse.json configuration file within " +
+          "your current working directory. Run `cse project init` if you don't have one",
+      );
     }
-    
+
     return existingConfig;
   }
 
@@ -46,7 +48,7 @@ export class ConfigService {
         numberOfSprints: Config.getValue(ConfigValue.DefaultNumberOfSprints),
         sprintIndexStart: Config.getValue(ConfigValue.DefaultSprintStartIndex),
         sprintNamePattern: Config.getValue(ConfigValue.DefaultSprintNamePattern),
-      }
+      },
     };
   }
 
@@ -64,7 +66,7 @@ export class ConfigService {
         const azDoProviderOptions: AzureDevOpsProviderOptions = {
           baseUrl: "{Base URL for Azure DevOps organization}",
           projectName: "{Name of Azure DevOps project}",
-          personalAccessToken: "{Go to 'https://dev.azure.com/{organization}/_usersSettings/tokens' to generate token}"
+          personalAccessToken: "{Go to 'https://dev.azure.com/{organization}/_usersSettings/tokens' to generate token}",
         };
         return azDoProviderOptions;
     }
