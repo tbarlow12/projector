@@ -15,8 +15,6 @@ export const agileWorkTemplateInit = new Command()
   .option("-t, --template <template>", "Template to use for work items")
   .option("-o, --out-file <out-file>", "Output file for work item template")
   .addAction((options: AgileWorkTemplateInitOptions) => {
-
-    console.log("Got here");
     // Stub for now - will fetch templates from repo
     const templates: BacklogItemTemplate[] = [
       exampleBacklogItemTemplate,
