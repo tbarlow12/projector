@@ -6,7 +6,7 @@ import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
 import { ConfigValue } from "../../../../constants";
 import { AgileConfig, BacklogItem, Project, Sprint } from "../../../../models";
-import { Config, Guard, retryAsync } from "../../../../utils";
+import { Config, Guard, Logger, retryAsync } from "../../../../utils";
 import { BaseAgileService } from "../../baseAgileService";
 import { AzureDevOpsFieldName } from "./azureDevOpsFieldName";
 import { AzureDevOpsUtils } from "./azureDevOpsUtils";
@@ -17,7 +17,7 @@ export interface AzureDevOpsProviderOptions {
   projectName: string;
   personalAccessToken: string;
 }
-export interface AzureDevOpsBacklogConfig extends AgileConfig {
+export interface AzureDevOpsAgileConfig extends AgileConfig {
   providerOptions: AzureDevOpsProviderOptions;
 } 
 
@@ -33,11 +33,9 @@ export class AzureDevOpsAgileService extends BaseAgileService {
   /* Team Context */
   private teamContext?: TeamContext;
 
-  constructor(config: AzureDevOpsBacklogConfig) {
+  constructor(config: AzureDevOpsAgileConfig) {
     super(config);
-    
     const { providerOptions } = config;
-
 
     const projectName = Config.getValueWithDefault(ConfigValue.AzDOProjectName, providerOptions.projectName);
     if (!projectName) {
@@ -78,7 +76,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
     return await Promise.all(workItems.map((workItem: WorkItem) => this.mapWorkItem(workItem, true)));
   }
 
-  createProviderBacklogItems = async (items: BacklogItem[], parent?: BacklogItem): Promise<BacklogItem[]> => {
+  createBacklogItems = async (items: BacklogItem[], parent?: BacklogItem): Promise<BacklogItem[]> => {
     const backlogItems: BacklogItem[] = [];
     for (const item of items) {
       // Make AzDO API call
@@ -93,7 +91,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
       
       // Create children if applicable
       if (item.children) {
-        createdBacklogItem.children = await this.createProviderBacklogItems(item.children, createdBacklogItem);
+        createdBacklogItem.children = await this.createBacklogItems(item.children, createdBacklogItem);
       }
 
       // Add created backlog item to list
@@ -129,7 +127,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
   createProviderSprints = async (sprints: Sprint[]): Promise<Sprint[]> => {
     const teamContext = await this.getTeamContext();
 
-    console.log(`Creating ${sprints.length} sprints`);
+    Logger.log(`Creating ${sprints.length} sprints`);
 
     const createdSprints: Sprint[] = [];
 
@@ -164,7 +162,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
     // Assign generated ID from Azure DevOps to sprint
     sprint.id = result.id;
-    console.log(`Sprint '${name}' created`);
+    Logger.log(`Sprint '${name}' created`);
     return sprint;
   }
 

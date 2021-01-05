@@ -3,22 +3,16 @@ import { ConfigValue, NumberConstants } from "../../../../constants";
 import { AgileServiceFactory } from "../../../../factories";
 import { registerProviders } from "../../../../initialization/registerProviders";
 import { BacklogItem, BacklogItemType, Sprint } from "../../../../models";
-import { Config, retryAsync, UserUtils } from "../../../../utils";
+import { Config, Logger, retryAsync, UserUtils } from "../../../../utils";
 import { AgileServiceProvider } from "../../agileServiceProvider";
 import { AzureDevOpsProviderOptions } from "./azureDevOpsAgileService";
 
 describe("Azure DevOps Backlog Service", () => {
   registerProviders();
 
-  const originalLogFunction = console.log;
-
   beforeEach(() => {
     UserUtils.confirmAction = jest.fn(() => Promise.resolve(true));
-    console.log = jest.fn();
-  });
-
-  afterEach(() => {
-    console.log = originalLogFunction;
+    Logger.log = jest.fn();
   });
 
   const providerOptions: AzureDevOpsProviderOptions = {

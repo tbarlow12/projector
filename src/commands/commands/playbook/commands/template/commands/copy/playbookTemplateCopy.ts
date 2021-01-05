@@ -3,7 +3,7 @@ import { Command } from "../../../../../../../extensions";
 import { RepoServiceFactory } from "../../../../../../../factories";
 import { CseCliConfig } from "../../../../../../../models";
 import { RepoServiceProvider } from "../../../../../../../services";
-import { Config } from "../../../../../../../utils";
+import { Config, Logger } from "../../../../../../../utils";
 
 export interface PlaybookTemplateCopyOptions {
   path: string;
@@ -38,6 +38,6 @@ export const playbookTemplateCopy = new Command()
     const playbookOwnerName: string = playbook?.playbookOwner || Config.getValue(ConfigValue.PlaybookOwnerName);
     const playbookRepoName: string = playbook?.playbookRepo || Config.getValue(ConfigValue.PlaybookRepoName);
 
-    console.log(`Getting template from ${playbookOwnerName}/${playbookRepoName} at path ${path}`);
+    Logger.log(`Getting template from ${playbookOwnerName}/${playbookRepoName} at path ${path}`);
     await githubService.downloadRepoItem(playbookOwnerName, playbookRepoName, path, branch);
   });

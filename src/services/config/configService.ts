@@ -23,9 +23,14 @@ export class ConfigService {
     };
   }
 
-  public static createConfig(options: ConfigOptions): CseCliConfig {
-    const { configFilePath } = options;
-    const existingConfig: CseCliConfig = FileUtils.readJson(configFilePath || FileConstants.configFileName);
+  public static getExistingConfig(filePath?: string): CseCliConfig {
+    const existingConfig: CseCliConfig = FileUtils.readJson(filePath || FileConstants.configFileName);
+
+    if (!existingConfig) {
+      throw new Error("Config undefined. Make sure you have a cse.json configuration file within " +
+        "your current working directory. Run `cse project init` if you don't have one");
+    }
+    
     return existingConfig;
   }
 

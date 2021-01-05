@@ -1,51 +1,11 @@
-import { AgileService, BacklogItem, BacklogItemType, Project, Sprint } from "../../models";
-import { BaseAgileService } from "./baseAgileService";
+import { AgileService, BacklogItem, BacklogItemType, Sprint } from "../../models";
+import { SimulatorAgileService } from "../../test";
 
-interface MockAgileServiceFunctions {
-  createProject: (project: Project) => Promise<Project>;
-  getSprint: (id: string) => Promise<Sprint>;
-  deleteSprint: (id: string) => Promise<void>;
-  getBacklogItems: (ids: string[]) => Promise<BacklogItem[]>;
-  createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
-  deleteBacklogItems: (ids: string[]) => Promise<void>;
-  createProviderSprints: (sprints: Sprint[]) => Promise<Sprint[]>;
-}
-
-class MockAgileService extends BaseAgileService {
-  createProject: (project: Project) => Promise<Project>;
-  getSprint: (id: string) => Promise<Sprint>;
-  deleteSprint: (id: string) => Promise<void>;
-  getBacklogItems: (ids: string[]) => Promise<BacklogItem[]>;
-  createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
-  deleteBacklogItems: (ids: string[]) => Promise<void>;
-  createProviderSprints: (sprints: Sprint[]) => Promise<Sprint[]>;
-  
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(functions: MockAgileServiceFunctions) {
-    super({providerName: "test"});
-    const {
-      getBacklogItems,
-      createProviderBacklogItems,
-      createProviderSprints,
-      deleteBacklogItems,
-      getSprint,
-      deleteSprint,
-      createProject,
-    } = functions;
-    this.getBacklogItems = getBacklogItems;
-    this.createProviderBacklogItems = createProviderBacklogItems;
-    this.deleteBacklogItems = deleteBacklogItems;
-    this.createProviderSprints = createProviderSprints;
-    this.getSprint = getSprint;
-    this.deleteSprint = deleteSprint;
-    this.createProject = createProject;
-  }
-}
 
 describe("Base Backlog Service", () => {
   it("calls abstract function to create backlog items and returns result", async () => {
     // Setup
-    const createProviderBacklogItems = jest.fn((items: BacklogItem[]) => Promise.resolve(items.map((item: BacklogItem) => {
+    const createBacklogItems = jest.fn((items: BacklogItem[]) => Promise.resolve(items.map((item: BacklogItem) => {
       return {
         ...item,
         id: "1"
@@ -59,15 +19,11 @@ describe("Base Backlog Service", () => {
       };
     })));
     
-    const service: AgileService = new MockAgileService({
-      createProviderBacklogItems,
+    const service: AgileService = new SimulatorAgileService({
+      createBacklogItems,
       createProviderSprints,
-      deleteBacklogItems: jest.fn(),
-      createProject: jest.fn(),
-      deleteSprint: jest.fn(),
-      getBacklogItems: jest.fn(),
-      getSprint: jest.fn(),
     });
+
     const backlogItems: BacklogItem[] = [
       {
         name: "Story 1",
@@ -83,7 +39,7 @@ describe("Base Backlog Service", () => {
     const result = await service.createBacklogItems(backlogItems);
 
     // Assert
-    expect(createProviderBacklogItems).toBeCalledTimes(1);
+    expect(createBacklogItems).toBeCalledTimes(1);
     expect(result).toEqual(backlogItems.map(item => {
       return {
         ...item,

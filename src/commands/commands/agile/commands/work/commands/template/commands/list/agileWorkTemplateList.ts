@@ -1,6 +1,7 @@
 import { Command } from "../../../../../../../../../extensions";
 import { BacklogItemTemplate } from "../../../../../../../../../models";
 import { emptyBacklogItemTemplate, exampleBacklogItemTemplate } from "../../../../../../../../../samples";
+import { Logger } from "../../../../../../../../../utils";
 
 export const agileWorkTemplateList = new Command()
   .name("list")
@@ -12,7 +13,6 @@ export const agileWorkTemplateList = new Command()
       emptyBacklogItemTemplate,
     ];
 
-    console.log("\nWork Item Templates");
-    console.log("-------------------");
-    templates.forEach(template => console.log(template.name));
+    Logger.logHeader("Work Item Templates");
+    templates.forEach(template => Logger.log(template.name));
   });
