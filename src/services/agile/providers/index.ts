@@ -1,2 +1,2 @@
-export * from "./azureDevOpsAgileService";
-export * from "./jiraAgileService";
+export * from "./azureDevOps";
+export * from "./jira";

@@ -1,14 +1,16 @@
 import { getPersonalAccessTokenHandler } from "azure-devops-node-api";
 import { CoreApi } from "azure-devops-node-api/CoreApi";
 import { TeamContext } from "azure-devops-node-api/interfaces/CoreInterfaces";
-import { TreeStructureGroup } from "azure-devops-node-api/interfaces/WorkItemTrackingInterfaces";
+import { TreeStructureGroup, WorkItem, WorkItemExpand } from "azure-devops-node-api/interfaces/WorkItemTrackingInterfaces";
 import { WorkApi } from "azure-devops-node-api/WorkApi";
 import { WorkItemTrackingApi } from "azure-devops-node-api/WorkItemTrackingApi";
-import { ConfigValue } from "../../../constants";
-import { BacklogItem, Project, Sprint } from "../../../models";
-import { AgileConfig } from "../../../models/config/agile/agileConfig";
-import { Config, Guard, retryAsync } from "../../../utils";
-import { BaseAgileService } from "../baseAgileService";
+import { ConfigValue } from "../../../../constants";
+import { AgileConfig, BacklogItem, Project, Sprint } from "../../../../models";
+import { Config, Guard, retryAsync } from "../../../../utils";
+import { BaseAgileService } from "../../baseAgileService";
+import { AzureDevOpsFieldName } from "./azureDevOpsFieldName";
+import { AzureDevOpsUtils } from "./azureDevOpsUtils";
+import { AzureDevOpsWorkItemType } from "./azureDevOpsWorkItemType";
 
 export interface AzureDevOpsProviderOptions {
   baseUrl: string;
@@ -71,9 +73,37 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
   // Backlog Items
 
-  createProviderBacklogItems = async (items: BacklogItem[]): Promise<BacklogItem[]> => {
-    // await this.workItemTracking.createWorkItem()
-    return items;
+  getBacklogItems = async (ids: string[]): Promise<BacklogItem[]> => {
+    const workItems = await this.workItemTracking.getWorkItems(ids.map(id => +id), undefined, undefined, WorkItemExpand.Relations);
+    return await Promise.all(workItems.map((workItem: WorkItem) => this.mapWorkItem(workItem, true)));
+  }
+
+  createProviderBacklogItems = async (items: BacklogItem[], parent?: BacklogItem): Promise<BacklogItem[]> => {
+    const backlogItems: BacklogItem[] = [];
+    for (const item of items) {
+      // Make AzDO API call
+      const workItem = await this.workItemTracking.createWorkItem(
+        undefined,
+        AzureDevOpsUtils.createPatchDocument(item, parent?.url),
+        this.projectName,
+        AzureDevOpsUtils.getWorkItemType(item.type));
+
+      // Map work item from AzDO model to BacklogItem
+      const createdBacklogItem = await this.mapWorkItem(workItem);
+      
+      // Create children if applicable
+      if (item.children) {
+        createdBacklogItem.children = await this.createProviderBacklogItems(item.children, createdBacklogItem);
+      }
+
+      // Add created backlog item to list
+      backlogItems.push(createdBacklogItem);
+    }
+    return backlogItems;
+  }
+
+  deleteBacklogItems = async (ids: string[]): Promise<void> => {
+    await Promise.all(ids.map(id => this.workItemTracking.deleteWorkItem(+id, this.projectName)));
   }
 
   // Sprints
@@ -183,5 +213,40 @@ export class AzureDevOpsAgileService extends BaseAgileService {
       teamId: defaultTeam?.id,
     };
     return this.teamContext;
+  }
+
+  private async mapWorkItem(workItem: WorkItem, includeChildren = false): Promise<BacklogItem> {
+    const { id, fields, url } = workItem;
+    const workItemType: AzureDevOpsWorkItemType = fields![AzureDevOpsFieldName.workItemType];
+     
+    return {
+      id: id!.toString(),
+      name: fields![AzureDevOpsFieldName.title],
+      description: fields![AzureDevOpsFieldName.description],
+      acceptanceCriteria: fields![AzureDevOpsFieldName.acceptanceCriteria],
+      type: AzureDevOpsUtils.getBacklogItemType(workItemType),
+      children: includeChildren ? await this.getBacklogItemChildren(workItem) : undefined,
+      url,
+    };
+  }
+
+  private async getBacklogItemChildren(workItem: WorkItem): Promise<BacklogItem[]|undefined> {
+    const { relations } = workItem;
+    if (relations) {
+      const childIds: string[] = [];
+      for (const relation of relations) {
+        const { attributes, url } = relation;
+        if (!attributes || !(attributes.name === "Child")) {
+          continue;
+        }
+        const id = url?.substr(url.lastIndexOf("/") + 1);
+        if (id) {
+          childIds.push(id);
+        }
+      }
+      if (childIds.length) {
+        return await this.getBacklogItems(childIds);
+      }
+    }
   }
 }

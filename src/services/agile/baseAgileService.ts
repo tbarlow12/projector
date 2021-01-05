@@ -1,16 +1,9 @@
 import { ConfigValue, NumberConstants } from "../../constants";
 import { AgileConfig, AgileService, BacklogItem, Project, Sprint } from "../../models";
-import { defaultBacklogItems, emptyBacklogItems } from "../../samples";
 import { Config, DateUtils, UserUtils } from "../../utils";
 
 export abstract class BaseAgileService implements AgileService {
   constructor(protected config: AgileConfig){}
-
-  // Static functions
-
-  public static createSampleBacklogItems(empty = false): BacklogItem[] {
-    return empty ? emptyBacklogItems : defaultBacklogItems;
-  }
 
   // Base functions
  
@@ -26,7 +19,9 @@ export abstract class BaseAgileService implements AgileService {
   // Abstract functions
 
   // Backlog Items
+  abstract getBacklogItems: (ids: string[]) => Promise<BacklogItem[]>;
   abstract createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
+  abstract deleteBacklogItems: (ids: string[]) => Promise<void>;
 
   // Projects
   abstract createProject: (project: Project) => Promise<Project>;

@@ -1,0 +1,1 @@
+export { agileWorkTemplate } from "./agileWorkTemplate";

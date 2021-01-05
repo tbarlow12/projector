@@ -1,2 +1,2 @@
-export * from "./default";
+export * from "./example";
 export * from "./empty";
