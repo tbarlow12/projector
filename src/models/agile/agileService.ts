@@ -20,9 +20,10 @@ export interface AgileService {
    * Create backlog items with agile provider
    * 
    * @param {BacklogItem[]} items List of backlog items to create
+   * @param {BacklogItem|undefined} parent Parent backlog item
    * @returns {BacklogItem[]} Newly created backlog items
    */
-  createBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
+  createBacklogItems: (items: BacklogItem[], parent?: BacklogItem) => Promise<BacklogItem[]>;
 
   /**
    * Delete backlog items from agile provider

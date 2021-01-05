@@ -1,15 +1,11 @@
 import { ConfigValue, NumberConstants } from "../../constants";
 import { AgileConfig, AgileService, BacklogItem, Project, Sprint } from "../../models";
-import { Config, DateUtils, UserUtils } from "../../utils";
+import { Config, DateUtils, Logger, UserUtils } from "../../utils";
 
 export abstract class BaseAgileService implements AgileService {
   constructor(protected config: AgileConfig){}
 
   // Base functions
- 
-  public createBacklogItems(items: BacklogItem[]): Promise<BacklogItem[]> {
-    return this.createProviderBacklogItems(items);
-  }
 
   public async createSprints(sprints?: Sprint[]): Promise<Sprint[]> {
     sprints = sprints || this.generateSprints();
@@ -20,7 +16,7 @@ export abstract class BaseAgileService implements AgileService {
 
   // Backlog Items
   abstract getBacklogItems: (ids: string[]) => Promise<BacklogItem[]>;
-  abstract createProviderBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
+  abstract createBacklogItems: (items: BacklogItem[]) => Promise<BacklogItem[]>;
   abstract deleteBacklogItems: (ids: string[]) => Promise<void>;
 
   // Projects
@@ -62,20 +58,20 @@ export abstract class BaseAgileService implements AgileService {
   }
 
   private async confirmAndCreateSprints(sprints: Sprint[]): Promise<Sprint[]> {
-    console.log("The following sprints will be created:\n");
+    Logger.log("The following sprints will be created:\n");
 
     sprints.forEach((sprint: Sprint) => {
       const { name, startDate, finishDate } = sprint;
-      console.log(`${name}:\t${DateUtils.toSimpleDateString(startDate)}\t${DateUtils.toSimpleDateString(finishDate)}`);
+      Logger.log(`${name}:\t${DateUtils.toSimpleDateString(startDate)}\t${DateUtils.toSimpleDateString(finishDate)}`);
     });
 
     if (await UserUtils.confirmAction()) {
-      console.log("\nCreating sprints...");
+      Logger.log("\nCreating sprints...");
       const createdSprints = await this.createProviderSprints(sprints);
-      console.log("\nCreated sprints");
+      Logger.log("\nCreated sprints");
       return createdSprints;
     } else {
-      console.log("Operation cancelled");
+      Logger.log("Operation cancelled");
       return [];
     }
   }

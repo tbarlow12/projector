@@ -16,7 +16,7 @@ export class JiraAgileService extends BaseAgileService {
     throw new Error("Not implemented");
   }
   
-  createProviderBacklogItems = (): Promise<BacklogItem[]> => {
+  createBacklogItems = (): Promise<BacklogItem[]> => {
     throw new Error("Not implemented");
   }
 

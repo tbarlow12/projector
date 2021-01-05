@@ -2,7 +2,7 @@ import { FileConstants } from "../../../../../../../constants";
 import { Command } from "../../../../../../../extensions";
 import { AgileServiceFactory } from "../../../../../../../factories";
 import { BacklogItemTemplate, CseCliConfig } from "../../../../../../../models";
-import { FileUtils } from "../../../../../../../utils";
+import { FileUtils, Logger } from "../../../../../../../utils";
 
 export interface AgileInitializationOptions {
   file: string;
@@ -11,6 +11,7 @@ export interface AgileInitializationOptions {
 export const agileWorkCreate = new Command()
   .name("create")
   .description("Work Item Creation")
+  .option("-f, --file <file>", "File containing backlog item template")
   .addAction(async (options: AgileInitializationOptions, config: CseCliConfig) => {
     const { agile: agileConfig } = config;
     if (!agileConfig) {
@@ -24,5 +25,8 @@ export const agileWorkCreate = new Command()
     const template: BacklogItemTemplate = await FileUtils.readJson(file || FileConstants.backlogItemsFileName);
 
     // Create Backlog Items
-    await agileService.createBacklogItems(template.items);
+    const items = await agileService.createBacklogItems(template.items);
+    Logger.logHeader("Created Items");
+
+    items.forEach(item => Logger.log(`${item.id} - ${item.name}`));
   });

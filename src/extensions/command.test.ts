@@ -6,10 +6,9 @@ import chalk from "chalk";
 
 jest.mock("figlet");
 import figlet from "figlet";
+import { Logger } from "../utils";
 
 describe("Command", () => {
-  const originalLogFunction = console.log;
-
   beforeAll(() => {
     mockFs({
       "cse.json": "{}"
@@ -21,11 +20,7 @@ describe("Command", () => {
   });
   
   beforeEach(() => {
-    console.log = jest.fn();
-  });
-
-  afterEach(() => {
-    console.log = originalLogFunction;
+    Logger.log = jest.fn();
   });
 
   it("calls initialize action", () => {
@@ -91,7 +86,7 @@ describe("Command", () => {
 
     // Assert
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { calls } = (console.log as any).mock;
+    const { calls } = (Logger.log as any).mock;
     expect(calls).toHaveLength(1);
     expect(calls[0][0]).toContain("Options:\n  -h, --help  display help for command");
   });
@@ -114,7 +109,7 @@ describe("Command", () => {
     expect(figlet.textSync).toBeCalledWith(originalText);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((chalk as any).cyanBright).toBeCalledWith(figletText);
-    expect(console.log).toBeCalledWith(chalkText);
+    expect(Logger.log).toBeCalledWith(chalkText);
   });
 
   it("adds link commands", () => {

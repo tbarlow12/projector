@@ -4,6 +4,7 @@ import figlet from "figlet";
 import { CseCliConfig } from "../models/config/cliConfig";
 import { Link } from "../models/general/link";
 import { ConfigService } from "../services";
+import { Logger } from "../utils";
 import { urlCommand } from "./urlCommand";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,7 +27,8 @@ export class Command extends CommanderCommand {
     this.actions.push(action);
     this.action(() => {
       const options = this.opts();
-      const config = ConfigService.createConfig(options);
+      const config = ConfigService.getExistingConfig();
+
       this.actions.forEach((action) => {
         action(options, config);
       });
@@ -36,14 +38,14 @@ export class Command extends CommanderCommand {
 
   public printHelp(): Command {
     this.addAction(() => {
-      console.log(this.helpInformation());
+      Logger.log(this.helpInformation());
     });
     return this;
   }
 
   public asciiArt(message: string): Command {
     this.addAction(() => {
-      console.log(chalk.cyanBright(figlet.textSync(message)));
+      Logger.log(chalk.cyanBright(figlet.textSync(message)));
     });
     return this;
   }
