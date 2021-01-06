@@ -1,26 +1,24 @@
-import { ConfigValue } from "../../constants";
+import mockFs from "mock-fs";
+import { ConfigValue, FileConstants } from "../../constants";
 import { ProjectorConfig } from "../../models";
+import { ModelSimulator } from "../../test";
 import { Config } from "../../utils";
 import { AgileServiceProvider } from "../agile";
 import { ConfigService } from "./configService";
-import mockFs from "mock-fs";
-import { ModelSimulator } from "../../test";
 
 describe("Config Service", () => {
   const existingConfig = ModelSimulator.createTestConfig();
 
   beforeAll(() => {
-    mockFs(
-      {
-        "cse.json": JSON.stringify(existingConfig),
-      },
-      { createCwd: true, createTmp: true },
-    );
+    const fileSystem: { [fileName: string]: string } = {};
+    fileSystem[FileConstants.configFileName] = JSON.stringify(existingConfig);
+    mockFs(fileSystem, { createCwd: true, createTmp: true });
   });
 
   afterAll(() => {
     mockFs.restore();
   });
+
   it("creates initial agile config", () => {
     const now = new Date();
 

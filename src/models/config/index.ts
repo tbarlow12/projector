@@ -1,5 +1,5 @@
 export * from "./agile";
 export * from "./github";
-export * from "./cliConfig";
+export * from "./projectorConfig";
 export * from "./providerConfig";
 export * from "./repo";
