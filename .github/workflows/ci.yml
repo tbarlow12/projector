@@ -14,7 +14,7 @@ on:
 name: Quality Gates
 jobs:
   build:
-    name: Lint and Build
+    name: Lint & Build
     runs-on: ubuntu-latest
     steps:
     # Check out repo
