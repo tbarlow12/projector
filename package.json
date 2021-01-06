@@ -1,7 +1,7 @@
 {
   "name": "pjr",
   "version": "0.0.0",
-  "description": "Projector: ⌨ A CLI for quickly creating projects",
+  "description": "📽 Projector: The CLI for bootstrapping projects",
   "repository": {
     "url": "https://github.com/tbarlow12/projector"
   },

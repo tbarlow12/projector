@@ -28,8 +28,8 @@ export class Command extends CommanderCommand {
     return this;
   }
 
-  public addAction(action: ActionHandler): Command {
-    this.actions.push(action);
+  public addAction(actionHandler: ActionHandler): Command {
+    this.actions.push(actionHandler);
     this.action(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const options: any = this.opts();

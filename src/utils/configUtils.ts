@@ -4,7 +4,7 @@ import config from "config";
 
 export class Config {
   public static getValue<T = string>(valueName: ConfigValue): T {
-    return config.get(valueName) as T;
+    return config.get(valueName);
   }
 
   public static getValueWithDefault<T = string>(valueName: ConfigValue, defaultValue?: T): T | undefined {
@@ -13,7 +13,7 @@ export class Config {
 
   public static getLink(name: string): Link {
     const links = this.getValue<Link[]>(ConfigValue.Links);
-    const link = links.find((link) => link.name === name);
+    const link = links.find((l) => l.name === name);
     if (!link) {
       throw new Error(`Missing link ${name} in config`);
     }

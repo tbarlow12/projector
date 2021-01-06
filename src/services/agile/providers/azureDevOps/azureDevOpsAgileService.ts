@@ -147,7 +147,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
     for (const sprint of sprints) {
       createdSprints.push(await this.createProviderSprint(sprint, teamContext));
     }
-    return sprints;
+    return createdSprints;
   };
 
   deleteSprint = async (id: string): Promise<void> => {
@@ -254,7 +254,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
       const childIds: string[] = [];
       for (const relation of relations) {
         const { attributes, url } = relation;
-        if (!attributes || !(attributes.name === "Child")) {
+        if (!attributes || attributes.name !== "Child") {
           continue;
         }
         const id = url?.substr(url.lastIndexOf("/") + 1);

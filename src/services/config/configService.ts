@@ -69,15 +69,11 @@ export class ConfigService {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private static getProviderOptions(provider: AgileServiceProvider): any {
-    switch (provider) {
-      case AgileServiceProvider.AzureDevOps:
-      default:
-        const azDoProviderOptions: AzureDevOpsProviderOptions = {
-          baseUrl: "{Base URL for Azure DevOps organization}",
-          projectName: "{Name of Azure DevOps project}",
-          personalAccessToken: "{Go to 'https://dev.azure.com/{organization}/_usersSettings/tokens' to generate token}",
-        };
-        return azDoProviderOptions;
-    }
+    // Only support AzDO for now. Leaving this here for when there are more options
+    return {
+      baseUrl: "{Base URL for Azure DevOps organization}",
+      projectName: "{Name of Azure DevOps project}",
+      personalAccessToken: "{Go to 'https://dev.azure.com/{organization}/_usersSettings/tokens' to generate token}",
+    } as AzureDevOpsProviderOptions;
   }
 }
