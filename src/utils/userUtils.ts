@@ -3,7 +3,7 @@ import { createInterface } from "readline";
 export class UserUtils {
   public static async confirmAction(message?: string, affirmative?: string): Promise<boolean> {
     message = `\n${message || "Confirm? (y/n)"}\n`;
-    affirmative = affirmative || "y";
+    affirmative = affirmative?.toLowerCase() || "y";
     const response = (await this.askQuestion(message)).trim().toLowerCase();
     return response === affirmative;
   }

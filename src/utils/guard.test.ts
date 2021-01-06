@@ -16,4 +16,20 @@ describe("Guard", () => {
     // Act & Assert
     expect(() => Guard.empty("", "empty", message)).toThrowError(message);
   });
+
+  it("throws an error for a null value with default message", () => {
+    // Setup
+    const name = "null";
+
+    // Act & Assert
+    expect(() => Guard.null(null, name)).toThrowError(`Argument '${name}' cannot be null`);
+  });
+
+  it("throws an error for an empty string with specified message", () => {
+    // Setup
+    const message = "this is null";
+
+    // Act & Assert
+    expect(() => Guard.null(null, "empty", message)).toThrowError(message);
+  });
 });
