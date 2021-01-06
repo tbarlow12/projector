@@ -30,9 +30,9 @@ jobs:
         key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
     # Install dependencies - cache if possible
-    - name: npm install
+    - name: install dependencies
       if: steps.cache-modules.outputs.cache-hit != 'true'
-      run: npm install
+      run: npm ci
 
     # Run linting
     - name: lint
@@ -56,6 +56,13 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: true
+
+    # Analyze with Sonar Cloud
+    - name: Analyze with SonarCloud
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     
     # Version the package and release on NPM
     - name: Release
