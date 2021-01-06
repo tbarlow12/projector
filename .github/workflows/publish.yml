@@ -30,9 +30,9 @@ jobs:
         key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
     # Install dependencies - cache if possible
-    - name: npm install
+    - name: install dependencies
       if: steps.cache-modules.outputs.cache-hit != 'true'
-      run: npm install
+      run: npm ci
 
     # Run linting
     - name: lint
