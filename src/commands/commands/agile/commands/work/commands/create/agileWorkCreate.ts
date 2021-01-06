@@ -1,7 +1,6 @@
 import { FileConstants } from "../../../../../../../constants";
 import { Command } from "../../../../../../../extensions";
-import { AgileServiceFactory } from "../../../../../../../factories";
-import { BacklogItemTemplate, CseCliConfig } from "../../../../../../../models";
+import { BacklogItemTemplate, ServiceCollection } from "../../../../../../../models";
 import { FileUtils, Logger } from "../../../../../../../utils";
 
 export interface AgileInitializationOptions {
@@ -12,13 +11,12 @@ export const agileWorkCreate = new Command()
   .name("create")
   .description("Work Item Creation")
   .option("-f, --file <file>", "File containing backlog item template")
-  .addAction(async (options: AgileInitializationOptions, config: CseCliConfig) => {
-    const { agile: agileConfig } = config;
-    if (!agileConfig) {
-      throw new Error("Section agile is required for this operation");
+  .addAction(async (serviceCollection: ServiceCollection, options: AgileInitializationOptions) => {
+    const { agileService } = serviceCollection;
+
+    if (!agileService) {
+      throw new Error("Section 'agile' must be configured for this command");
     }
-    // Instantiate agile service from factory
-    const agileService = AgileServiceFactory.get(agileConfig);
 
     // Read agile items from provided file
     const { file } = options;

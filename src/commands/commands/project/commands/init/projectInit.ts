@@ -1,5 +1,6 @@
 import { writeFileSync } from "fs";
 import { Command } from "../../../../../extensions";
+import { ServiceCollection } from "../../../../../models";
 import { AgileServiceProvider, ConfigService } from "../../../../../services";
 
 export interface ProjectCreationOptions {
@@ -20,7 +21,7 @@ export const projectInit = new Command()
   .option("-u, --base-url <base-url>", "Base URL for Agile Provider project")
   .option("-p, --project <project>", "Agile provider project")
   .option("-t, --token <token>", "Agile provider access token")
-  .addAction((options: ProjectCreationOptions) => {
+  .addAction((serviceCollection: ServiceCollection, options: ProjectCreationOptions) => {
     const config = ConfigService.createInitialConfig(options);
     writeFileSync("cse.json", JSON.stringify(config, null, 4));
   });

@@ -74,9 +74,9 @@ describe("Command", () => {
       myOption: optionValue,
     };
 
-    expect(action1).toBeCalledWith(expectedParsedOptions, expect.anything());
-    expect(action2).toBeCalledWith(expectedParsedOptions, expect.anything());
-    expect(action3).toBeCalledWith(expectedParsedOptions, expect.anything());
+    expect(action1).toBeCalledWith(expect.anything(), expectedParsedOptions, expect.anything());
+    expect(action2).toBeCalledWith(expect.anything(), expectedParsedOptions, expect.anything());
+    expect(action3).toBeCalledWith(expect.anything(), expectedParsedOptions, expect.anything());
   });
 
   it("prints help information", () => {

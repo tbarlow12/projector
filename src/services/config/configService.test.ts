@@ -3,10 +3,24 @@ import { CseCliConfig } from "../../models";
 import { Config } from "../../utils";
 import { AgileServiceProvider } from "../agile";
 import { ConfigService } from "./configService";
+import mockFs from "mock-fs";
+import { ModelSimulator } from "../../test";
 
 describe("Config Service", () => {
-  /* Config Service currently just stubs */
+  const existingConfig = ModelSimulator.createTestConfig();
 
+  beforeAll(() => {
+    mockFs(
+      {
+        "cse.json": JSON.stringify(existingConfig),
+      },
+      { createCwd: true, createTmp: true },
+    );
+  });
+
+  afterAll(() => {
+    mockFs.restore();
+  });
   it("creates initial agile config", () => {
     const now = new Date();
 
@@ -32,5 +46,47 @@ describe("Config Service", () => {
     expect(ConfigService.createInitialConfig({ agileProvider: "azdo" as AgileServiceProvider })).toEqual(
       expectedConfig,
     );
+  });
+
+  it("gets existing config with no options specified", () => {
+    expect(ConfigService.getExistingConfig()).toEqual(existingConfig);
+  });
+
+  it("gets existing config with options specified", () => {
+    const githubToken = "myToken";
+
+    expect(
+      ConfigService.getExistingConfig({
+        githubToken,
+      }),
+    ).toEqual({
+      ...existingConfig,
+      github: {
+        personalAccessToken: githubToken,
+      },
+    });
+  });
+
+  it("gets default config if config file does not exist", () => {
+    expect(
+      ConfigService.getExistingConfig({
+        configFile: "fakeCse.json",
+      }),
+    ).toEqual({});
+  });
+
+  it("gets default config with options specified if config file does not exist", () => {
+    const githubToken = "myToken";
+
+    expect(
+      ConfigService.getExistingConfig({
+        configFile: "fakeCse.json",
+        githubToken,
+      }),
+    ).toEqual({
+      github: {
+        personalAccessToken: githubToken,
+      },
+    });
   });
 });

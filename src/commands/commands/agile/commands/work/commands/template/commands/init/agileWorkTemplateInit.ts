@@ -1,6 +1,6 @@
 import { FileConstants } from "../../../../../../../../../constants";
 import { Command } from "../../../../../../../../../extensions";
-import { BacklogItemTemplate } from "../../../../../../../../../models";
+import { BacklogItemTemplate, ServiceCollection } from "../../../../../../../../../models";
 import { emptyBacklogItemTemplate, exampleBacklogItemTemplate } from "../../../../../../../../../samples";
 import { FileUtils } from "../../../../../../../../../utils";
 
@@ -14,7 +14,7 @@ export const agileWorkTemplateInit = new Command()
   .description("Initialize work item template")
   .option("-t, --template <template>", "Template to use for work items")
   .option("-o, --out-file <out-file>", "Output file for work item template")
-  .addAction((options: AgileWorkTemplateInitOptions) => {
+  .addAction((serviceCollection: ServiceCollection, options: AgileWorkTemplateInitOptions) => {
     // Stub for now - will fetch templates from repo
     const templates: BacklogItemTemplate[] = [exampleBacklogItemTemplate, emptyBacklogItemTemplate];
 

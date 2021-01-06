@@ -15,9 +15,7 @@ export class RepoServiceFactory {
     const service = this.registry[providerName];
 
     if (!service) {
-      throw new Error(
-        `Backlog service ${providerName} not defined. Options are ${Object.keys(this.registry).join(",")}`,
-      );
+      throw new Error(`Repo service ${providerName} not defined. Options are ${Object.keys(this.registry).join(",")}`);
     }
     return new service(config);
   }

@@ -1,8 +1,9 @@
 import mockFs from "mock-fs";
-import { AgileServiceFactory } from "../../../../../../../factories";
 import { CliSimulator, ModelSimulator, SimulatorAgileService } from "../../../../../../../test";
 import { Logger, UserUtils } from "../../../../../../../utils";
 import { agileSprintsCreate } from "./agileSprintsCreate";
+jest.mock("../../../../../../../factories/agileServiceFactory");
+import { AgileServiceFactory } from "../../../../../../../factories/agileServiceFactory";
 
 describe("Agile Sprints Create Command", () => {
   const cseConfigFileName = "cse.json";
