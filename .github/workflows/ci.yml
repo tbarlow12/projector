@@ -11,10 +11,10 @@ on:
       - 'codecov.yml'
       - 'jest.*.js'
 
-name: Build, Test and Coverage
+name: Quality Gates
 jobs:
-  all:
-    name: Build, Test and Coverage
+  build:
+    name: Lint and Build
     runs-on: ubuntu-latest
     steps:
     # Check out repo
@@ -40,7 +40,27 @@ jobs:
     # Build package
     - name: build
       run: npm run build
-    
+
+  test:
+    name: Test & Coverage
+    runs-on: ubuntu-latest
+    steps:
+    # Check out repo
+    - uses: actions/checkout@master
+
+    # Cache node modules
+    - name: Cache node_modules
+      id: cache-modules
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+
+    # Install dependencies - use cache if possible
+    - name: npm install
+      if: steps.cache-modules.outputs.cache-hit != 'true'
+      run: npm install
+
     # Run tests and output code coverage
     - name: Test coverage
       run: npm run test:coverage
@@ -55,3 +75,17 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: true
+  
+  sonar:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+    # Check out repo
+    - uses: actions/checkout@master
+
+    # Analyze with Sonar Cloud
+    - name: Analyze with SonarCloud
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
