@@ -77,7 +77,7 @@ jobs:
         fail_ci_if_error: true
   
   sonar:
-    name: SonarCloud
+    name: Static Analysis
     runs-on: ubuntu-latest
     steps:
     # Check out repo
