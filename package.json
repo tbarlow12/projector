@@ -19,7 +19,7 @@
     "test:unit": "jest -c jest.config.unit.js",
     "test:int": "jest -c jest.config.integration.js",
     "test:coverage": "npm run test -- --coverage",
-    "check": "npm run lint && npm run build && npm run test"
+    "check": "npm run lint && npm run build && npm run test:coverage"
   },
   "keywords": [
     "cli",

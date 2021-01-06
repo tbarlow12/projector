@@ -1,12 +1,11 @@
-import { ConfigValue } from "../../../../../../../constants";
 import { Command } from "../../../../../../../extensions";
 import { ServiceCollection } from "../../../../../../../models";
-import { Config, Logger } from "../../../../../../../utils";
 
 export interface PlaybookTemplateCopyOptions {
   path: string;
   branch: string;
   githubToken: string;
+  outPath: string;
 }
 
 export const playbookTemplateCopy = new Command()
@@ -17,13 +16,7 @@ export const playbookTemplateCopy = new Command()
   .option("-p, --path <template-path>", "Path to template within playbook repo")
   .option("-o, --out-path <out-path>", "Local path to which file will be written. Defaults to name of template file")
   .addAction(async (serviceCollection: ServiceCollection, options: PlaybookTemplateCopyOptions) => {
-    const { repoService } = serviceCollection;
-
-    const { path, branch } = options;
-
-    const playbookOwnerName: string = Config.getValue(ConfigValue.PlaybookOwnerName);
-    const playbookRepoName: string = Config.getValue(ConfigValue.PlaybookRepoName);
-
-    Logger.log(`Getting template from ${playbookOwnerName}/${playbookRepoName} at path ${path}`);
-    await repoService.downloadRepoItem(playbookOwnerName, playbookRepoName, path, branch);
+    const { playbookService } = serviceCollection;
+    const { path, outPath } = options;
+    await playbookService.downloadRepoItem(path, outPath);
   });

@@ -10,9 +10,12 @@ describe("Config Service", () => {
   const existingConfig = ModelSimulator.createTestConfig();
 
   beforeAll(() => {
-    mockFs({
-      "cse.json": JSON.stringify(existingConfig),
-    }, { createCwd: true, createTmp: true })
+    mockFs(
+      {
+        "cse.json": JSON.stringify(existingConfig),
+      },
+      { createCwd: true, createTmp: true },
+    );
   });
 
   afterAll(() => {
@@ -51,33 +54,39 @@ describe("Config Service", () => {
 
   it("gets existing config with options specified", () => {
     const githubToken = "myToken";
-    
-    expect(ConfigService.getExistingConfig({
-      githubToken,
-    })).toEqual({
+
+    expect(
+      ConfigService.getExistingConfig({
+        githubToken,
+      }),
+    ).toEqual({
       ...existingConfig,
       github: {
-        personalAccessToken: githubToken
-      }
+        personalAccessToken: githubToken,
+      },
     });
   });
 
   it("gets default config if config file does not exist", () => {
-    expect(ConfigService.getExistingConfig({
-      configFile: "fakeCse.json"
-    })).toEqual({});
+    expect(
+      ConfigService.getExistingConfig({
+        configFile: "fakeCse.json",
+      }),
+    ).toEqual({});
   });
 
   it("gets default config with options specified if config file does not exist", () => {
     const githubToken = "myToken";
 
-    expect(ConfigService.getExistingConfig({
-      configFile: "fakeCse.json",
-      githubToken,
-    })).toEqual({
+    expect(
+      ConfigService.getExistingConfig({
+        configFile: "fakeCse.json",
+        githubToken,
+      }),
+    ).toEqual({
       github: {
-        personalAccessToken: githubToken
-      }
+        personalAccessToken: githubToken,
+      },
     });
   });
 });
