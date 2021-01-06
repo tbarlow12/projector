@@ -13,16 +13,18 @@ describe("Playbook Template Copy Command", () => {
     const repoPath = "repoPath";
     const localPath = "localPath";
 
-    await playbookTemplateCopy.parseAsync(CliSimulator.createArgs([
-      {
-        name: "--path",
-        value: repoPath,
-      },
-      {
-        name: "--out-path",
-        value: localPath,
-      }
-    ]));
+    await playbookTemplateCopy.parseAsync(
+      CliSimulator.createArgs([
+        {
+          name: "--path",
+          value: repoPath,
+        },
+        {
+          name: "--out-path",
+          value: localPath,
+        },
+      ]),
+    );
     expect(CsePlaybookService.prototype.downloadRepoItem).toBeCalledWith(repoPath, localPath);
   });
 });

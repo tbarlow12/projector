@@ -7,14 +7,14 @@ import { agileWorkCreate } from "./agileWorkCreate";
 
 describe("Agile Work Create Command", () => {
   const backlogItemFileName = "myItems.json";
-  const cseConfigFileName = "cse.json";
+  const projectorConfigFileName = "projector.json";
   const backlogItemTemplate = ModelSimulator.createTestBacklogItemTemplate();
-  const cseConfig = ModelSimulator.createTestConfig();
+  const projectorConfig = ModelSimulator.createTestConfig();
 
   beforeAll(() => {
     const fileSystem: { [fileName: string]: string } = {};
     fileSystem[backlogItemFileName] = JSON.stringify(backlogItemTemplate);
-    fileSystem[cseConfigFileName] = JSON.stringify(cseConfig);
+    fileSystem[projectorConfigFileName] = JSON.stringify(projectorConfig);
     mockFs(fileSystem);
     Logger.log = jest.fn();
   });

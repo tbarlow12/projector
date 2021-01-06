@@ -6,12 +6,12 @@ jest.mock("../../../../../../../factories/agileServiceFactory");
 import { AgileServiceFactory } from "../../../../../../../factories/agileServiceFactory";
 
 describe("Agile Sprints Create Command", () => {
-  const cseConfigFileName = "cse.json";
-  const cseConfig = ModelSimulator.createTestConfig();
+  const projectorConfigFileName = "projector.json";
+  const projectorConfig = ModelSimulator.createTestConfig();
 
   beforeAll(() => {
     const fileSystem: { [fileName: string]: string } = {};
-    fileSystem[cseConfigFileName] = JSON.stringify(cseConfig);
+    fileSystem[projectorConfigFileName] = JSON.stringify(projectorConfig);
     mockFs(fileSystem);
     Logger.log = jest.fn();
     UserUtils.confirmAction = jest.fn(() => Promise.resolve(true));

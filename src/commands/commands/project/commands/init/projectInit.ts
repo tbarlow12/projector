@@ -23,5 +23,5 @@ export const projectInit = new Command()
   .option("-t, --token <token>", "Agile provider access token")
   .addAction((serviceCollection: ServiceCollection, options: ProjectCreationOptions) => {
     const config = ConfigService.createInitialConfig(options);
-    writeFileSync("cse.json", JSON.stringify(config, null, 4));
+    writeFileSync("projector.json", JSON.stringify(config, null, 4));
   });

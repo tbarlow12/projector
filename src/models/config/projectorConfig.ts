@@ -1,7 +1,7 @@
 import { AgileConfig } from "./agile";
 import { GitHubConfig } from "./github";
 
-export interface CseCliConfig {
+export interface ProjectorConfig {
   agile?: AgileConfig;
   github?: GitHubConfig;
 }

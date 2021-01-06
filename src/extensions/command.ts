@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { Command as CommanderCommand } from "commander";
 import figlet from "figlet";
 import { createServiceCollection } from "../factories";
-import { CseCliConfig, ServiceCollection } from "../models";
+import { ProjectorConfig, ServiceCollection } from "../models";
 import { Link } from "../models/general/link";
 import { ConfigService } from "../services";
 import { Logger } from "../utils";
@@ -12,7 +12,7 @@ export type ActionHandler = (
   serviceCollection: ServiceCollection,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options: any,
-  config: CseCliConfig,
+  config: ProjectorConfig,
 ) => void | Promise<void>;
 
 export class Command extends CommanderCommand {

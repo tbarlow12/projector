@@ -32,7 +32,7 @@ export abstract class BaseAgileService implements AgileService {
   private generateSprints(): Sprint[] {
     const { sprints: sprintConfig } = this.config;
     if (!sprintConfig) {
-      throw new Error("Section agile.sprints of cse.json is required for this operation");
+      throw new Error("Section agile.sprints of projector.json is required for this operation");
     }
     const {
       startDate,
