@@ -10,9 +10,7 @@ describe("Azure DevOps Utils", () => {
       name: "My item",
       type: BacklogItemType.Story,
       description: "My description",
-      acceptanceCriteria: [
-        "My acceptance criteria"
-      ]
+      acceptanceCriteria: ["My acceptance criteria"],
     };
 
     const expectedPatchDocument: AzDOJsonPatchDocument = [
@@ -30,7 +28,7 @@ describe("Azure DevOps Utils", () => {
         op: AzDoOp.Add,
         path: `/fields/${AzureDevOpsFieldName.acceptanceCriteria}`,
         value: `<div><ul><li>${item.acceptanceCriteria![0]}</li></ul></div>`,
-      }
+      },
     ];
 
     expect(AzureDevOpsUtils.createPatchDocument(item)).toEqual(expectedPatchDocument);
@@ -41,9 +39,7 @@ describe("Azure DevOps Utils", () => {
       name: "My item",
       type: BacklogItemType.Story,
       description: "My description",
-      acceptanceCriteria: [
-        "My acceptance criteria"
-      ]
+      acceptanceCriteria: ["My acceptance criteria"],
     };
     const parentUrl = "https://parent.com";
 
@@ -72,11 +68,10 @@ describe("Azure DevOps Utils", () => {
           attributes: {
             isLocked: false,
             name: "Parent",
-          }
-        }
-      }
+          },
+        },
+      },
     ];
-
 
     expect(AzureDevOpsUtils.createPatchDocument(item, parentUrl)).toEqual(expectedPatchDocument);
   });
