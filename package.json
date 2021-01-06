@@ -19,7 +19,8 @@
     "test:unit": "jest -c jest.config.unit.js",
     "test:int": "jest -c jest.config.integration.js",
     "test:coverage": "npm run test -- --coverage",
-    "check": "npm run lint && npm run build && npm run test:coverage"
+    "check": "npm run lint && npm run build && npm run test:coverage",
+    "docs:generate": "ts-node src/scripts/generateDocs.ts"
   },
   "keywords": [
     "cli",
@@ -59,6 +60,7 @@
     "mock-fs": "4.13.0",
     "prettier": "2.2.1",
     "ts-jest": "26.4.4",
+    "ts-node": "9.1.1",
     "typescript": "4.1.2"
   }
 }

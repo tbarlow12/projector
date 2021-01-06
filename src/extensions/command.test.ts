@@ -9,6 +9,18 @@ import figlet from "figlet";
 import { Logger } from "../utils";
 
 describe("Command", () => {
+  const commandName1 = "command1";
+  const commandName2 = "command2";
+
+  const commandDescription1 = "commandDescription1";
+  const commandDescription2 = "commandDescription2";
+
+  const command1 = new Command().name(commandName1).description(commandDescription1);
+
+  const command2 = new Command().name(commandName2).description(commandDescription2);
+
+  command1.addCommand(command2);
+
   beforeAll(() => {
     mockFs(
       {
@@ -124,5 +136,24 @@ describe("Command", () => {
 
     // Assert
     expect(command.commands).toHaveLength(links.length);
+  });
+
+  it("gets the markdown representation of the command", () => {
+    const commandHelp1 = command1.helpInformation();
+    const commandHelp2 = command2.helpInformation();
+
+    const markdown = command1.toMarkdownDoc();
+    expect(markdown).toContain(commandHelp1);
+    expect(markdown).toContain(commandHelp2);
+    expect(markdown).toContain(commandDescription1);
+    expect(markdown).toContain(commandDescription2);
+  });
+
+  it("gets the table of contents for the command", () => {
+    const toc = command1.toTableOfContents();
+    expect(toc).toContain(commandName1);
+    expect(toc).toContain(commandName2);
+    expect(toc).toContain(commandDescription1);
+    expect(toc).toContain(commandDescription2);
   });
 });
