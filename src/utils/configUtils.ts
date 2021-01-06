@@ -13,10 +13,10 @@ export class Config {
 
   public static getLink(name: string): Link {
     const links = this.getValue<Link[]>(ConfigValue.Links);
-    const link = links.find((l) => l.name === name);
-    if (!link) {
+    const matchingLink = links.find((link) => link.name === name);
+    if (!matchingLink) {
       throw new Error(`Missing link ${name} in config`);
     }
-    return link;
+    return matchingLink;
   }
 }
