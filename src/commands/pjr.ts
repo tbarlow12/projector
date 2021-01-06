@@ -2,13 +2,13 @@ import { Command } from "../extensions";
 import { registerProviders } from "../initialization/registerProviders";
 import { agile, project, links, playbook } from "./commands";
 
-export const cse = new Command()
-  .description("CSE Bootstrap CLI")
-  .name("cse")
+export const pjr = new Command()
+  .description("Projector CLI")
+  .name("pjr")
   .initialize(() => {
     registerProviders();
   })
-  .asciiArt("CSE")
+  .asciiArt("PJR")
   .passCommandToAction(false)
   .addCommand(agile)
   .addCommand(links)

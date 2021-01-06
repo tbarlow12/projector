@@ -4,12 +4,12 @@ import { Logger } from "../../../../../../../../../utils";
 import { agileWorkTemplateList } from "./agileWorkTemplateList";
 
 describe("Agile Work Template List", () => {
-  const cseConfigFileName = "cse.json";
-  const cseConfig = ModelSimulator.createTestConfig();
+  const projectorConfigFileName = "projector.json";
+  const projectorConfig = ModelSimulator.createTestConfig();
 
   beforeAll(() => {
     const fileSystem: { [fileName: string]: string } = {};
-    fileSystem[cseConfigFileName] = JSON.stringify(cseConfig);
+    fileSystem[projectorConfigFileName] = JSON.stringify(projectorConfig);
     mockFs(fileSystem);
   });
 

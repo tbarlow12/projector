@@ -1,12 +1,12 @@
 {
-  "name": "cse-cli",
+  "name": "projector",
   "version": "0.0.0",
-  "description": "⌨ The CLI for all things Commercial Software Engineering",
+  "description": "⌨ A CLI for quickly creating projects",
   "repository": {
     "url": "https://github.com/tbarlow12/cse-cli"
   },
   "bin": {
-    "cse": "./lib/index.js"
+    "pjr": "./lib/index.js"
   },
   "files": [
     "lib/"
@@ -23,7 +23,8 @@
   },
   "keywords": [
     "cli",
-    "cse"
+    "cse",
+    "pjr"
   ],
   "author": "Tanner Barlow",
   "license": "ISC",

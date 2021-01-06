@@ -1,16 +1,16 @@
 import { ProjectCreationOptions } from "../../commands/commands/project/commands/init/projectInit";
 import { ConfigValue, FileConstants } from "../../constants";
-import { AgileConfig, CseCliConfig, GitHubConfig, SharedOptions } from "../../models";
+import { AgileConfig, GitHubConfig, ProjectorConfig, SharedOptions } from "../../models";
 import { Config, FileUtils } from "../../utils";
 import { AgileServiceProvider } from "../agile";
 import { AzureDevOpsProviderOptions } from "../agile/providers";
 
 /**
- * Class dealing with the CSE configuration.
+ * Class dealing with the Projector configuration.
  */
 export class ConfigService {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-module-boundary-types
-  public static createInitialConfig(options: ProjectCreationOptions): CseCliConfig {
+  public static createInitialConfig(options: ProjectCreationOptions): ProjectorConfig {
     const { agileProvider } = options;
     return {
       agile: agileProvider ? this.createAgileConfig(agileProvider) : undefined,
@@ -18,11 +18,11 @@ export class ConfigService {
     };
   }
 
-  public static getExistingConfig(options?: SharedOptions): CseCliConfig {
+  public static getExistingConfig(options?: SharedOptions): ProjectorConfig {
     const githubToken = options?.githubToken;
     const configFile = options?.configFile;
 
-    const config: CseCliConfig | undefined = FileUtils.readJson(configFile || FileConstants.configFileName);
+    const config: ProjectorConfig | undefined = FileUtils.readJson(configFile || FileConstants.configFileName);
 
     if (!githubToken) {
       return config ? config : {};

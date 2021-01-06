@@ -1,5 +1,5 @@
 import { ConfigValue } from "../../constants";
-import { CseCliConfig } from "../../models";
+import { ProjectorConfig } from "../../models";
 import { Config } from "../../utils";
 import { AgileServiceProvider } from "../agile";
 import { ConfigService } from "./configService";
@@ -24,7 +24,7 @@ describe("Config Service", () => {
   it("creates initial agile config", () => {
     const now = new Date();
 
-    const expectedConfig: CseCliConfig = {
+    const expectedConfig: ProjectorConfig = {
       agile: {
         providerName: "azdo",
         providerOptions: expect.anything(),

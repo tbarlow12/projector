@@ -8,7 +8,7 @@ describe("URL Command", () => {
   beforeAll(() => {
     mockFs(
       {
-        "cse.json": "{}",
+        "projector.json": "{}",
       },
       { createCwd: true, createTmp: true },
     );

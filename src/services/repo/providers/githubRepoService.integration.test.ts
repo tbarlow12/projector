@@ -10,7 +10,7 @@ describe("GitHub Repo Service", () => {
 
   it("gets the latest commit hash", async () => {
     // Act
-    const result = await service.latestCommit("tbarlow12", "cse-cli", "master");
+    const result = await service.latestCommit("tbarlow12", "projector", "master");
 
     // Assert
     expect(result).toBeTruthy();
@@ -18,7 +18,7 @@ describe("GitHub Repo Service", () => {
 
   it("gets children from directory in repo", async () => {
     // Act
-    const github = await service.getRepoItem("tbarlow12", "cse-cli", ".github");
+    const github = await service.getRepoItem("tbarlow12", "projector", ".github");
 
     // Assert
     expect(github.children).toBeDefined();
@@ -26,7 +26,7 @@ describe("GitHub Repo Service", () => {
 
   it("gets content from file in repo", async () => {
     // Act
-    const readme = await service.getRepoItem("tbarlow12", "cse-cli", "README.md", true);
+    const readme = await service.getRepoItem("tbarlow12", "projector", "README.md", true);
 
     // Assert
     expect(readme.content).toBeDefined();
@@ -34,7 +34,7 @@ describe("GitHub Repo Service", () => {
 
   it("gets the content of a file in the repo", async () => {
     // Act
-    const readme = await service.getRepoItem("tbarlow12", "cse-cli", "README.md");
+    const readme = await service.getRepoItem("tbarlow12", "projector", "README.md");
 
     // Assert
     expect(readme).toBeTruthy();

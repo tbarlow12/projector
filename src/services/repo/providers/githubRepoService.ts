@@ -19,7 +19,7 @@ export class GitHubRepoService extends BaseRepoService {
     const accessToken = Config.getValueWithDefault(ConfigValue.GithubAccessToken, config?.personalAccessToken);
 
     this.github = new Octokit({
-      userAgent: "cse-cli",
+      userAgent: "projector",
       auth: accessToken,
     });
   }

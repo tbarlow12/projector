@@ -1,7 +1,7 @@
-import { BacklogItem, BacklogItemTemplate, BacklogItemType, CseCliConfig } from "../../models";
+import { BacklogItem, BacklogItemTemplate, BacklogItemType, ProjectorConfig } from "../../models";
 
 export class ModelSimulator {
-  public static createTestConfig(): CseCliConfig {
+  public static createTestConfig(): ProjectorConfig {
     return {
       agile: {
         providerName: "simulator",
