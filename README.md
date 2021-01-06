@@ -1,6 +1,6 @@
 # Projector
 
-[![codecov](https://codecov.io/gh/tbarlow12/projector/branch/master/graph/badge.svg)](https://codecov.io/gh/tbarlow12/projector) [![npm version](https://badge.fury.io/js/projector.svg)](https://badge.fury.io/js/projector) [![Build, Test and Coverage](https://github.com/tbarlow12/projector/workflows/Build,%20Test%20and%20Coverage/badge.svg)](https://github.com/tbarlow12/projector/actions?query=workflow%3A%22Build%2C+Test+and+Coverage%22)
+[![codecov](https://codecov.io/gh/tbarlow12/projector/branch/master/graph/badge.svg)](https://codecov.io/gh/tbarlow12/projector) [![npm version](https://badge.fury.io/js/pjr.svg)](https://badge.fury.io/js/pjr) [![Build, Test and Coverage](https://github.com/tbarlow12/projector/workflows/Build,%20Test%20and%20Coverage/badge.svg)](https://github.com/tbarlow12/projector/actions?query=workflow%3A%22Build%2C+Test+and+Coverage%22)
 
 A command-line interface for setting up projects.
 
