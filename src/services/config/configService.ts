@@ -49,7 +49,7 @@ export class ConfigService {
     const now = new Date();
     return {
       providerName: provider,
-      providerOptions: this.getProviderOptions(provider),
+      providerOptions: this.getProviderOptions(),
       sprints: {
         startDate: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`,
         lengthOfSprintInDays: Config.getValue(ConfigValue.DefaultSprintLength),
@@ -68,16 +68,12 @@ export class ConfigService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private static getProviderOptions(provider: AgileServiceProvider): any {
-    switch (provider) {
-      case AgileServiceProvider.AzureDevOps:
-      default:
-        const azDoProviderOptions: AzureDevOpsProviderOptions = {
-          baseUrl: "{Base URL for Azure DevOps organization}",
-          projectName: "{Name of Azure DevOps project}",
-          personalAccessToken: "{Go to 'https://dev.azure.com/{organization}/_usersSettings/tokens' to generate token}",
-        };
-        return azDoProviderOptions;
-    }
+  private static getProviderOptions(): any {
+    // Only support AzDO for now. Leaving this here for when there are more options
+    return {
+      baseUrl: "{Base URL for Azure DevOps organization}",
+      projectName: "{Name of Azure DevOps project}",
+      personalAccessToken: "{Go to 'https://dev.azure.com/{organization}/_usersSettings/tokens' to generate token}",
+    } as AzureDevOpsProviderOptions;
   }
 }

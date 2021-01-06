@@ -147,7 +147,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
     for (const sprint of sprints) {
       createdSprints.push(await this.createProviderSprint(sprint, teamContext));
     }
-    return sprints;
+    return createdSprints;
   };
 
   deleteSprint = async (id: string): Promise<void> => {
@@ -235,13 +235,17 @@ export class AzureDevOpsAgileService extends BaseAgileService {
 
   private async mapWorkItem(workItem: WorkItem, includeChildren = false): Promise<BacklogItem> {
     const { id, fields, url } = workItem;
-    const workItemType: AzureDevOpsWorkItemType = fields![AzureDevOpsFieldName.workItemType];
+    if (!id || !fields) {
+      throw new Error(`Invalid work item: ${JSON.stringify(workItem)}`);
+    }
+
+    const workItemType: AzureDevOpsWorkItemType = fields[AzureDevOpsFieldName.workItemType];
 
     return {
-      id: id!.toString(),
-      name: fields![AzureDevOpsFieldName.title],
-      description: fields![AzureDevOpsFieldName.description],
-      acceptanceCriteria: fields![AzureDevOpsFieldName.acceptanceCriteria],
+      id: id.toString(),
+      name: fields[AzureDevOpsFieldName.title],
+      description: fields[AzureDevOpsFieldName.description],
+      acceptanceCriteria: fields[AzureDevOpsFieldName.acceptanceCriteria],
       type: AzureDevOpsUtils.getBacklogItemType(workItemType),
       children: includeChildren ? await this.getBacklogItemChildren(workItem) : undefined,
       url,
@@ -254,7 +258,7 @@ export class AzureDevOpsAgileService extends BaseAgileService {
       const childIds: string[] = [];
       for (const relation of relations) {
         const { attributes, url } = relation;
-        if (!attributes || !(attributes.name === "Child")) {
+        if (!attributes || attributes.name !== "Child") {
           continue;
         }
         const id = url?.substr(url.lastIndexOf("/") + 1);

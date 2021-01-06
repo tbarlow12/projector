@@ -38,17 +38,17 @@ export abstract class BaseRepoService implements RepoService {
   private async writeRepoItem(repoItem: RepoItem, outputPath: string): Promise<void> {
     const { content, children, name, type } = repoItem;
 
-    await FileUtils.mkdirIfNotExists(outputPath);
+    FileUtils.mkdirIfNotExists(outputPath);
 
     const repoItemPath = join(outputPath, name);
 
     if (type === RepoItemType.Directory) {
-      await FileUtils.mkdirIfNotExists(repoItemPath);
+      FileUtils.mkdirIfNotExists(repoItemPath);
       if (children) {
         await Promise.all(children.map((item: RepoItem) => this.writeRepoItem(item, repoItemPath)));
       }
     } else if (content) {
-      await FileUtils.writeFile(repoItemPath, content);
+      FileUtils.writeFile(repoItemPath, content);
     }
   }
 }

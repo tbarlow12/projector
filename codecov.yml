@@ -10,7 +10,7 @@ coverage:
     project: # compare project coverage against the base of pr
       default:
         target: 75%  # min coverage ratio to be considered a success
-        threshold: null  # allow coverage to drop by X%
+        threshold: 1%  # allow coverage to drop by X%
         base: auto
     patch:  # provides an indication on how well the pull request is tested
       default:
