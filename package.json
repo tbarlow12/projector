@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "⌨ A CLI for quickly creating projects",
   "repository": {
-    "url": "https://github.com/tbarlow12/cse-cli"
+    "url": "https://github.com/tbarlow12/projector"
   },
   "bin": {
     "pjr": "./lib/index.js"
