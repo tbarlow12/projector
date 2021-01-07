@@ -1,6 +1,6 @@
 import { ConfigValue } from "../../constants";
 import { PlaybookService, RepoItem, RepoService, TemplateItem } from "../../models";
-import { Config, FileUtils } from "../../utils";
+import { Config } from "../../utils";
 
 export class GithubPlaybookService implements PlaybookService {
   private repoService: RepoService;
@@ -14,7 +14,7 @@ export class GithubPlaybookService implements PlaybookService {
   }
 
   public async getTemplates(predicate?: (templateItem: TemplateItem) => boolean): Promise<TemplateItem[]> {
-    const fileNames = ["projector.json", "projectorrc.json", ".projectorrc"];
+    const fileNames = ["projector.templates", "projectorrc.json", ".projectorrc"];
     let repoItem: RepoItem | undefined = undefined;
 
     for (const index in fileNames) {

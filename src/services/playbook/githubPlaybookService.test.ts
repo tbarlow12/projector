@@ -10,7 +10,7 @@ describe("CSE Playbook Service", () => {
   const missingName = "missing";
   const templateName = "template";
 
-  const projectorName = "projector.json";
+  const projectorName = "projector.templates";
 
   const templateOne: TemplateItem = { name: duplicateName, fileName: "", filePath: "" };
   const templateTwo: TemplateItem = { name: templateName, fileName: "", filePath: "" };
