@@ -6,7 +6,7 @@ import { Config, Logger, retryAsync, UserUtils } from "../../../../utils";
 import { AgileServiceProvider } from "../../agileServiceProvider";
 import { AzureDevOpsAgileService, AzureDevOpsProviderOptions } from "./azureDevOpsAgileService";
 
-describe("Azure DevOps Backlog Service", () => {
+xdescribe("Azure DevOps Backlog Service", () => {
   registerProviders();
 
   beforeEach(() => {
