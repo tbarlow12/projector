@@ -38,7 +38,7 @@ export class GithubPlaybookService implements PlaybookService {
       );
     }
 
-    const templates: TemplateItem[] = repoItem.content;
+    const templates: TemplateItem[] = JSON.parse(repoItem.content);
 
     return predicate ? templates.filter((template) => predicate(template)) : templates;
   }

@@ -7,7 +7,6 @@ export interface RepoItem {
   type: RepoItemType;
   name: string;
   path: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  content?: any;
+  content?: string;
   children?: RepoItem[];
 }

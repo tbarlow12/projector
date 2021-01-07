@@ -20,7 +20,7 @@ describe("CSE Playbook Service", () => {
     name: projectorName,
     type: RepoItemType.File,
     path: "",
-    content: templates,
+    content: JSON.stringify(templates),
   };
 
   beforeEach(() => {
@@ -32,7 +32,7 @@ describe("CSE Playbook Service", () => {
             name: name ?? "",
             type: RepoItemType.File,
             path: "",
-            content: templates[0],
+            content: JSON.stringify(templates[0]),
           };
           return Promise.resolve(repoItem);
         }
