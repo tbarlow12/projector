@@ -1,10 +1,8 @@
 import path from "path";
-import { ConfigValue } from "../../../../../../../constants";
 import { Command } from "../../../../../../../extensions";
-import { RepoServiceFactory } from "../../../../../../../factories";
-import { CseCliConfig, templateItem } from "../../../../../../../models";
-import { RepoServiceProvider } from "../../../../../../../services";
-import { Config } from "../../../../../../../utils";
+import { Logger } from "../../../../../../../utils";
+import { ServiceCollection } from "../../../../../../../models/general/serviceCollection";
+import { TemplateItem } from "../../../../../../../models";
 
 export interface PlaybookTemplateListOptions {
   branch: string;
@@ -18,46 +16,17 @@ export const playbookTemplateList = new Command()
   .description("List available templates.")
   .option("-b, --branch <branch>", "Branch of playbook to use")
   .option("-f, --filename <filename>", "Name of template file", "templates.json")
-  .option("-g, --github-token <github-token>", "GitHub personal access token")
   .option("-p, --filepath <filepath>", "Path to template file in playbook", path.sep)
-  .addAction(async (options: PlaybookTemplateListOptions, config: CseCliConfig) => {
-    const { branch, filename, filepath, githubToken } = options;
-    // If access token passed as option, use that over configured value
-    if (githubToken) {
-      config.github = {
-        ...config.github,
-        personalAccessToken: githubToken,
-      };
-    }
+  .addAction(async (serviceCollection: ServiceCollection) => {
+    const { playbookService } = serviceCollection;
 
-    const { playbook, github } = config;
+    const templates: TemplateItem[] = await playbookService.getTemplates();
 
-    const githubService = RepoServiceFactory.get({
-      providerName: RepoServiceProvider.GitHub,
-      ...github,
-    });
-
-    const playbookOwnerName: string = playbook?.playbookOwner || Config.getValue(ConfigValue.PlaybookOwnerName);
-    const playbookRepoName: string = playbook?.playbookRepo || Config.getValue(ConfigValue.PlaybookRepoName);
-
-    const templateFilePath: string = path.join(filepath, filename);
-
-    console.log(`Getting templates from ${playbookOwnerName}/${playbookRepoName} at path ${templateFilePath}`);
-    const templates = await githubService.getRepoItem(
-      playbookOwnerName,
-      playbookRepoName,
-      templateFilePath,
-      true,
-      branch,
-    );
-
-    if (!templates.content) {
-      console.log("Templates file appears to be empty.");
+    if (!templates || templates.length === 0) {
+      Logger.log("Templates file appears to be empty.");
     } else {
-      const templateItems: templateItem[] = templates.content;
-
-      for (const index in templateItems) {
-        console.log(templateItems[index].templateName);
+      for (const index in templates) {
+        Logger.log(templates[index].name);
       }
     }
   });
