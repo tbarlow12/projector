@@ -22,7 +22,7 @@ export class ConfigService {
     const githubToken = options?.githubToken;
     const configFile = options?.configFile;
 
-    const config: ProjectorConfig | undefined = FileUtils.readJson(configFile || FileConstants.configFileName);
+    const config = FileUtils.readJson<ProjectorConfig>(configFile || FileConstants.configFileName);
 
     if (!githubToken) {
       return config ? config : {};
