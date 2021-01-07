@@ -1,6 +1,6 @@
 import { AgileServiceFactory } from "./agileServiceFactory";
 import { ProjectorConfig, ServiceCollection } from "../models";
-import { GitHubRepoService, CsePlaybookService } from "../services";
+import { GitHubRepoService, GithubPlaybookService } from "../services";
 
 /**
  * Create collection of shared services
@@ -15,6 +15,6 @@ export function createServiceCollection(config: ProjectorConfig): ServiceCollect
   return {
     agileService: AgileServiceFactory.get(agile),
     repoService,
-    playbookService: new CsePlaybookService(repoService),
+    playbookService: new GithubPlaybookService(repoService),
   };
 }

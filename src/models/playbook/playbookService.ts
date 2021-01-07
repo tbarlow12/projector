@@ -1,8 +1,6 @@
-import { BacklogItemTemplate } from "../agile";
-import { RepoItem } from "../repo";
+import { TemplateItem } from "../template";
 
 export interface PlaybookService {
-  getTemplates: () => Promise<BacklogItemTemplate[]>;
-  getRepoItem: (pathInRepo: string, includeContent?: boolean) => Promise<RepoItem>;
-  downloadRepoItem: (pathInRepo: string, localRelativePath: string) => Promise<void>;
+  getTemplates: (predicate?: (templateItem: TemplateItem) => boolean) => Promise<TemplateItem[]>;
+  downloadTemplate: (templateName: string, localRelativePath: string) => Promise<void>;
 }

@@ -1,7 +1,7 @@
 import { CliSimulator } from "../../../../../../../test";
 import { playbookTemplateCopy } from "./playbookTemplateCopy";
 jest.mock("../../../../../../../services");
-import { CsePlaybookService } from "../../../../../../../services";
+import { GithubPlaybookService } from "../../../../../../../services";
 
 describe("Playbook Template Copy Command", () => {
   it("contains correct number of sub-commands", () => {
@@ -9,15 +9,15 @@ describe("Playbook Template Copy Command", () => {
   });
 
   it("copies a template from the playbook", async () => {
-    CsePlaybookService.prototype.downloadRepoItem = jest.fn();
-    const repoPath = "repoPath";
+    GithubPlaybookService.prototype.downloadTemplate = jest.fn();
+    const templateName = "templateName";
     const localPath = "localPath";
 
     await playbookTemplateCopy.parseAsync(
       CliSimulator.createArgs([
         {
-          name: "--path",
-          value: repoPath,
+          name: "--template-name",
+          value: templateName,
         },
         {
           name: "--out-path",
@@ -25,6 +25,6 @@ describe("Playbook Template Copy Command", () => {
         },
       ]),
     );
-    expect(CsePlaybookService.prototype.downloadRepoItem).toBeCalledWith(repoPath, localPath);
+    expect(GithubPlaybookService.prototype.downloadTemplate).toBeCalledWith(templateName, localPath);
   });
 });
