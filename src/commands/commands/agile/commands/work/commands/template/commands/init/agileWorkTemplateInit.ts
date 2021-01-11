@@ -12,8 +12,14 @@ export interface AgileWorkTemplateInitOptions {
 export const agileWorkTemplateInit = new Command()
   .name("init")
   .description("Initialize work item template")
-  .option("-t, --template <template>", "Template to use for work items")
-  .option("-o, --out-file <out-file>", "Output file for work item template")
+  .option(
+    "-t, --template <template>",
+    "Work item template (run 'pjr agile work template list' to view available templates)",
+  )
+  .option(
+    "-o, --out-file <out-file>",
+    "Output file name for initialized work item template. Defaults to using 'backlogItems.json' if not provided",
+  )
   .addAction((serviceCollection: ServiceCollection, options: AgileWorkTemplateInitOptions) => {
     // Stub for now - will fetch templates from repo
     const templates: BacklogItemTemplate[] = [exampleBacklogItemTemplate, emptyBacklogItemTemplate];
