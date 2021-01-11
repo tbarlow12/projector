@@ -1,5 +1,5 @@
 import { AgileServiceFactory, RepoServiceFactory } from "../factories";
-import { AgileServiceProvider, BaseAgileService, BaseRepoService, RepoServiceProvider } from "../services";
+import { AgileServiceProvider, BaseAgileService, RepoServiceProvider } from "../services";
 import { AzureDevOpsProviderOptions } from "../services/agile/providers";
 import { registerProviders } from "./registerProviders";
 jest.mock("azure-devops-node-api/WorkItemTrackingApi");
@@ -41,7 +41,6 @@ describe("Register Providers", () => {
 
       // Assert
       expect(repoService).toBeDefined();
-      expect(repoService).toBeInstanceOf(BaseRepoService);
     });
   });
 });

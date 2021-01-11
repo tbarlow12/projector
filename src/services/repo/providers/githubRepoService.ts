@@ -2,21 +2,21 @@ import { Octokit } from "@octokit/rest";
 import axios from "axios";
 import { basename } from "path";
 import { ConfigValue } from "../../../constants";
-import { GitHubConfig, RepoItem, RepoItemType } from "../../../models";
+import { GitHubConfig, RepoItem, RepoItemType, RepoService, StorageService } from "../../../models";
 import { Config } from "../../../utils";
-import { BaseRepoService } from "../baseRepoService";
 
 export interface GitHubRepoServiceProviderOptions {
   personalAccessToken: string;
 }
 
-export class GitHubRepoService extends BaseRepoService {
+export class GitHubRepoService implements RepoService {
   private github: Octokit;
+  private storageService: StorageService<RepoItem>;
 
-  constructor(config?: GitHubConfig) {
-    super();
+  constructor(storageService: StorageService<RepoItem>, config?: GitHubConfig) {
     // Prefer environment variable over config
     const accessToken = Config.getValueWithDefault(ConfigValue.GithubAccessToken, config?.personalAccessToken);
+    this.storageService = storageService;
 
     this.github = new Octokit({
       userAgent: "projector",
@@ -24,13 +24,31 @@ export class GitHubRepoService extends BaseRepoService {
     });
   }
 
-  getRepoItem = async (
+  public async listRepoItems(owner: string, repo: string, path?: string, branch?: string): Promise<RepoItem[]> {
+    const repoItem = await this.getRepoItem(owner, repo, path, false, branch);
+    const { type, children } = repoItem;
+    return type === RepoItemType.Directory && children ? children : [];
+  }
+
+  public async downloadRepoItem(
+    owner: string,
+    repo: string,
+    path?: string,
+    branch?: string,
+    outputPath?: string,
+  ): Promise<void> {
+    const repoItem = await this.getRepoItem(owner, repo, path, true, branch);
+    const fileName = `${repoItem.name}.json`;
+    await this.storageService.write(fileName, repoItem, outputPath);
+  }
+
+  public async getRepoItem(
     owner: string,
     repo: string,
     path = "",
     includeContent?: boolean,
     branch?: string,
-  ): Promise<RepoItem> => {
+  ): Promise<RepoItem> {
     try {
       const { data } = await this.github.repos.getContent({
         owner,
@@ -62,18 +80,12 @@ export class GitHubRepoService extends BaseRepoService {
         };
       }
     } catch (err) {
-      const { status } = err;
-      if (status && status === 403) {
-        const message =
-          "API rate limit exceeded. Try setting GITHUB_TOKEN in your local .env file with a token from GitHub";
-        throw new Error(message);
-      } else {
-        throw new Error(`Ran into problem getting items from GitHub: \n\n${JSON.stringify(err, null, 2)}`);
-      }
+      // TODO: should eliminate completely
+      throw new Error(`Ran into problem getting items from GitHub: \n\n${JSON.stringify(err, null, 2)}`);
     }
-  };
+  }
 
-  latestCommit = async (owner: string, repo: string, branch: string): Promise<string> => {
+  public async latestCommit(owner: string, repo: string, branch: string): Promise<string> {
     const { data } = await this.github.repos.getCommit({
       owner,
       repo,
@@ -85,5 +97,5 @@ export class GitHubRepoService extends BaseRepoService {
       throw new Error(`Could not find latest commit for ${owner}/${repo}`);
     }
     return sha;
-  };
+  }
 }

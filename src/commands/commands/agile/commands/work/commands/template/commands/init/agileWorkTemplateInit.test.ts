@@ -1,17 +1,20 @@
+import { StorageServiceFactory } from "../../../../../../../../../factories/storageServiceFactory";
+import { SimulatedStorageService } from "../../../../../../../../../services/storage/simulatedStorageService";
 import { CliSimulator, ModelSimulator } from "../../../../../../../../../test";
-import mockFs from "mock-fs";
-import { FileUtils, Logger } from "../../../../../../../../../utils";
+import { Logger } from "../../../../../../../../../utils";
 import { agileWorkTemplateInit } from "./agileWorkTemplateInit";
-import { FileConstants } from "../../../../../../../../../constants";
 
 describe("Agile Work Template List", () => {
   const projectorConfigFileName = "projector.json";
   const projectorConfig = ModelSimulator.createTestConfig();
 
-  beforeAll(() => {
-    const fileSystem: { [fileName: string]: string } = {};
-    fileSystem[projectorConfigFileName] = JSON.stringify(projectorConfig);
-    mockFs(fileSystem, { createCwd: true });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const storageSimulator = new SimulatedStorageService<any>();
+  const writeSpy = jest.spyOn(storageSimulator, "write");
+
+  beforeAll(async () => {
+    await storageSimulator.write(projectorConfigFileName, projectorConfig);
+    StorageServiceFactory.get = jest.fn(() => storageSimulator);
   });
 
   beforeEach(() => {
@@ -19,13 +22,11 @@ describe("Agile Work Template List", () => {
     Logger.log = jest.fn();
   });
 
-  afterAll(() => {
-    mockFs.restore();
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
-  it("writes template to default or specified output file", async () => {
-    const writeFile = jest.spyOn(FileUtils, "writeFile");
-
+  it("writes template to the default output file", async () => {
     await agileWorkTemplateInit.parseAsync(
       CliSimulator.createArgs([
         {
@@ -35,9 +36,11 @@ describe("Agile Work Template List", () => {
       ]),
     );
 
-    expect(writeFile).toBeCalledWith(FileConstants.backlogItemsFileName, expect.any(String));
-    writeFile.mockReset();
+    expect(writeSpy).toBeCalled();
+  });
 
+  it("writes a template to a provided output file", async () => {
+    // expect().toBeCalledWith(FileConstants.backlogItemsFileName, expect.any(String));
     const outputFileName = "out.json";
 
     // Running both tests within this block to run executions sequentially
@@ -56,7 +59,7 @@ describe("Agile Work Template List", () => {
         },
       ]),
     );
-    expect(writeFile).toBeCalledWith(outputFileName, expect.any(String));
-    writeFile.mockReset();
+
+    expect(writeSpy).toBeCalled();
   });
 });
