@@ -1,6 +1,6 @@
 import { FileConstants } from "../../../../../../../constants";
 import { Command } from "../../../../../../../extensions";
-import { BacklogItemTemplate, ServiceCollection } from "../../../../../../../models";
+import { BacklogItem, BacklogItemTemplate, ServiceCollection } from "../../../../../../../models";
 import { FileUtils, Logger } from "../../../../../../../utils";
 
 export interface AgileInitializationOptions {
@@ -26,5 +26,23 @@ export const agileWorkCreate = new Command()
     const items = await agileService.createBacklogItems(template.items);
     Logger.logHeader("Created Items");
 
-    items.forEach((item) => Logger.log(`${item.id} - ${item.name}`));
+    for (const item of items) {
+      logBacklogItem(item);
+    }
   });
+
+/**
+ * Log a one-line backlog item description. Logs children recursively
+ *
+ * @param {BacklogItem} item Backlog item
+ * @param {string|undefined} parentId Parent ID if it has one
+ */
+function logBacklogItem(item: BacklogItem, parentId?: string): void {
+  const { id, name, children, url } = item;
+  Logger.log(`${id}${parentId ? ` (Child of ${parentId})` : ""} - ${name}${url ? ` (${url})` : ""}`);
+  if (children) {
+    for (const child of children) {
+      logBacklogItem(child, id);
+    }
+  }
+}

@@ -21,5 +21,13 @@ export const agileWorkTemplateInit = new Command()
     const { template: templateName, outFile } = options;
     const template = templates.find((t) => t.name === templateName);
 
+    if (!template) {
+      throw new Error(
+        `Could not find template '${templateName}'. Available templates:\n${templates
+          .map((temp) => temp.name)
+          .join("\n")}`,
+      );
+    }
+
     FileUtils.writeFile(outFile || FileConstants.backlogItemsFileName, JSON.stringify(template, null, 4));
   });
