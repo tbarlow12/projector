@@ -1,5 +1,6 @@
-import { CliSimulator, ModelSimulator } from "../../../../../../../../../test";
 import mockFs from "mock-fs";
+import { AgileServiceFactory } from "../../../../../../../../../factories";
+import { CliSimulator, ModelSimulator, SimulatorAgileService } from "../../../../../../../../../test";
 import { Logger } from "../../../../../../../../../utils";
 import { agileWorkTemplateList } from "./agileWorkTemplateList";
 
@@ -11,6 +12,7 @@ describe("Agile Work Template List", () => {
     const fileSystem: { [fileName: string]: string } = {};
     fileSystem[projectorConfigFileName] = JSON.stringify(projectorConfig);
     mockFs(fileSystem);
+    AgileServiceFactory.get = jest.fn(() => new SimulatorAgileService({}));
   });
 
   beforeEach(() => {

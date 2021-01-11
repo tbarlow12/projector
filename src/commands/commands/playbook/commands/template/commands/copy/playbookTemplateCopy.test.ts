@@ -1,9 +1,14 @@
-import { CliSimulator } from "../../../../../../../test";
+import { AgileServiceFactory } from "../../../../../../../factories";
+import { CliSimulator, SimulatorAgileService } from "../../../../../../../test";
 import { playbookTemplateCopy } from "./playbookTemplateCopy";
-jest.mock("../../../../../../../services");
-import { CsePlaybookService } from "../../../../../../../services";
+jest.mock("../../../../../../../services/playbook/csePlaybookService");
+import { CsePlaybookService } from "../../../../../../../services/playbook/csePlaybookService";
 
 describe("Playbook Template Copy Command", () => {
+  beforeAll(() => {
+    AgileServiceFactory.get = jest.fn(() => new SimulatorAgileService({}));
+  });
+
   it("contains correct number of sub-commands", () => {
     expect(playbookTemplateCopy.commands).toHaveLength(0);
   });

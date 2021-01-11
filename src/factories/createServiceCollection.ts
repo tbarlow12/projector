@@ -1,6 +1,6 @@
-import { AgileServiceFactory } from "./agileServiceFactory";
 import { ProjectorConfig, ServiceCollection } from "../models";
-import { GitHubRepoService, CsePlaybookService } from "../services";
+import { CsePlaybookService, GitHubRepoService } from "../services";
+import { AgileServiceFactory } from "./agileServiceFactory";
 
 /**
  * Create collection of shared services

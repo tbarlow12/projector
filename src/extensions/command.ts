@@ -34,7 +34,7 @@ export class Command extends CommanderCommand {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const options: any = this.opts();
       const config = ConfigService.getExistingConfig(options);
-      const serviceCollection = createServiceCollection(options);
+      const serviceCollection = createServiceCollection(config);
 
       this.actions.forEach((action) => {
         action(serviceCollection, options, config);
