@@ -1,24 +1,20 @@
-import mockFs from "mock-fs";
 import { CliSimulator, ModelSimulator, SimulatorAgileService } from "../../../../../../../test";
 import { Logger, UserUtils } from "../../../../../../../utils";
 import { agileSprintsCreate } from "./agileSprintsCreate";
 jest.mock("../../../../../../../factories/agileServiceFactory");
 import { AgileServiceFactory } from "../../../../../../../factories/agileServiceFactory";
+import { SimulatedStorageService } from "../../../../../../../services/storage/simulatedStorageService";
+import { FileConstants } from "../../../../../../../constants";
 
 describe("Agile Sprints Create Command", () => {
-  const projectorConfigFileName = "projector.json";
   const projectorConfig = ModelSimulator.createTestConfig();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const storageService = new SimulatedStorageService<any>();
 
-  beforeAll(() => {
-    const fileSystem: { [fileName: string]: string } = {};
-    fileSystem[projectorConfigFileName] = JSON.stringify(projectorConfig);
-    mockFs(fileSystem);
+  beforeAll(async () => {
+    await storageService.write(FileConstants.configFileName, projectorConfig);
     Logger.log = jest.fn();
     UserUtils.confirmAction = jest.fn(() => Promise.resolve(true));
-  });
-
-  afterAll(() => {
-    mockFs.restore();
   });
 
   it("creates sprints", async () => {

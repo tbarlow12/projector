@@ -9,5 +9,5 @@ export const agileWorkTemplateList = new Command()
     const { playbookService } = serviceCollection;
     const templates = await playbookService.getTemplates();
     Logger.logHeader("Work Item Templates");
-    templates.forEach((template) => Logger.log(template.name));
+    templates.forEach((template) => Logger.log(template.templateName));
   });

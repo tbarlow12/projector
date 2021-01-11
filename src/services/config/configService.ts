@@ -1,7 +1,7 @@
 import { ProjectCreationOptions } from "../../commands/commands/project/commands/init/projectInit";
 import { ConfigValue, FileConstants } from "../../constants";
-import { AgileConfig, GitHubConfig, ProjectorConfig, SharedOptions } from "../../models";
-import { Config, FileUtils } from "../../utils";
+import { AgileConfig, GitHubConfig, ProjectorConfig, SharedOptions, StorageService } from "../../models";
+import { Config } from "../../utils";
 import { AgileServiceProvider } from "../agile";
 import { AzureDevOpsProviderOptions } from "../agile/providers";
 
@@ -18,11 +18,20 @@ export class ConfigService {
     };
   }
 
-  public static getExistingConfig(options?: SharedOptions): ProjectorConfig {
+  public static async getConfig(
+    storage: StorageService<ProjectorConfig>,
+    options?: SharedOptions,
+  ): Promise<ProjectorConfig> {
+    // https://stackoverflow.com/questions/12238477/determine-command-line-working-directory-when-running-node-bin-script
+    // Worth considering the above in case this doesn't work how I think it does
+    // When executing globally.
     const githubToken = options?.githubToken;
     const configFile = options?.configFile;
 
-    const config: ProjectorConfig | undefined = FileUtils.readJson(configFile || FileConstants.configFileName);
+    const config: ProjectorConfig | undefined = await storage.find(
+      configFile || FileConstants.configFileName,
+      process.cwd(),
+    );
 
     if (!githubToken) {
       return config ? config : {};

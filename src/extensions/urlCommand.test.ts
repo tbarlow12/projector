@@ -1,24 +1,23 @@
 import { Link } from "../models";
 import { urlCommand } from "./urlCommand";
-import mockFs from "mock-fs";
 jest.mock("open");
 import open from "open";
+import { ModelSimulator } from "../test";
+import { SimulatedStorageService } from "../services/storage/simulatedStorageService";
+import { FileConstants } from "../constants";
+import { StorageServiceFactory } from "../factories/storageServiceFactory";
 
 describe("URL Command", () => {
+  const projectorConfig = ModelSimulator.createTestConfig();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const storageService = new SimulatedStorageService<any>();
+
   beforeAll(() => {
-    mockFs(
-      {
-        "projector.json": "{}",
-      },
-      { createCwd: true, createTmp: true },
-    );
+    storageService.write(FileConstants.configFileName, projectorConfig);
+    StorageServiceFactory.get = jest.fn(() => storageService);
   });
 
-  afterAll(() => {
-    mockFs.restore();
-  });
-
-  it("creates a URL command with base path", () => {
+  it("creates a URL command with base path", async () => {
     // Setup
     const link: Link = {
       name: "link",
@@ -33,7 +32,7 @@ describe("URL Command", () => {
     expect(open).toBeCalledWith(link.url);
   });
 
-  it("creates a URL command with additional path", () => {
+  it("creates a URL command with additional path", async () => {
     // Setup
     const link: Link = {
       name: "link",

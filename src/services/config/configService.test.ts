@@ -1,22 +1,17 @@
-import mockFs from "mock-fs";
 import { ConfigValue, FileConstants } from "../../constants";
 import { ProjectorConfig } from "../../models";
 import { ModelSimulator } from "../../test";
 import { Config } from "../../utils";
 import { AgileServiceProvider } from "../agile";
+import { SimulatedStorageService } from "../storage/simulatedStorageService";
 import { ConfigService } from "./configService";
 
 describe("Config Service", () => {
   const existingConfig = ModelSimulator.createTestConfig();
+  const storageService = new SimulatedStorageService<ProjectorConfig>();
 
   beforeAll(() => {
-    const fileSystem: { [fileName: string]: string } = {};
-    fileSystem[FileConstants.configFileName] = JSON.stringify(existingConfig);
-    mockFs(fileSystem, { createCwd: true, createTmp: true });
-  });
-
-  afterAll(() => {
-    mockFs.restore();
+    storageService.write(FileConstants.configFileName, existingConfig);
   });
 
   it("creates initial agile config", () => {
@@ -46,15 +41,15 @@ describe("Config Service", () => {
     );
   });
 
-  it("gets existing config with no options specified", () => {
-    expect(ConfigService.getExistingConfig()).toEqual(existingConfig);
+  it("gets existing config with no options specified", async () => {
+    expect(await ConfigService.getConfig(storageService)).toEqual(existingConfig);
   });
 
-  it("gets existing config with options specified", () => {
+  it("gets existing config with options specified", async () => {
     const githubToken = "myToken";
 
     expect(
-      ConfigService.getExistingConfig({
+      await ConfigService.getConfig(storageService, {
         githubToken,
       }),
     ).toEqual({
@@ -65,19 +60,19 @@ describe("Config Service", () => {
     });
   });
 
-  it("gets default config if config file does not exist", () => {
+  it("gets default config if config file does not exist", async () => {
     expect(
-      ConfigService.getExistingConfig({
+      await ConfigService.getConfig(storageService, {
         configFile: "fakeCse.json",
       }),
     ).toEqual({});
   });
 
-  it("gets default config with options specified if config file does not exist", () => {
+  it("gets default config with options specified if config file does not exist", async () => {
     const githubToken = "myToken";
 
     expect(
-      ConfigService.getExistingConfig({
+      await ConfigService.getConfig(storageService, {
         configFile: "fakeCse.json",
         githubToken,
       }),

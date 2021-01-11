@@ -1,5 +1,5 @@
 export interface TemplateItem {
-  name: string;
+  templateName: string;
   filePath: string;
   fileName: string;
   outputFileName?: string;

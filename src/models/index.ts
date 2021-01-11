@@ -3,4 +3,5 @@ export * from "./config";
 export * from "./general";
 export * from "./playbook";
 export * from "./repo";
+export * from "./storage";
 export * from "./template";

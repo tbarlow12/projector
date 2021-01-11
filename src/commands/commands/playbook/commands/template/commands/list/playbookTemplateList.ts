@@ -26,7 +26,7 @@ export const playbookTemplateList = new Command()
       Logger.log("Templates file appears to be empty.");
     } else {
       for (const index in templates) {
-        Logger.log(templates[index].name);
+        Logger.log(templates[index].templateName);
       }
     }
   });

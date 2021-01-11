@@ -1,4 +1,4 @@
-import { writeFileSync } from "fs";
+import { FileConstants } from "../../../../../constants";
 import { Command } from "../../../../../extensions";
 import { ServiceCollection } from "../../../../../models";
 import { AgileServiceProvider, ConfigService } from "../../../../../services";
@@ -21,7 +21,7 @@ export const projectInit = new Command()
   .option("-u, --base-url <base-url>", "Base URL for Agile Provider project")
   .option("-p, --project <project>", "Agile provider project")
   .option("-t, --token <token>", "Agile provider access token")
-  .addAction((serviceCollection: ServiceCollection, options: ProjectCreationOptions) => {
+  .addAction(async (serviceCollection: ServiceCollection, options: ProjectCreationOptions) => {
     const config = ConfigService.createInitialConfig(options);
-    writeFileSync("projector.json", JSON.stringify(config, null, 4));
+    await serviceCollection.configStorageService.write(FileConstants.configFileName, config);
   });

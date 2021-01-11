@@ -1,25 +1,21 @@
-import { CliSimulator, ModelSimulator } from "../../../../../../../../../test";
-import mockFs from "mock-fs";
+import { FileConstants } from "../../../../../../../../../constants";
+import { ProjectorConfig } from "../../../../../../../../../models";
+import { SimulatedStorageService } from "../../../../../../../../../services/storage/simulatedStorageService";
+import { ModelSimulator } from "../../../../../../../../../test";
 import { Logger } from "../../../../../../../../../utils";
 import { agileWorkTemplateList } from "./agileWorkTemplateList";
 
 describe("Agile Work Template List", () => {
-  const projectorConfigFileName = "projector.templates";
   const projectorConfig = ModelSimulator.createTestConfig();
+  const projectorConfigStorageService = new SimulatedStorageService<ProjectorConfig>();
 
   beforeAll(() => {
-    const fileSystem: { [fileName: string]: string } = {};
-    fileSystem[projectorConfigFileName] = JSON.stringify(projectorConfig);
-    mockFs(fileSystem);
+    projectorConfigStorageService.write(FileConstants.configFileName, projectorConfig);
   });
 
   beforeEach(() => {
     Logger.logHeader = jest.fn();
     Logger.log = jest.fn();
-  });
-
-  afterAll(() => {
-    mockFs.restore();
   });
 
   it("lists work item templates", async () => {

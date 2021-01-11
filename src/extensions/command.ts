@@ -5,6 +5,7 @@ import { createServiceCollection } from "../factories";
 import { ProjectorConfig, ServiceCollection } from "../models";
 import { Link } from "../models/general/link";
 import { ConfigService } from "../services";
+import { FileStorageService } from "../services/storage";
 import { Logger } from "../utils";
 import { urlCommand } from "./urlCommand";
 
@@ -30,15 +31,15 @@ export class Command extends CommanderCommand {
 
   public addAction(actionHandler: ActionHandler): Command {
     this.actions.push(actionHandler);
-    this.action(() => {
+    this.action(async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const options: { [key: string]: any } = this.opts();
-      const config = ConfigService.getExistingConfig(options);
+      const projectorConfigStorageService = new FileStorageService<ProjectorConfig>(process.cwd());
+      const config = await ConfigService.getConfig(projectorConfigStorageService, options);
+      const serviceCollection = createServiceCollection(config, projectorConfigStorageService);
 
-      const serviceCollection = createServiceCollection(config);
-
-      this.actions.forEach((action) => {
-        action(serviceCollection, options, config);
+      this.actions.forEach(async (action) => {
+        await action(serviceCollection, options, config);
       });
     });
     return this;
@@ -59,7 +60,7 @@ export class Command extends CommanderCommand {
   }
 
   public addLinkCommands(links: Link[]): Command {
-    links.forEach((link: Link) => this.addCommand(urlCommand(link)));
+    links.forEach(async (link: Link) => this.addCommand(await urlCommand(link)));
     return this;
   }
 

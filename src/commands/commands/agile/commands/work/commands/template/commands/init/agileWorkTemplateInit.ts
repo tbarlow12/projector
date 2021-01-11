@@ -2,7 +2,7 @@ import { FileConstants } from "../../../../../../../../../constants";
 import { Command } from "../../../../../../../../../extensions";
 import { BacklogItemTemplate, ServiceCollection } from "../../../../../../../../../models";
 import { emptyBacklogItemTemplate, exampleBacklogItemTemplate } from "../../../../../../../../../samples";
-import { FileUtils } from "../../../../../../../../../utils";
+import { Logger } from "../../../../../../../../../utils";
 
 export interface AgileWorkTemplateInitOptions {
   template: string;
@@ -16,10 +16,16 @@ export const agileWorkTemplateInit = new Command()
   .option("-o, --out-file <out-file>", "Output file for work item template")
   .addAction((serviceCollection: ServiceCollection, options: AgileWorkTemplateInitOptions) => {
     // Stub for now - will fetch templates from repo
+    const { backlogItemStorageService } = serviceCollection;
+
     const templates: BacklogItemTemplate[] = [exampleBacklogItemTemplate, emptyBacklogItemTemplate];
 
     const { template: templateName, outFile } = options;
     const template = templates.find((t) => t.name === templateName);
 
-    FileUtils.writeFile(outFile || FileConstants.backlogItemsFileName, JSON.stringify(template, null, 4));
+    if (!template) {
+      Logger.log(`Could not find template ${templateName}.`);
+    } else {
+      backlogItemStorageService.write(outFile ?? FileConstants.backlogItemsFileName, template);
+    }
   });

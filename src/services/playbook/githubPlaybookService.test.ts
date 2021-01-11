@@ -10,10 +10,10 @@ describe("CSE Playbook Service", () => {
   const missingName = "missing";
   const templateName = "template";
 
-  const projectorName = "projector.templates";
+  const projectorName = "templates.json";
 
-  const templateOne: TemplateItem = { name: duplicateName, fileName: "", filePath: "" };
-  const templateTwo: TemplateItem = { name: templateName, fileName: "", filePath: "" };
+  const templateOne: TemplateItem = { templateName: duplicateName, fileName: "", filePath: "" };
+  const templateTwo: TemplateItem = { templateName: templateName, fileName: "", filePath: "" };
   const templates: TemplateItem[] = [templateOne, { ...templateOne }, templateTwo];
 
   const projectorFile: RepoItem = {
@@ -27,7 +27,7 @@ describe("CSE Playbook Service", () => {
     repoService = {
       ...ServiceSimulator.createTestRepoService(),
       getRepoItem: jest.fn((owner, repo, name) => {
-        if (templates.find((template) => template.name === name)) {
+        if (templates.find((template) => template.templateName === name)) {
           const repoItem: RepoItem = {
             name: name ?? "",
             type: RepoItemType.File,

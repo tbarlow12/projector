@@ -1,7 +1,7 @@
 import { FileConstants } from "../../../../../../../constants";
 import { Command } from "../../../../../../../extensions";
-import { BacklogItemTemplate, ServiceCollection } from "../../../../../../../models";
-import { FileUtils, Logger } from "../../../../../../../utils";
+import { ServiceCollection } from "../../../../../../../models";
+import { Logger } from "../../../../../../../utils";
 
 export interface AgileInitializationOptions {
   file: string;
@@ -12,7 +12,7 @@ export const agileWorkCreate = new Command()
   .description("Work Item Creation")
   .option("-f, --file <file>", "File containing backlog item template")
   .addAction(async (serviceCollection: ServiceCollection, options: AgileInitializationOptions) => {
-    const { agileService } = serviceCollection;
+    const { agileService, backlogItemStorageService } = serviceCollection;
 
     if (!agileService) {
       throw new Error("Section 'agile' must be configured for this command");
@@ -20,11 +20,16 @@ export const agileWorkCreate = new Command()
 
     // Read agile items from provided file
     const { file } = options;
-    const template: BacklogItemTemplate = await FileUtils.readJson(file || FileConstants.backlogItemsFileName);
+    const fileName = file ?? FileConstants.backlogItemsFileName;
+    const template = await backlogItemStorageService.read(fileName);
 
-    // Create Backlog Items
-    const items = await agileService.createBacklogItems(template.items);
-    Logger.logHeader("Created Items");
+    if (!template) {
+      Logger.log(`Could not find a template at ${fileName}`);
+    } else {
+      // Create Backlog Items
+      const items = await agileService.createBacklogItems(template.items);
+      Logger.logHeader("Created Items");
 
-    items.forEach((item) => Logger.log(`${item.id} - ${item.name}`));
+      items.forEach((item) => Logger.log(`${item.id} - ${item.name}`));
+    }
   });

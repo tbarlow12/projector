@@ -1,12 +1,15 @@
 import { Link } from "../models";
 import { Command } from "./command";
-import mockFs from "mock-fs";
 jest.mock("chalk");
 import chalk from "chalk";
 
 jest.mock("figlet");
 import figlet from "figlet";
 import { Logger } from "../utils";
+import { ModelSimulator } from "../test";
+import { SimulatedStorageService } from "../services/storage/simulatedStorageService";
+import { FileConstants } from "../constants";
+import { StorageServiceFactory } from "../factories/storageServiceFactory";
 
 describe("Command", () => {
   const commandName1 = "command1";
@@ -21,17 +24,13 @@ describe("Command", () => {
 
   command1.addCommand(command2);
 
-  beforeAll(() => {
-    mockFs(
-      {
-        "projector.json": "{}",
-      },
-      { createCwd: true, createTmp: true },
-    );
-  });
+  const projectorConfig = ModelSimulator.createTestConfig();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const storageService = new SimulatedStorageService<any>();
 
-  afterAll(() => {
-    mockFs.restore();
+  beforeAll(() => {
+    storageService.write(FileConstants.configFileName, projectorConfig);
+    StorageServiceFactory.get = jest.fn(() => storageService);
   });
 
   beforeEach(() => {

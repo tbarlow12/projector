@@ -1,33 +1,30 @@
-import mockFs from "mock-fs";
+import { FileConstants } from "../../../../../../../constants";
 import { AgileServiceFactory } from "../../../../../../../factories";
+import { StorageServiceFactory } from "../../../../../../../factories/storageServiceFactory";
 import { BacklogItem } from "../../../../../../../models";
+import { SimulatedStorageService } from "../../../../../../../services/storage/simulatedStorageService";
 import { CliSimulator, ModelSimulator, SimulatorAgileService } from "../../../../../../../test";
 import { Logger } from "../../../../../../../utils";
 import { agileWorkCreate } from "./agileWorkCreate";
 
 describe("Agile Work Create Command", () => {
-  const backlogItemFileName = "myItems.json";
-  const projectorConfigFileName = "projector.json";
   const backlogItemTemplate = ModelSimulator.createTestBacklogItemTemplate();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const simulatedStorageService = new SimulatedStorageService<any>();
+
   const projectorConfig = ModelSimulator.createTestConfig();
 
-  beforeAll(() => {
-    const fileSystem: { [fileName: string]: string } = {};
-    fileSystem[backlogItemFileName] = JSON.stringify(backlogItemTemplate);
-    fileSystem[projectorConfigFileName] = JSON.stringify(projectorConfig);
-    mockFs(fileSystem);
+  beforeAll(async () => {
+    await simulatedStorageService.write(FileConstants.backlogItemsFileName, backlogItemTemplate);
+    await simulatedStorageService.write(FileConstants.configFileName, projectorConfig);
     Logger.log = jest.fn();
   });
 
-  afterAll(() => {
-    mockFs.restore();
+  it("contains correct number of sub-commands", async () => {
+    expect(await agileWorkCreate.commands).toHaveLength(0);
   });
 
-  it("contains correct number of sub-commands", () => {
-    expect(agileWorkCreate.commands).toHaveLength(0);
-  });
-
-  it("runs a test", async () => {
+  it("creates backlog items in an agile provider", async () => {
     const createBacklogItems = jest.fn((items: BacklogItem[]) =>
       Promise.resolve(
         items.map((item) => {
@@ -38,6 +35,8 @@ describe("Agile Work Create Command", () => {
         }),
       ),
     );
+
+    StorageServiceFactory.get = jest.fn(() => simulatedStorageService);
 
     AgileServiceFactory.get = jest.fn(
       () =>
@@ -50,7 +49,7 @@ describe("Agile Work Create Command", () => {
       CliSimulator.createArgs([
         {
           name: "--file",
-          value: backlogItemFileName,
+          value: FileConstants.backlogItemsFileName,
         },
       ]),
     );

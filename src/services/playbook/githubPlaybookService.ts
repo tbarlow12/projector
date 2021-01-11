@@ -14,7 +14,7 @@ export class GithubPlaybookService implements PlaybookService {
   }
 
   public async getTemplates(predicate?: (templateItem: TemplateItem) => boolean): Promise<TemplateItem[]> {
-    const fileNames = ["projector.templates", "projectorrc.json", ".projectorrc"];
+    const fileNames = ["templates.json", "projector.templates", "projectorrc.json", ".projectorrc"];
     let repoItem: RepoItem | undefined = undefined;
 
     for (const index in fileNames) {
@@ -38,14 +38,17 @@ export class GithubPlaybookService implements PlaybookService {
       );
     }
 
-    const templates: TemplateItem[] = JSON.parse(repoItem.content);
+    const templates: TemplateItem[] =
+      typeof repoItem.content === "string" ? JSON.parse(repoItem.content) : repoItem.content;
+
+    console.log(templates);
 
     return predicate ? templates.filter((template) => predicate(template)) : templates;
   }
 
   public async downloadTemplate(templateName: string, localRelativePath: string): Promise<void> {
     const templates = await this.getTemplates((template) => {
-      return template.name === templateName;
+      return template.templateName === templateName;
     });
 
     if (!templates || templates.length <= 0) {
@@ -55,7 +58,7 @@ export class GithubPlaybookService implements PlaybookService {
     if (templates.length > 1) {
       throw new Error(
         `Found multiple templates matching name ${templateName}:\n` +
-          templates.map((template) => template.name).join("\n"),
+          templates.map((template) => template.templateName).join("\n"),
       );
     }
 
