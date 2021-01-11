@@ -20,7 +20,7 @@ See the [commands doc](./docs/commands.md) for usage and description of each com
 
 ### Running CLI from src
 
-In the root of the repo, run `npm link` to create a symbolic link in your local npm configuration.
+In the root of the repo, run `npm run build` to build the project. Then run `npm link` (you might need to use `sudo`) to create a symbolic link in your local npm configuration.
 If you'd like to use projector in a separate directory, navigate to that directory and run `npm link projector`.
 
 You will then be able to execute commands with the `pjr` executable inside that directory.

@@ -27,11 +27,32 @@
     "cse",
     "pjr"
   ],
-  "author": "Tanner Barlow",
+  "contributors": [
+    {
+      "name": "Tanner Barlow",
+      "email": "tabarlow@microsoft.com"
+    },
+    {
+      "name": "Zach Miller",
+      "email": "zamiller@microsoft.com"
+    },
+    {
+      "name": "Alex Lancaster",
+      "email": "allancas@microsoft.com"
+    },
+    {
+      "name": "Elizabeth Halper",
+      "email": "elhalper@microsoft.com"
+    },
+    {
+      "name": "Stewart Adam",
+      "email": "stad@microsoft.com"
+    }
+  ],
   "license": "ISC",
   "dependencies": {
     "@octokit/rest": "18.0.12",
-    "axios": "0.21.0",
+    "axios": "0.21.1",
     "azure-devops-node-api": "10.1.2",
     "chalk": "4.1.0",
     "clear": "0.1.0",
