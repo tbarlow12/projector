@@ -123,4 +123,41 @@ describe("Agile Work Create Command", () => {
     // Log header and one line for each backlog item
     expect(Logger.log).toBeCalledTimes(expectedBacklogItemTemplate.items.length + 2);
   });
+
+  it("throws if backlog item file does not exist", async () => {
+    const createBacklogItems = jest.fn((items: BacklogItem[]) =>
+      Promise.resolve(
+        items.map((item) => {
+          return {
+            ...item,
+            id: "itemId",
+          };
+        }),
+      ),
+    );
+
+    AgileServiceFactory.get = jest.fn(
+      () =>
+        new SimulatorAgileService({
+          createBacklogItems,
+        }),
+    );
+
+    await agileWorkCreate.parseAsync(
+      CliSimulator.createArgs([
+        {
+          name: "--file",
+          value: "fakeFileName",
+        },
+        {
+          name: "--params",
+          value: paramsFileName,
+        },
+      ]),
+    );
+
+    // Commander won't actually throw the error above, so the best we
+    // can do for now is assert that the create function is not called
+    expect(createBacklogItems).not.toBeCalled();
+  });
 });
