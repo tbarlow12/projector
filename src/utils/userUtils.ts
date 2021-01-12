@@ -2,7 +2,7 @@ import { createInterface } from "readline";
 
 export class UserUtils {
   public static async confirmAction(message?: string, affirmative?: string): Promise<boolean> {
-    message = `\n${message || "Confirm? (y/n)"}\n`;
+    message = `\n${message || "Confirm? (y/n)"}`;
     affirmative = affirmative?.toLowerCase() || "y";
     const response = (await this.askQuestion(message)).trim().toLowerCase();
     return response === affirmative;
@@ -15,10 +15,15 @@ export class UserUtils {
     });
 
     return new Promise((resolve) =>
-      read.question(question, (answer: string) => {
+      read.question(`${question}\n`, (answer: string) => {
         read.close();
         resolve(answer);
       }),
     );
+  }
+
+  public static async askQuestionWithDefault(question: string, defaultAnswer: string): Promise<string> {
+    const answer = await this.askQuestion(`${question} (enter to use '${defaultAnswer}')`);
+    return answer ? answer : defaultAnswer;
   }
 }

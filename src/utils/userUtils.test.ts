@@ -23,7 +23,7 @@ describe("User Utils", () => {
     const question = "This is my question";
     const questionPromise = UserUtils.askQuestion(question);
     const calls = questionFn.mock.calls;
-    expect(questionFn).toBeCalledWith(question, expect.anything());
+    expect(questionFn).toBeCalledWith(`${question}\n`, expect.anything());
 
     const answer = "This is my answer";
     const answerCallback = calls[0][1];

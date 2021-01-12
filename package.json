@@ -20,7 +20,8 @@
     "test:int": "jest -c jest.config.integration.js",
     "test:coverage": "npm run test -- --coverage",
     "check": "npm run lint && npm run build && npm run test:coverage",
-    "docs:generate": "ts-node src/scripts/generateDocs.ts"
+    "docs:generate": "ts-node src/scripts/generateDocs.ts",
+    "onboard": "ts-node src/scripts/onboard.ts && npm test"
   },
   "keywords": [
     "cli",
