@@ -1,13 +1,19 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+import { Parameters } from "../models";
+import { Interpolator } from "./interpolator";
 
 export class FileUtils {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public static readJson(relativePath: string): any {
+  public static readJson<T>(relativePath?: string, parameters?: Parameters): T | undefined {
+    if (!relativePath) {
+      return undefined;
+    }
+
     const path = join(process.cwd(), relativePath);
     if (existsSync(path)) {
       const fileContent = readFileSync(path).toString();
-      return JSON.parse(fileContent);
+      const interpolated = Interpolator.interpolate(fileContent, parameters);
+      return JSON.parse(interpolated);
     }
   }
 

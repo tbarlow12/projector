@@ -1,21 +1,38 @@
 import mockFs from "mock-fs";
 import { AgileServiceFactory } from "../../../../../../../factories";
-import { BacklogItem } from "../../../../../../../models";
+import { BacklogItem, BacklogItemTemplate } from "../../../../../../../models";
 import { CliSimulator, ModelSimulator, SimulatorAgileService } from "../../../../../../../test";
 import { Logger } from "../../../../../../../utils";
 import { agileWorkCreate } from "./agileWorkCreate";
 
 describe("Agile Work Create Command", () => {
   const backlogItemFileName = "myItems.json";
+  const parameterizedBacklogItemFileName = "myParamItems.json";
   const projectorConfigFileName = "projector.json";
+  const paramsFileName = "params.json";
+  const variableValue = "hello";
   const backlogItemTemplate = ModelSimulator.createTestBacklogItemTemplate();
   const projectorConfig = ModelSimulator.createTestConfig();
+  const parameterizedBacklogItemTemplate: BacklogItemTemplate = {
+    ...backlogItemTemplate,
+    items: backlogItemTemplate.items.map((item: BacklogItem) => {
+      return {
+        ...item,
+        name: item.name + " ${variable}",
+      };
+    }),
+  };
 
   beforeAll(() => {
     const fileSystem: { [fileName: string]: string } = {};
     fileSystem[backlogItemFileName] = JSON.stringify(backlogItemTemplate);
     fileSystem[projectorConfigFileName] = JSON.stringify(projectorConfig);
-    mockFs(fileSystem);
+    fileSystem[paramsFileName] = JSON.stringify({ variable: variableValue });
+    fileSystem[parameterizedBacklogItemFileName] = JSON.stringify(parameterizedBacklogItemTemplate);
+    mockFs(fileSystem, { createCwd: true, createTmp: true });
+  });
+
+  beforeEach(() => {
     Logger.log = jest.fn();
   });
 
@@ -27,7 +44,7 @@ describe("Agile Work Create Command", () => {
     expect(agileWorkCreate.commands).toHaveLength(0);
   });
 
-  it("runs a test", async () => {
+  it("creates backlog items from a file", async () => {
     const createBacklogItems = jest.fn((items: BacklogItem[]) =>
       Promise.resolve(
         items.map((item) => {
@@ -58,5 +75,89 @@ describe("Agile Work Create Command", () => {
     expect(createBacklogItems).toBeCalledWith(backlogItemTemplate.items);
     // Log header and one line for each backlog item
     expect(Logger.log).toBeCalledTimes(backlogItemTemplate.items.length + 2);
+  });
+
+  it("creates parameterized backlog items from a file", async () => {
+    const createBacklogItems = jest.fn((items: BacklogItem[]) =>
+      Promise.resolve(
+        items.map((item) => {
+          return {
+            ...item,
+            id: "itemId",
+          };
+        }),
+      ),
+    );
+
+    AgileServiceFactory.get = jest.fn(
+      () =>
+        new SimulatorAgileService({
+          createBacklogItems,
+        }),
+    );
+
+    await agileWorkCreate.parseAsync(
+      CliSimulator.createArgs([
+        {
+          name: "--file",
+          value: parameterizedBacklogItemFileName,
+        },
+        {
+          name: "--params",
+          value: paramsFileName,
+        },
+      ]),
+    );
+
+    const expectedBacklogItemTemplate: BacklogItemTemplate = {
+      ...backlogItemTemplate,
+      items: backlogItemTemplate.items.map((item: BacklogItem) => {
+        return {
+          ...item,
+          name: item.name + ` ${variableValue}`,
+        };
+      }),
+    };
+
+    expect(createBacklogItems).toBeCalledWith(expectedBacklogItemTemplate.items);
+    // Log header and one line for each backlog item
+    expect(Logger.log).toBeCalledTimes(expectedBacklogItemTemplate.items.length + 2);
+  });
+
+  it("throws if backlog item file does not exist", async () => {
+    const createBacklogItems = jest.fn((items: BacklogItem[]) =>
+      Promise.resolve(
+        items.map((item) => {
+          return {
+            ...item,
+            id: "itemId",
+          };
+        }),
+      ),
+    );
+
+    AgileServiceFactory.get = jest.fn(
+      () =>
+        new SimulatorAgileService({
+          createBacklogItems,
+        }),
+    );
+
+    await agileWorkCreate.parseAsync(
+      CliSimulator.createArgs([
+        {
+          name: "--file",
+          value: "fakeFileName",
+        },
+        {
+          name: "--params",
+          value: paramsFileName,
+        },
+      ]),
+    );
+
+    // Commander won't actually throw the error above, so the best we
+    // can do for now is assert that the create function is not called
+    expect(createBacklogItems).not.toBeCalled();
   });
 });
