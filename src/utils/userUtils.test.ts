@@ -32,6 +32,20 @@ describe("User Utils", () => {
     expect(closeFn).toBeCalled();
   });
 
+  it("asks a question with a default response for empty answer", async () => {
+    const question = "This is my question";
+    const defaultAnswer = "defaultAnswer";
+    const questionPromise = UserUtils.askQuestionWithDefault(question, defaultAnswer);
+    const calls = questionFn.mock.calls;
+    expect(questionFn).toBeCalledWith(`${question} (enter to use '${defaultAnswer}')\n`, expect.anything());
+
+    const answer = "";
+    const answerCallback = calls[0][1];
+    answerCallback(answer);
+    expect(await questionPromise).toEqual(defaultAnswer);
+    expect(closeFn).toBeCalled();
+  });
+
   it("confirms an action with default message", async () => {
     const questionPromise = UserUtils.confirmAction();
     const calls = questionFn.mock.calls;
