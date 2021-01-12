@@ -3,6 +3,6 @@ import { playbookIssueCreate, playbookIssuesOpen } from "./commands";
 
 export const playbookIssues = new Command()
   .name("issues")
-  .description("Playbook Issues")
+  .description("Interacting with issues in the code-with engineering playbook")
   .addCommand(playbookIssueCreate)
   .addCommand(playbookIssuesOpen);

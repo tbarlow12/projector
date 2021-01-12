@@ -75,14 +75,18 @@ export class Command extends CommanderCommand {
     return doc;
   }
 
-  public toTableOfContents(parentIndentation?: string, parentCommandPath?: string): string {
+  public toTableOfContents(linkPrefix?: string, parentIndentation?: string, parentCommandPath?: string): string {
     const indentation = parentIndentation !== undefined ? parentIndentation + "  " : "";
     const commandPath = `${parentCommandPath ? parentCommandPath + " " : ""}${this.name()}`;
-    const line = "- [`" + commandPath + "`]" + `(#${commandPath.replace(/ /g, "-")}) - ${this.description()}`;
+    const line =
+      "- [`" +
+      commandPath +
+      "`]" +
+      `(${linkPrefix ? linkPrefix : ""}#${commandPath.replace(/ /g, "-")}) - ${this.description()}`;
     let toc = indentation + line;
     for (const command of this.commands) {
       if (command instanceof Command) {
-        toc += `\n${command.toTableOfContents(indentation, commandPath)}`;
+        toc += `\n${command.toTableOfContents(linkPrefix, indentation, commandPath)}`;
       }
     }
     return toc;

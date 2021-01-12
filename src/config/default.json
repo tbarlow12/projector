@@ -3,17 +3,17 @@
     {
       "name": "snowball",
       "url": "https://snowballv2.azurewebsites.net/",
-      "description": "Used for tracking work"
+      "description": "Track your work in CSE"
     },
     {
       "name": "playbook",
       "url": "https://github.com/Microsoft/code-with-engineering-playbook",
-      "description": "CSE playbook for the way we do work"
+      "description": "The Code-With Engineering Playbook"
     },
     {
-      "name": "playbook",
-      "url": "https://github.com/Microsoft/code-with-engineering-playbook",
-      "description": "Issues in the CSE Playbook"
+      "name": "playbook-issues",
+      "url": "https://github.com/Microsoft/code-with-engineering-playbook/issues",
+      "description": "Issues in the Code-With Engineering Playbook"
     }
   ],
   "playbook": {
