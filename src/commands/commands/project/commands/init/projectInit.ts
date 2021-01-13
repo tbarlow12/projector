@@ -12,7 +12,7 @@ export interface ProjectCreationOptions {
 
 export const projectInit = new Command()
   .name("init")
-  .description("Local Configuration Initialization")
+  .description("Initialize local project configuration in `projector.json` file")
   .option(
     "-a, --agile-provider <agile-provider>",
     "Agile provider (currently only supports and defaults to 'azdo')",

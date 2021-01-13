@@ -22,7 +22,7 @@
     - [`pjr playbook template`](#pjr-playbook-template) - Discover and use templates from playbook
       - [`pjr playbook template copy`](#pjr-playbook-template-copy) - Copy templates from playbook to local working directory
   - [`pjr project`](#pjr-project) - Project configuration
-    - [`pjr project init`](#pjr-project-init) - Local Configuration Initialization
+    - [`pjr project init`](#pjr-project-init) - Initialize local projector configuration in `projector.json` file
 
 ## `pjr`
 
@@ -278,7 +278,7 @@ Options:
   -h, --help      display help for command
 
 Commands:
-  init [options]  Local Configuration Initialization
+  init [options]  Initialize local projector configuration in `projector.json` file
   help [command]  display help for command
 ```
 ## `pjr project init`
@@ -286,7 +286,7 @@ Commands:
 ```
 Usage: pjr project init [options]
 
-Local Configuration Initialization
+Initialize local projector configuration in `projector.json` file
 
 Options:
   -a, --agile-provider <agile-provider>  Agile provider (currently only supports and defaults to 'azdo') (default: "azdo")
